@@ -5,6 +5,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+option(NQ_BUILD_TESTS "Build nq_test target and enable ctest" ON)
+
 # SDL3 — modern properties-based API, return-by-error instead of out-params.
 find_package(SDL3 REQUIRED)
 
@@ -21,7 +23,6 @@ target_compile_options(nq_core PRIVATE
 )
 
 # First example: hello window with a bouncing colored square.
-# Demonstrates the nq_renderer_* API rather than calling SDL3 directly.
 add_executable(nq_hello_window examples/hello_window.c)
 target_link_libraries(nq_hello_window PRIVATE nq_core)
 
@@ -30,4 +31,24 @@ target_link_libraries(nq_hello_window PRIVATE nq_core)
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     target_compile_options(nq_hello_window PRIVATE -Wno-pedantic)
     target_compile_options(nq_core PRIVATE -Wno-pedantic)
+endif()
+
+# --- Tests ---
+if(NQ_BUILD_TESTS)
+    enable_testing()
+
+    # GLOB for tests; new tests/*.c picked up automatically.
+    file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_*.c")
+
+    add_executable(nq_test ${NQ_TEST_SOURCES})
+    target_include_directories(nq_test PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    )
+    # nq_test links only the math layer — no SDL3 dep, so `cmake -B build
+    # -DNQ_BUILD_TESTS=ON && ctest` works on a host without libsdl3-dev
+    # (SDL3 transitive via nq_core would break the build).
+    target_link_libraries(nq_test PRIVATE nq_core)
+
+    add_test(NAME nq_test COMMAND nq_test)
 endif()
