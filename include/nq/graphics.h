@@ -30,6 +30,7 @@ typedef struct {
 NqRenderer *nq_renderer_create(NqWindow *window);
 void       nq_renderer_destroy(NqRenderer *r);
 int        nq_renderer_clear(NqRenderer *r, NqColor color);
+int        nq_renderer_set_draw_color(NqRenderer *r, NqColor color);
 int        nq_renderer_fill_rect(NqRenderer *r, NqColor color,
                                  int x, int y, int w, int h);
 void       nq_renderer_present(NqRenderer *r);

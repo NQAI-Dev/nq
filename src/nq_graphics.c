@@ -48,6 +48,17 @@ int nq_renderer_clear(NqRenderer *r, NqColor c) {
     return SDL_RenderClear(r->sdl_renderer) ? -1 : 0;
 }
 
+int nq_renderer_set_draw_color(NqRenderer *r, NqColor c) {
+    /* Sets the renderer draw colour for subsequent primitives; pairs with
+     * multiple fill_rect / draw_line / draw_rect calls before the next
+     * colour change. Lets callers amortise SDL3 state flips across many
+     * draws (each SDL_SetRenderDrawColor is a CPU-GPU sync point). */
+    if (!r) {
+        return -1;
+    }
+    return SDL_SetRenderDrawColor(r->sdl_renderer, c.r, c.g, c.b, c.a) ? -1 : 0;
+}
+
 int nq_renderer_fill_rect(NqRenderer *r, NqColor c,
                           int x, int y, int w, int h) {
     if (!r || w <= 0 || h <= 0) {
