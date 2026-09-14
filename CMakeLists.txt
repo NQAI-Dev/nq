@@ -19,6 +19,7 @@ find_package(SDL3 REQUIRED)
 add_library(nq_core STATIC
     src/nq_graphics.c
     src/nq_log.c
+    src/nq_input.c
 )
 target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
