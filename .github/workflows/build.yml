@@ -1,0 +1,50 @@
+name: nq CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build & test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            install: |
+              sudo apt-get update
+              sudo apt-get install -y libsdl3-dev cmake ninja-build
+          - os: macos-latest
+            install: |
+              brew update
+              brew install sdl3 cmake ninja
+          - os: windows-latest
+            install: |
+              choco install -y sdl3 cmake ninja
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SDL3 + cmake
+        shell: bash
+        run: ${{ matrix.install }}
+
+      - name: Configure
+        shell: bash
+        run: cmake -S . -B build -G Ninja -DNQ_BUILD_TESTS=ON
+
+      - name: Build
+        shell: bash
+        run: cmake --build build --config Release
+
+      - name: Test
+        shell: bash
+        working-directory: build
+        run: ctest --output-on-failure
