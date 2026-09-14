@@ -7,17 +7,23 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 option(NQ_BUILD_TESTS "Build nq_test target and enable ctest" ON)
 
+# Threads needed for log_thread_safety on POSIX. On Windows FindThreads
+# would be different, but for now this is fine.
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 # SDL3 — modern properties-based API, return-by-error instead of out-params.
 find_package(SDL3 REQUIRED)
 
 # nq core static library — the engine proper. Consumers link against this.
-# Includes are PUBLIC so consumers see include/nq/ via nq_core's interface
-# (so #include "nq/graphics.h" works for both the engine and examples).
-add_library(nq_core STATIC src/nq_graphics.c)
+add_library(nq_core STATIC
+    src/nq_graphics.c
+    src/nq_log.c
+)
 target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-target_link_libraries(nq_core PUBLIC SDL3::SDL3)
+target_link_libraries(nq_core PUBLIC SDL3::SDL3 Threads::Threads)
 target_compile_options(nq_core PRIVATE
     -Wall -Wextra
 )
@@ -37,7 +43,6 @@ endif()
 if(NQ_BUILD_TESTS)
     enable_testing()
 
-    # GLOB for tests; new tests/*.c picked up automatically.
     file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_*.c")
 
     add_executable(nq_test ${NQ_TEST_SOURCES})
@@ -45,10 +50,7 @@ if(NQ_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/tests
     )
-    # nq_test links only the math layer — no SDL3 dep, so `cmake -B build
-    # -DNQ_BUILD_TESTS=ON && ctest` works on a host without libsdl3-dev
-    # (SDL3 transitive via nq_core would break the build).
-    target_link_libraries(nq_test PRIVATE nq_core)
+    target_link_libraries(nq_test PRIVATE nq_core Threads::Threads)
 
     add_test(NAME nq_test COMMAND nq_test)
 endif()
