@@ -1,83 +1,73 @@
 /*
- * nq — keyboard state machine.
+ * nq — input state.
  *
- * Pure C, no SDL dependency on the data side — SDL3 lives behind the
- * bridge functions (nq_input_make_keydown_event / nq_input_make_keyup_event)
- * so tests can drive the state machine without SDL3 dev headers.
+ * Tracks keyboard + mouse state across frames. Edge detection (pressed /
+ * released) is computed against the previous frame's snapshot, so callers
+ * must call nq_input_begin_frame() at the start of each render tick before
+ * SDL3 (or whichever backend) pumps events that update the current state.
  *
- * Lifecycle per frame:
- *   1. nq_input_poll_begin(in)   — clear edges from previous frame
- *   2. for each event: nq_input_process(in, ev)
- *   3. queries (pressed/released/down) return correct values
+ * Mouse deltas accumulate between begin_frame() calls and are read with
+ * nq_input_mouse_dx() / nq_input_mouse_dy(). This matches SDL3's relative
+ * motion model so a hover during one frame registers as dx/dy in the next.
  *
- * Edges stick for one frame: a key DOWN registers true from _pressed()
- * once at the frame it arrived, and continues to register from _down()
- * until _released_ fires.
+ * Intentionally engine-internal — no SDL3 types here. The backend (SDL3
+ * events, raw input, network events from a remote controller, …) pumps
+ * values into NqInput via nq_input_pump_* setters. Keeping this in pure C
+ * keeps the module unit-testable without a display server.
  */
 #ifndef NQ_INPUT_H
 #define NQ_INPUT_H
 
-#include <stdbool.h>
 #include <stdint.h>
 
-#define NQ_KEY_COUNT 256
-
-typedef enum {
-    NQ_KEY_NONE = 0,
-    NQ_KEY_A, NQ_KEY_B, NQ_KEY_C, NQ_KEY_D, NQ_KEY_E, NQ_KEY_F,
-    NQ_KEY_G, NQ_KEY_H, NQ_KEY_I, NQ_KEY_J, NQ_KEY_K, NQ_KEY_L,
-    NQ_KEY_M, NQ_KEY_N, NQ_KEY_O, NQ_KEY_P, NQ_KEY_Q, NQ_KEY_R,
-    NQ_KEY_S, NQ_KEY_T, NQ_KEY_U, NQ_KEY_V, NQ_KEY_W, NQ_KEY_X,
-    NQ_KEY_Y, NQ_KEY_Z,
-    NQ_KEY_0, NQ_KEY_1, NQ_KEY_2, NQ_KEY_3, NQ_KEY_4,
-    NQ_KEY_5, NQ_KEY_6, NQ_KEY_7, NQ_KEY_8, NQ_KEY_9,
-    NQ_KEY_SPACE, NQ_KEY_ENTER, NQ_KEY_ESCAPE, NQ_KEY_TAB, NQ_KEY_BACKSPACE,
-    NQ_KEY_LEFT, NQ_KEY_RIGHT, NQ_KEY_UP, NQ_KEY_DOWN,
-    NQ_KEY_LSHIFT, NQ_KEY_RSHIFT, NQ_KEY_LCTRL, NQ_KEY_RCTRL,
-    NQ_KEY_LALT, NQ_KEY_RALT,
-    NQ_KEY_UNKNOWN = NQ_KEY_COUNT - 1
-} NqKey;
-
-typedef enum {
-    NQ_EVENT_NONE     = 0,
-    NQ_EVENT_KEY_DOWN = 1,
-    NQ_EVENT_KEY_UP   = 2,
-    NQ_EVENT_QUIT     = 3,
-} NqEventKind;
+#define NQ_KEY_MAX       512
+#define NQ_MOUSE_BUTTON_LEFT   0x1
+#define NQ_MOUSE_BUTTON_RIGHT  0x2
+#define NQ_MOUSE_BUTTON_MIDDLE 0x4
 
 typedef struct {
-    NqEventKind kind;
-    NqKey       key;
-} NqEvent;
+    uint8_t current[NQ_KEY_MAX];
+    uint8_t prev[NQ_KEY_MAX];
+} NqKeyboard;
 
-typedef struct NqInput NqInput;
+typedef struct {
+    int  x;
+    int  y;
+    int  rel_x;     /* accumulated since last begin_frame() */
+    int  rel_y;
+    int  buttons;   /* bitmask of NQ_MOUSE_BUTTON_* */
+    int  prev_buttons;
+} NqMouse;
 
-NqInput *nq_input_create(void);
-void     nq_input_destroy(NqInput *in);
+typedef struct {
+    NqKeyboard kb;
+    NqMouse    mouse;
+} NqInput;
 
-/* Feed one event. Edge transitions are tracked internally; cleared by
- * nq_input_poll_begin() at the start of the next frame. */
-void nq_input_process(NqInput *in, NqEvent ev);
+void nq_input_init(NqInput *in);
 
-/* Per-frame: clears the edge flags from the previous frame. Call BEFORE
- * pumping events for the new frame. */
-void nq_input_poll_begin(NqInput *in);
+/* Call at the top of each frame, before the event pump. Resets relative
+ * mouse deltas to 0. Keyboard prev snapshot is updated here so edge
+ * detection against the just-finished frame is correct. */
+void nq_input_begin_frame(NqInput *in);
 
-/* Edge queries — true for exactly one frame on the transition. */
-bool nq_input_pressed (const NqInput *in, NqKey key);
-bool nq_input_released(const NqInput *in, NqKey key);
+/* Backend setters — called by the platform event pump, once per
+ * physical event. Key scancodes follow SDL3 convention (1..512). */
+void nq_input_set_key(NqInput *in, int scancode, int down);
+void nq_input_set_mouse_pos(NqInput *in, int x, int y);
+void nq_input_set_mouse_button(NqInput *in, int button_mask);
 
-/* Level query — true while the key is held (after DOWN, until UP). */
-bool nq_input_down(const NqInput *in, NqKey key);
+/* Queries. `pressed` = edge down this frame; `released` = edge up.
+ * `down` = currently held (regardless of when pressed). */
+int nq_input_key_down(const NqInput *in, int scancode);
+int nq_input_key_pressed(const NqInput *in, int scancode);
+int nq_input_key_released(const NqInput *in, int scancode);
 
-/* Quit flag — set when a NQ_EVENT_QUIT arrived during process(). Cleared
- * by poll_begin() with the rest of the edges. */
-bool nq_input_quit(const NqInput *in);
-
-/* SDL3 bridge — these are the only SDL-aware pieces. They take an
- * SDL_Keycode (the runtime type is int because we don't want to
- * include SDL3 in this header's consumers). */
-NqEvent nq_input_make_keydown_event(int sdl_keycode);
-NqEvent nq_input_make_keyup_event  (int sdl_keycode);
+int nq_input_mouse_x(const NqInput *in);
+int nq_input_mouse_y(const NqInput *in);
+int nq_input_mouse_dx(const NqInput *in);
+int nq_input_mouse_dy(const NqInput *in);
+int nq_input_mouse_down(const NqInput *in, int button_mask);
+int nq_input_mouse_pressed(const NqInput *in, int button_mask);
 
 #endif /* NQ_INPUT_H */

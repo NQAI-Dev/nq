@@ -1,123 +1,71 @@
 #include "nq/input.h"
 
-#include <stdlib.h>
 #include <string.h>
 
-struct NqInput {
-    /* Bitset: bit i set ↔ key i is currently held (DOWN without UP). */
-    uint8_t down[NQ_KEY_COUNT / 8];
-    /* Bitset: transitions in the current frame. */
-    uint8_t pressed [NQ_KEY_COUNT / 8];
-    uint8_t released[NQ_KEY_COUNT / 8];
-    bool quit;
-};
-
-static void set_bit(uint8_t *bits, int idx)   { bits[idx / 8] |=  (uint8_t)(1u << (idx % 8)); }
-static void clr_bit(uint8_t *bits, int idx)   { bits[idx / 8] &= ~(uint8_t)(1u << (idx % 8)); }
-static bool get_bit(const uint8_t *bits, int idx) { return (bits[idx / 8] >> (idx % 8)) & 1u; }
-
-static bool in_range(NqKey key) { return (int)key >= 0 && (int)key < NQ_KEY_COUNT; }
-
-NqInput *nq_input_create(void) {
-    NqInput *in = calloc(1, sizeof(NqInput));
-    return in;
-}
-
-void nq_input_destroy(NqInput *in) {
-    free(in);
-}
-
-void nq_input_poll_begin(NqInput *in) {
+void nq_input_init(NqInput *in) {
     if (!in) return;
-    memset(in->pressed,  0, sizeof(in->pressed));
-    memset(in->released, 0, sizeof(in->released));
-    in->quit = false;
+    memset(&in->kb, 0, sizeof(in->kb));
+    memset(&in->mouse, 0, sizeof(in->mouse));
 }
 
-void nq_input_process(NqInput *in, NqEvent ev) {
+void nq_input_begin_frame(NqInput *in) {
     if (!in) return;
-    switch (ev.kind) {
-        case NQ_EVENT_KEY_DOWN:
-            if (ev.key == NQ_KEY_NONE) return;
-            set_bit(in->down, ev.key);
-            set_bit(in->pressed, ev.key);
-            break;
-        case NQ_EVENT_KEY_UP:
-            if (ev.key == NQ_KEY_NONE) return;
-            clr_bit(in->down, ev.key);
-            set_bit(in->released, ev.key);
-            break;
-        case NQ_EVENT_QUIT:
-            in->quit = true;
-            break;
-        case NQ_EVENT_NONE:
-        default:
-            break;
-    }
+    /* Snapshot of "current" becomes "prev" for edge detection. The actual
+     * current state is overwritten by the event pump during the frame. */
+    memcpy(&in->kb.prev, &in->kb.current, sizeof(in->kb.prev));
+    in->mouse.prev_buttons = in->mouse.buttons;
+    in->mouse.rel_x = 0;
+    in->mouse.rel_y = 0;
 }
 
-bool nq_input_pressed(const NqInput *in, NqKey key) {
-    if (!in || !in_range(key)) return false;
-    return get_bit(in->pressed, key);
+void nq_input_set_key(NqInput *in, int scancode, int down) {
+    if (!in || scancode < 0 || scancode >= NQ_KEY_MAX) return;
+    in->kb.current[scancode] = down ? 1 : 0;
 }
 
-bool nq_input_released(const NqInput *in, NqKey key) {
-    if (!in || !in_range(key)) return false;
-    return get_bit(in->released, key);
+void nq_input_set_mouse_pos(NqInput *in, int x, int y) {
+    if (!in) return;
+    in->mouse.rel_x += (x - in->mouse.x);
+    in->mouse.rel_y += (y - in->mouse.y);
+    in->mouse.x = x;
+    in->mouse.y = y;
 }
 
-bool nq_input_down(const NqInput *in, NqKey key) {
-    if (!in || !in_range(key)) return false;
-    return get_bit(in->down, key);
+void nq_input_set_mouse_button(NqInput *in, int button_mask) {
+    if (!in) return;
+    in->mouse.buttons = button_mask & (NQ_MOUSE_BUTTON_LEFT |
+                                      NQ_MOUSE_BUTTON_RIGHT |
+                                      NQ_MOUSE_BUTTON_MIDDLE);
 }
 
-bool nq_input_quit(const NqInput *in) {
-    if (!in) return false;
-    return in->quit;
+int nq_input_key_down(const NqInput *in, int scancode) {
+    if (!in || scancode < 0 || scancode >= NQ_KEY_MAX) return 0;
+    return in->kb.current[scancode];
 }
 
-/* SDL3 → NqKey. Returns NQ_KEY_NONE for unmapped scancodes. The
- * caller (typically the example) is responsible for the SDL events
- * loop; we don't reach into SDL ourselves.
- */
-static NqKey nq_sdl_keycode_to_nq_key(int sdl_keycode) {
-    if (sdl_keycode >= 'a' && sdl_keycode <= 'z') {
-        return (NqKey)(NQ_KEY_A + (sdl_keycode - 'a'));
-    }
-    if (sdl_keycode >= '0' && sdl_keycode <= '9') {
-        return (NqKey)(NQ_KEY_0 + (sdl_keycode - '0'));
-    }
-    /* SDL3 special keys */
-    switch (sdl_keycode) {
-        case 0x20: return NQ_KEY_SPACE;
-        case 0x0D: return NQ_KEY_ENTER;
-        case 0x09: return NQ_KEY_TAB;
-        case 0x08: return NQ_KEY_BACKSPACE;
-        case 0x1B: return NQ_KEY_ESCAPE;
-        case 1073741906: return NQ_KEY_LEFT;
-        case 1073741903: return NQ_KEY_RIGHT;
-        case 1073741904: return NQ_KEY_UP;
-        case 1073741905: return NQ_KEY_DOWN;
-        case 1073742049: return NQ_KEY_LSHIFT;
-        case 1073742050: return NQ_KEY_RSHIFT;
-        case 1073742048: return NQ_KEY_LCTRL;
-        case 1073742052: return NQ_KEY_RCTRL;
-        case 1073742054: return NQ_KEY_LALT;
-        case 1073742057: return NQ_KEY_RALT;
-    }
-    return NQ_KEY_NONE;
+int nq_input_key_pressed(const NqInput *in, int scancode) {
+    if (!in || scancode < 0 || scancode >= NQ_KEY_MAX) return 0;
+    return in->kb.current[scancode] && !in->kb.prev[scancode];
 }
 
-NqEvent nq_input_make_keydown_event(int sdl_keycode) {
-    NqEvent ev = { NQ_EVENT_NONE, NQ_KEY_NONE };
-    ev.kind = NQ_EVENT_KEY_DOWN;
-    ev.key  = nq_sdl_keycode_to_nq_key(sdl_keycode);
-    return ev;
+int nq_input_key_released(const NqInput *in, int scancode) {
+    if (!in || scancode < 0 || scancode >= NQ_KEY_MAX) return 0;
+    return !in->kb.current[scancode] && in->kb.prev[scancode];
 }
 
-NqEvent nq_input_make_keyup_event(int sdl_keycode) {
-    NqEvent ev = { NQ_EVENT_NONE, NQ_KEY_NONE };
-    ev.kind = NQ_EVENT_KEY_UP;
-    ev.key  = nq_sdl_keycode_to_nq_key(sdl_keycode);
-    return ev;
+int nq_input_mouse_x(const NqInput *in)  { return in ? in->mouse.x : 0; }
+int nq_input_mouse_y(const NqInput *in)  { return in ? in->mouse.y : 0; }
+int nq_input_mouse_dx(const NqInput *in) { return in ? in->mouse.rel_x : 0; }
+int nq_input_mouse_dy(const NqInput *in) { return in ? in->mouse.rel_y : 0; }
+
+int nq_input_mouse_down(const NqInput *in, int button_mask) {
+    if (!in) return 0;
+    return (in->mouse.buttons & button_mask) == button_mask;
+}
+
+int nq_input_mouse_pressed(const NqInput *in, int button_mask) {
+    if (!in) return 0;
+    int now  = in->mouse.buttons & button_mask;
+    int prev = in->mouse.prev_buttons & button_mask;
+    return now && !prev;
 }
