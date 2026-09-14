@@ -90,6 +90,76 @@ header in `include/nq/`.
 - Networking — if needed, separate `nq_net` lib on top of the event loop.
 - Scripting (Lua / WASM) — adds API and build complexity, only if needed later.
 
+## Building on top
+
+End-to-end skeleton of a minimal nq application, using every Phase 1 module:
+
+```c
+#include <SDL3/SDL.h>
+#include <nq/common.h>
+#include <nq/graphics.h>
+#include <nq/input.h>
+#include <nq/texture.h>
+
+int main(void) {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window *win = SDL_CreateWindow("demo", 800, 600, 0);
+    NqRenderer *ren = nq_renderer_create((NqWindow *)win);
+    NqInput input;
+    nq_input_init(&input);
+    /* NqTexture *tex = nq_texture_load(ren, "sprite.bmp"); */
+
+    int running = 1;
+    while (running) {
+        nq_input_begin_frame(&input);
+        SDL_Event ev;
+        while (SDL_PollEvent(&ev)) {
+            switch (ev.type) {
+                case SDL_EVENT_QUIT: running = 0; break;
+                case SDL_EVENT_KEY_DOWN: {
+                    SDL_Keycode key = ev.key.key;
+                    int sc = (key >= 0) ? (int)key : -1;
+                    nq_input_set_key(&input, sc, 1);
+                    break;
+                }
+                default: break;
+            }
+        }
+
+        nq_renderer_clear(ren, NQ_COLOR_RGB(20, 24, 32));
+        /* nq_texture_draw(tex, 100, 100); */
+
+        /* Move a box by holding arrow keys. */
+        static int x = 100, y = 100;
+        if (nq_input_key_down(&input, SDLK_RIGHT)) x += 2;
+        if (nq_input_key_down(&input, SDLK_LEFT))  x -= 2;
+        if (nq_input_key_down(&input, SDLK_DOWN))  y += 2;
+        if (nq_input_key_down(&input, SDLK_UP))    y -= 2;
+        nq_renderer_fill_rect(ren, NQ_COLOR_RGB(220, 90, 60), x, y, 32, 32);
+
+        nq_renderer_present(ren);
+    }
+
+    /* nq_texture_destroy(tex); */
+    nq_renderer_destroy(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+    return 0;
+}
+```
+
+Key conventions the example relies on:
+- `nq_renderer_clear` / `nq_renderer_fill_rect` are stateful — colour is set
+  each call, so callers wanting the same colour for many primitives can use
+  `nq_renderer_set_draw_color` first to avoid per-primitive state flips.
+- `nq_input_begin_frame` must run at the top of each tick so edge detection
+  (`pressed` / `released`) and `mouse dx/dy` reset correctly.
+- Module boundaries are clean: `nq/graphics.h`, `nq/texture.h`, and
+  `nq/input.h` do not include each other or SDL3 in their public surfaces,
+  so swapping the backend means rewriting only `src/nq_graphics.c` and
+  `src/nq_input.c` driver code.
+
 ## Build
 
 ```sh
