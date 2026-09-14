@@ -1,0 +1,25 @@
+# Build output
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# CMake / IDE
+.cache/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+.vscode/
+.idea/
+*.user
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*~
+*.swp
