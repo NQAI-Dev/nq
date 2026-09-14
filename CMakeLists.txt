@@ -21,6 +21,7 @@ add_library(nq_core STATIC
     src/nq_input.c
     src/nq_log.c
     src/nq_texture.c
+    src/nq_clock.c
 )
 target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
