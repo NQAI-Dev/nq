@@ -7,12 +7,19 @@ pace.
 
 ## Status
 
-Pre-alpha. Two example programs: `nq_hello_window` — opens a 640x480 SDL3
-window, clears to dark blue, draws a single bouncing colored square that
-bounces off the edges. SDL3 is wired through the public engine API; the
-example never calls SDL3 directly.
+Pre-alpha. Three example programs:
+- `nq_hello_window` — opens a 640x480 SDL3 window, draws a single bouncing
+  colored square that bounces off the edges
+- `nq_animated_square` — kitchen-sink demo wiring `nq_clock + nq_scene +
+  nq_action_manager + nq_action_tween + nq_animation + nq_renderer`; RGB
+  channels cycle through sine-in-out independently
+- `nq_controlled_square` — arrow keys / WASD steer a box with friction
+  and wall bouncing. Exercises the full input pipeline
+  (`SDL_PollEvent → nq_input_pump_sdl3_event → nq_input_* queries`)
 
-Phases 1, 2, and 3 are complete. See [Roadmap](#roadmap) below for the full picture.
+SDL3 is wired through the public engine API; the examples never call
+SDL3 directly. Phases 1, 2, and 3 are complete. Phase 6 (tooling and
+examples) is in progress.
 
 ## Roadmap
 
@@ -49,8 +56,17 @@ header in `include/nq/`.
 ### Phase 3 — scene graph + scheduling ✅
 - `nq_node` — tree structure, transform2d, lifecycle (init/update/draw/destroy)
 - `nq_scene` — root scene, layering, scene stack (push/pop for pauses)
-- `nq_action` — scheduler with priorities. Tween / CallFunc / Repeat /
-  Sequence / Spawn (cocos2d-x inspired)
+- `nq_action` — base action state machine (RUNNING / FINISHED /
+  CANCELLED)
+- Action composition primitives — each composes one or more
+  `NqAction`s behind the same tick/update interface so they all work
+  with `nq_action_manager`:
+  - `nq_action_delay` — RUNNING for `duration` seconds, then FINISHED
+  - `nq_action_tween` — RUNNING until an `NqAnimFloat` reaches its end
+  - `nq_action_sequence` — chain N sub-actions serially (A→B→C)
+  - `nq_action_spawn` — N sub-actions in parallel, FINISHED when all done
+  - `nq_action_manager` — owns list of `NqAction*`, ticks all per frame,
+    prunes FINISHED/CANCELLED
 
 ### Phase 4 — 2D physics
 - `nq_physics2d` — AABB + circles + oriented boxes (SAT if I get there)
