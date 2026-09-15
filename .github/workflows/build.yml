@@ -26,7 +26,7 @@ jobs:
               brew install sdl3 cmake ninja
           - os: windows-latest
             install: |
-              choco install -y sdl3 cmake ninja
+              choco install -y sdl3 --prerelease cmake ninja
 
     steps:
       - name: Checkout

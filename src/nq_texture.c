@@ -14,12 +14,6 @@ struct NqTexture {
     char *path;  /* for logs; NULL for in-memory textures */
 };
 
-/* Internal helper: pull SDL_Renderer* out of our opaque NqRenderer.
- * Both were created in `src/nq_graphics.c` and the layout is fixed. */
-static SDL_Renderer *nq_renderer_sdl(NqRenderer *r) {
-    return ((struct NqRenderer *)r)->sdl_renderer;
-}
-
 /* Try SDL3_image's IMG_Load path via weak-style fallback: if the symbol
  * isn't available at link time, we fall back to SDL3's BMP-only loader.
  * We don't drag libsdl3-image as a hard dep — engines today prefer optional

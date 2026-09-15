@@ -35,4 +35,15 @@ int        nq_renderer_fill_rect(NqRenderer *r, NqColor color,
                                  int x, int y, int w, int h);
 void       nq_renderer_present(NqRenderer *r);
 
+/* Backend escape hatch: returns the underlying SDL_Renderer* for code
+ * that needs direct SDL access. nq_texture.c uses this to drive
+ * SDL_RenderTexture. If we ever swap to a different backend, this is
+ * the only NqRenderer accessor that needs to change.
+ *
+ * Forward declaration only — full SDL3 types stay out of this header so
+ * other consumers can include nq/graphics.h without pulling SDL3 in. */
+typedef struct SDL_Renderer SDL_Renderer;
+SDL_Renderer *nq_renderer_sdl(NqRenderer *r);
+
+
 #endif /* NQ_GRAPHICS_H */
