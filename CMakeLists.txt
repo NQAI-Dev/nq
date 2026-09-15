@@ -58,6 +58,12 @@ target_link_libraries(nq_hello_window PRIVATE nq_core)
 add_executable(nq_animated_square examples/animated_square.c)
 target_link_libraries(nq_animated_square PRIVATE nq_core)
 
+# Third example: controlled_square — arrow keys / WASD steer a box with
+# friction and wall bouncing. Exercises the full input pipeline:
+# SDL_PollEvent → nq_input_pump_sdl3_event → nq_input_* queries.
+add_executable(nq_controlled_square examples/controlled_square.c)
+target_link_libraries(nq_controlled_square PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
