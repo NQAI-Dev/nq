@@ -62,11 +62,18 @@ header in `include/nq/`.
 - `nq_audio` over SDL3_audio or miniaudio
 - Mix bus (master + SFX + music), per-source pitch/volume, sound pooling
 
-### Phase 6 — tooling & examples
-- Examples: animatedsprite, parallax scrolldemo, tiny arcanoid to demo the stack
-- CI: GitHub Actions on ubuntu-latest + macos-latest + windows-latest
-- Benchmarks via a hand-rolled `nq_bench.h`
-- `tools/nq-conv` — sprite sheet → nq_atlas format converter
+### Phase 6 — tooling & examples (in progress)
+- Examples done:
+  - `examples/hello_window.c` — SDL3 hello window, basic square bounce
+  - `examples/animated_square.c` — kitchen-sink demo of Phase 2 + Phase 3
+  - `examples/controlled_square.c` — input-driven square via
+    `nq_input_pump_sdl3_event`
+- Examples pending: animatedsprite, parallax scrolldemo, tiny arcanoid
+- CI ✅ — GitHub Actions on ubuntu-24.04 / macos-latest / windows-latest
+  via `.github/workflows/build.yml`
+- `nq_bench.h` ✅ — header-only RAII profiler via
+  `SDL_GetPerformanceCounter`, gated by `NQ_BENCH` for production builds
+- `tools/nq-conv` ✅ — sprite-sheet → NqAtlas C-header generator
 
 ## Architectural principles
 
