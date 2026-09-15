@@ -1,6 +1,15 @@
 #include <nq/text.h>
 #include "test_main.c"
 
+/* Forward declarations for tests defined after the NQ_TEST_REGISTER
+ * block — the macro generates __attribute__((constructor)) code that
+ * references these by name, which the compiler must see as forward
+ * declarations even though they are static. */
+static void test_text_width_empty_string(void);
+static void test_text_width_simple_string(void);
+static void test_text_width_with_newline(void);
+static void test_text_width_null_safe(void);
+
 static void test_text_create_destroy_null(void) {
     /* Without SDL3 dev headers on this host we can't construct a real
      * NqRenderer to give to nq_text_create, so the test exercises only
