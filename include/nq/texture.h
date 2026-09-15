@@ -15,6 +15,11 @@
 #include <stdint.h>
 #include "nq/graphics.h"  /* NqRenderer */
 
+/* Forward declaration so consumers can reference SDL_Texture* without
+ * pulling in <SDL3/SDL.h> for the typedef. Same pattern as the
+ * SDL_Renderer forward-decl in nq/graphics.h (d036c99). */
+typedef struct SDL_Texture SDL_Texture;
+
 typedef struct NqTexture NqTexture;
 
 NqTexture *nq_texture_load(NqRenderer *renderer, const char *path);
