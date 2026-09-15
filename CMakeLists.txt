@@ -50,6 +50,13 @@ target_compile_options(nq_core PRIVATE
 add_executable(nq_hello_window examples/hello_window.c)
 target_link_libraries(nq_hello_window PRIVATE nq_core)
 
+# Second example: animated_square — kitchen-sink demo wiring together
+# nq_clock + nq_scene + nq_action_manager + nq_action_tween + nq_animation
+# + nq_renderer. RGB channels cycle through sine-in-out independently so
+# the box's colour is always smoothly shifting.
+add_executable(nq_animated_square examples/animated_square.c)
+target_link_libraries(nq_animated_square PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
