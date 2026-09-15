@@ -8,8 +8,6 @@ static void test_atlas_draw_null_safe(void);
 static void test_atlas_draw_unknown_region_null_texture(void);
 
 static void test_create_destroy(void) {
-
-static void test_create_destroy(void) {
     NqAtlas *a = nq_atlas_create(512, 512, 0);
     NQ_ASSERT(a != NULL);
     NQ_ASSERT_EQ(nq_atlas_width(a), 512);
