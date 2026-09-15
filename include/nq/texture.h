@@ -31,4 +31,11 @@ int        nq_texture_draw_region(NqTexture *tex,
                                   int src_x, int src_y,
                                   int src_w, int src_h);
 
+
+/* Wrap an existing SDL_Texture* into an NqTexture. For tools / tests /
+ * examples that build the underlying texture procedurally rather than
+ * loading it from disk. Caller transfers ownership of the SDL_Texture
+ * to the returned NqTexture (nq_texture_destroy will free it). */
+NqTexture *nq_texture_wrap_sdl(SDL_Texture *sdl_tex, int w, int h);
+
 #endif /* NQ_TEXTURE_H */

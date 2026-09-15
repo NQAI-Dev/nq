@@ -100,3 +100,14 @@ int nq_texture_draw_region(NqTexture *tex,
     SDL_FRect dst = { (float)dst_x, (float)dst_y, (float)src_w, (float)src_h };
     return SDL_RenderTexture(tex->sdl_renderer, tex->sdl_tex, &src, &dst) ? -1 : 0;
 }
+
+NqTexture *nq_texture_wrap_sdl(SDL_Texture *sdl_tex, int w, int h) {
+    if (!sdl_tex) return NULL;
+    NqTexture *tex = calloc(1, sizeof(NqTexture));
+    if (!tex) return NULL;
+    tex->sdl_tex  = sdl_tex;
+    tex->width    = w;
+    tex->height   = h;
+    tex->path     = NULL;
+    return tex;
+}

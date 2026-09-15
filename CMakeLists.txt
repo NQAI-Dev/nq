@@ -74,6 +74,13 @@ target_link_libraries(nq_controlled_square PRIVATE nq_core)
 add_executable(nq_parallax examples/parallax.c)
 target_link_libraries(nq_parallax PRIVATE nq_core)
 
+# Fifth example: animatedsprite — single sprite with 4 procedurally-
+# generated frames in an NqAtlas, cycled via NqAnimFloat. Demonstrates
+# nq_texture + nq_atlas + nq_anim_float pipeline end-to-end without
+# needing real asset files in tree.
+add_executable(nq_animatedsprite examples/animatedsprite.c)
+target_link_libraries(nq_animatedsprite PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
