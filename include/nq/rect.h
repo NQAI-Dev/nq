@@ -76,6 +76,13 @@ static inline NqRect nq_rect_inflate(NqRect r, int dx, int dy) {
     return nq_rect(r.x - dx, r.y - dy, r.w + 2 * dx, r.h + 2 * dy);
 }
 
+/* Center point of the rectangle (as NqVec2i — top-left + size/2,
+ * truncated toward zero). Empty rect (w<=0 or h<=0) returns the
+ * top-left corner. */
+static inline NqVec2i nq_rect_center(NqRect r) {
+    return nq_vec2i(r.x + r.w / 2, r.y + r.h / 2);
+}
+
 /* Linear interpolation between two rects. Each component (x, y, w, h) is
  * interpolated independently and rounded to int. t is clamped to [0,1]
  * so this composes cleanly with `nq_ease` outputs. */
