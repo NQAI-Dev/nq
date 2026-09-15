@@ -122,6 +122,15 @@ int nq_atlas_remove_region(NqAtlas *a, const char *name) {
     return 0;
 }
 
+size_t nq_atlas_count_regions(const NqAtlas *a) {
+    if (!a) return 0;
+    size_t live = 0;
+    for (size_t i = 0; i < a->regions_count; i++) {
+        if (a->regions[i].alive) live++;
+    }
+    return live;
+}
+
 NqRect nq_atlas_find(const NqAtlas *a, const char *name) {
     if (!a || !name) return nq_rect(0, 0, 0, 0);
     for (size_t i = 0; i < a->regions_count; i++) {
