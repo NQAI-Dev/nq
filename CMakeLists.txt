@@ -66,6 +66,13 @@ target_link_libraries(nq_animated_square PRIVATE nq_core)
 add_executable(nq_controlled_square examples/controlled_square.c)
 target_link_libraries(nq_controlled_square PRIVATE nq_core)
 
+# Fourth example: parallax — three coloured rectangles scroll at
+# different speeds based on input. Uses nq_node + nq_scene (tree draw
+# order) + nq_input + nq_clock. No textures — pure procedural rectangles
+# so CI doesn't need any fixture files in tree.
+add_executable(nq_parallax examples/parallax.c)
+target_link_libraries(nq_parallax PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
