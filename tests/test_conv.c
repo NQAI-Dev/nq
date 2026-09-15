@@ -29,11 +29,11 @@ static char *nq_conv_run(int cols, int rows, int tex_w, int tex_h,
     char cmd[1024];
     if (tex_w > 0 && tex_h > 0) {
         snprintf(cmd, sizeof(cmd),
-                 ""%s" /tmp/nq_conv_test_out.h %s %d %d %d %d",
+                 "%s /tmp/nq_conv_test_out.h %s %d %d %d %d",
                  NQ_CONV_BIN, atlas_name, cols, rows, tex_w, tex_h);
     } else {
         snprintf(cmd, sizeof(cmd),
-                 ""%s" /tmp/nq_conv_test_out.h %s %d %d",
+                 "%s /tmp/nq_conv_test_out.h %s %d %d",
                  NQ_CONV_BIN, atlas_name, cols, rows);
     }
     /* The tool writes the generated header to the path passed as argv[1];
