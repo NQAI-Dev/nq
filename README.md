@@ -7,7 +7,7 @@ pace.
 
 ## Status
 
-Pre-alpha. Three example programs:
+Pre-alpha. Four example programs:
 - `nq_hello_window` — opens a 640x480 SDL3 window, draws a single bouncing
   colored square that bounces off the edges
 - `nq_animated_square` — kitchen-sink demo wiring `nq_clock + nq_scene +
@@ -16,6 +16,9 @@ Pre-alpha. Three example programs:
 - `nq_controlled_square` — arrow keys / WASD steer a box with friction
   and wall bouncing. Exercises the full input pipeline
   (`SDL_PollEvent → nq_input_pump_sdl3_event → nq_input_* queries`)
+- `nq_parallax` — three coloured rectangles scroll at different speeds
+  (parallax factor 0.20 / 0.50 / 1.00). Pure procedural rectangles — no
+  texture fixtures needed in tree
 
 SDL3 is wired through the public engine API; the examples never call
 SDL3 directly. Phases 1, 2, and 3 are complete. Phase 6 (tooling and
@@ -79,12 +82,14 @@ header in `include/nq/`.
 - Mix bus (master + SFX + music), per-source pitch/volume, sound pooling
 
 ### Phase 6 — tooling & examples (in progress)
-- Examples done:
+- Examples done (4/5):
   - `examples/hello_window.c` — SDL3 hello window, basic square bounce
   - `examples/animated_square.c` — kitchen-sink demo of Phase 2 + Phase 3
   - `examples/controlled_square.c` — input-driven square via
     `nq_input_pump_sdl3_event`
-- Examples pending: animatedsprite, parallax scrolldemo, tiny arcanoid
+  - `examples/parallax.c` — three layered scrolls at different speeds
+- Examples pending: tiny arcanoid (animatedsprite + parallax scrolldemo
+  deferred — see commit 5fb66b5 for context)
 - CI ✅ — GitHub Actions on ubuntu-24.04 / macos-latest / windows-latest
   via `.github/workflows/build.yml`
 - `nq_bench.h` ✅ — header-only RAII profiler via
