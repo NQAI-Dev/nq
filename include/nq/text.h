@@ -33,6 +33,14 @@ void nq_text_set_color(NqText *t, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
  * the last drawn character (useful for cursor / caret logic). */
 int  nq_text_draw(NqText *t, const char *s, int x, int y);
 
+/* Query: pixel width of a string if drawn with nq_text_draw. Newlines
+ * are treated as "wrap" — i.e. the maximum line width is returned. Used
+ * for layout / centering / alignment: if width is too big, callers can
+ * clip, scale, or split into multiple lines.
+ *
+ * Out-of-range characters render as '?' width (matches draw behaviour). */
+int  nq_text_width(NqText *t, const char *s);
+
 /* Query: width and height of a glyph for the active font. */
 int  nq_text_glyph_w(NqText *t, char c);
 int  nq_text_glyph_h(NqText *t, char c);
