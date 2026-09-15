@@ -25,6 +25,12 @@ static NqActionState seq_tick(NqAction *a, float dt, void *user) {
     return NQ_ACTION_RUNNING;
 }
 
+static void seq_reset(void *user) {
+    /* Restart the sequence from the first sub-action. */
+    NqActionSequence *s = (NqActionSequence *)user;
+    if (s) s->current = 0;
+}
+
 NqActionSequence *nq_action_sequence_create(const NqAction **subs,
                                             size_t count,
                                             int take_ownership) {
@@ -43,6 +49,7 @@ NqActionSequence *nq_action_sequence_create(const NqAction **subs,
         }
     }
     s->action = nq_action_create(seq_tick, NULL, s);
+    nq_action_set_reset(s->action, seq_reset);
     if (!s->action) {
         free(s);
         return NULL;

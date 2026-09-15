@@ -1,3 +1,6 @@
+#include <stddef.h>
+#include <stddef.h>
+
 /*
  * nq — spawn action (parallel composite).
  *

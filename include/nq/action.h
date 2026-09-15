@@ -30,6 +30,15 @@ typedef NqActionState (*nq_action_tick_fn)(NqAction *a, float dt, void *user);
  * (whether by the tick callback or by an external cancel). May be NULL. */
 typedef void (*nq_action_done_fn)(NqAction *a, void *user);
 
+/* Optional: re-arm the action so the next update() ticks from the
+ * beginning again. Takes the action's user pointer (rather than the
+ * action itself) so composition primitives can install a reset_fn
+ * without exposing NqAction's internal struct layout.
+ *
+ * NULL means "not resettable" — nq_action_reset is a no-op on such
+ * actions and they stay FINISHED. */
+typedef void (*nq_action_reset_fn)(void *user);
+
 NqAction *nq_action_create(nq_action_tick_fn tick,
                            nq_action_done_fn done,
                            void *user);
@@ -40,6 +49,21 @@ NqActionState nq_action_update(NqAction *a, float dt);
 
 /* Forced state transitions. */
 void nq_action_cancel(NqAction *a);
+
+/* Install a reset callback on a freshly-created action. Composition
+ * primitives call this from their constructors to expose reset
+ * semantics; user-defined actions built on top of nq_action_create
+ * can use it too. Pass NULL to remove an existing reset callback. */
+void nq_action_set_reset(NqAction *a, nq_action_reset_fn reset);
+
+/* Re-arm the action: if the action has a reset_fn installed, calls it
+ * to put the action back into RUNNING state with its internal counters
+ * zeroed. Otherwise this is a no-op (the action stays FINISHED).
+ *
+ * Note: nq_action_reset itself does NOT trigger the action's done()
+ * callback; it just reverses a FINISHED transition. The callback had
+ * already fired when the action originally terminated. */
+void nq_action_reset(NqAction *a);
 
 /* Queries. */
 NqActionState nq_action_state(const NqAction *a);

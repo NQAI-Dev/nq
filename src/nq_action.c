@@ -5,6 +5,7 @@
 struct NqAction {
     nq_action_tick_fn tick;
     nq_action_done_fn done;
+    nq_action_reset_fn reset;
     void             *user;
     NqActionState    state;
     int               done_fired;   /* 1 once `done` callback has run */
@@ -47,6 +48,27 @@ void nq_action_cancel(NqAction *a) {
         a->done(a, a->user);
         a->done_fired = 1;
     }
+}
+
+void nq_action_reset(NqAction *a) {
+    if (!a) return;
+    /* Reverse the FINISHED/CANCELLED transition so the action becomes
+     * RUNNING again, then let the action's reset_fn (if any) zero
+     * internal counters. Without a reset_fn we still flip the state
+     * so the next update() reaches the tick callback, but the tick
+     * callback will see stale internal state — that's why the
+     * primitives install their own reset_fn. */
+    if (a->state == NQ_ACTION_RUNNING) return;
+    a->state = NQ_ACTION_RUNNING;
+    a->done_fired = 0;
+    if (a->reset) {
+        a->reset(a->user);
+    }
+}
+
+void nq_action_set_reset(NqAction *a, nq_action_reset_fn reset) {
+    if (!a) return;
+    a->reset = reset;
 }
 
 NqActionState nq_action_state(const NqAction *a) {

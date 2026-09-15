@@ -22,7 +22,8 @@
 typedef struct {
     NqAction *action;
     NqAction *sub;
-    int       remaining;   /* iterations left; -1 = infinite */
+    int       remaining;       /* iterations left; -1 = infinite */
+    int       original_count;   /* saved at create so reset can restore it */
     int       infinite;
 } NqActionRepeat;
 

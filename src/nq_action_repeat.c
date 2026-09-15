@@ -1,4 +1,4 @@
-#include "nq_action_repeat.h"
+#include "nq/action_repeat.h"
 
 #include <stdlib.h>
 
@@ -15,26 +15,24 @@ static NqActionState repeat_tick(NqAction *a, float dt, void *user) {
     }
     /* Sub terminated — should we restart? */
     if (r->infinite) {
-        /* No API to "restart" an NqAction without recreating it. The
-         * user's tick callback however can return RUNNING again from the
-         * start, which is the same as restarting the sub for our
-         * purposes. Since we can't reset internal state here, we just
-         * keep RUNNING and let the user's tick keep firing (a no-op
-         * for one frame, then it'll keep returning RUNNING).
-         *
-         * But this breaks the "one sub-action that restarts N times"
-         * contract for infinite mode. A cleaner design would have
-         * nq_action_reset(sub) — future tick. For now, mark this with a
-         * note: infinite mode requires the sub's tick to be re-callable. */
+        /* The user's tick callback returns RUNNING on re-entry after a
+         * previous FINISHED (counter_tick does this; a pure "play clip"
+         * action doesn't). So infinite mode just keeps the wrapper
+         * RUNNING and trusts the sub. */
         return NQ_ACTION_RUNNING;
     }
-    /* Finite mode: decrement counter, restart sub by ticking it again.
-     * Same caveat: without reset, the sub's tick needs to behave
-     * well when called after FINISHED — that's a sub-by-sub concern
-     * (e.g. counter_tick returns RUNNING until target). */
+    /* Finite mode: decrement counter. When it hits 0 we stop. */
     if (r->remaining > 0) r->remaining--;
     if (r->remaining <= 0) return NQ_ACTION_FINISHED;
     return NQ_ACTION_RUNNING;
+}
+
+/* Restore the iteration counter to the value supplied at construction.
+ * For infinite mode the "original count" is -1 (forever) so reset
+ * leaves it at -1. */
+static void repeat_reset(void *user) {
+    NqActionRepeat *r = (NqActionRepeat *)user;
+    if (r) r->remaining = r->original_count;
 }
 
 NqActionRepeat *nq_action_repeat_create(NqAction *sub, int times) {
@@ -43,12 +41,14 @@ NqActionRepeat *nq_action_repeat_create(NqAction *sub, int times) {
     if (!r) return NULL;
     r->sub = sub;
     r->remaining = times;
+    r->original_count = times;
     r->infinite = 0;
     r->action = nq_action_create(repeat_tick, NULL, r);
     if (!r->action) {
         free(r);
         return NULL;
     }
+    nq_action_set_reset(r->action, repeat_reset);
     return r;
 }
 
@@ -58,12 +58,14 @@ NqActionRepeat *nq_action_repeat_forever_create(NqAction *sub) {
     if (!r) return NULL;
     r->sub = sub;
     r->remaining = -1;
+    r->original_count = -1;
     r->infinite = 1;
     r->action = nq_action_create(repeat_tick, NULL, r);
     if (!r->action) {
         free(r);
         return NULL;
     }
+    nq_action_set_reset(r->action, repeat_reset);
     return r;
 }
 
@@ -84,6 +86,5 @@ NqAction *nq_action_repeat_action(NqActionRepeat *r) {
 }
 
 int nq_action_repeat_remaining(const NqActionRepeat *r) {
-    if (!r) return 0;
-    return r->remaining;
+    return r ? r->remaining : 0;
 }

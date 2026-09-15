@@ -13,12 +13,18 @@ static NqActionState tween_tick(NqAction *a, float dt, void *user) {
         : NQ_ACTION_RUNNING;
 }
 
+static void tween_reset(void *user) {
+    NqAnimFloat *anim = (NqAnimFloat *)user;
+    if (anim) nq_anim_float_restart(anim);
+}
+
 NqActionTween *nq_action_tween_create(NqAnimFloat *anim) {
     if (!anim) return NULL;
     NqActionTween *t = calloc(1, sizeof(NqActionTween));
     if (!t) return NULL;
     t->anim = anim;
     t->action = nq_action_create(tween_tick, NULL, anim);
+    nq_action_set_reset(t->action, tween_reset);
     if (!t->action) {
         free(t);
         return NULL;

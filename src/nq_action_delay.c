@@ -14,6 +14,11 @@ static NqActionState delay_tick(NqAction *a, float dt, void *user) {
     return NQ_ACTION_RUNNING;
 }
 
+static void delay_reset(void *user) {
+    NqActionDelay *d = (NqActionDelay *)user;
+    if (d) d->elapsed_seconds = 0.0f;
+}
+
 NqActionDelay *nq_action_delay_create(float duration_seconds) {
     if (duration_seconds < 0.0f) duration_seconds = 0.0f;
     NqActionDelay *d = calloc(1, sizeof(NqActionDelay));
@@ -21,6 +26,7 @@ NqActionDelay *nq_action_delay_create(float duration_seconds) {
     d->duration_seconds = duration_seconds;
     d->elapsed_seconds = 0.0f;
     d->action = nq_action_create(delay_tick, NULL, d);
+    nq_action_set_reset(d->action, delay_reset);
     if (!d->action) {
         free(d);
         return NULL;
