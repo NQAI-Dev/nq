@@ -119,5 +119,28 @@ NQ_TEST_REGISTER("atlas_remove_region",            test_remove_region);
 NQ_TEST_REGISTER("atlas_remove_then_readd",       test_remove_then_re_add);
 NQ_TEST_REGISTER("atlas_iter_only_live",           test_iter_visits_only_live);
 NQ_TEST_REGISTER("atlas_grows_beyond_initial",     test_grow_beyond_initial_capacity);
+
+static void test_count_regions_tracks_live(void) {
+    NqAtlas *a = nq_atlas_create(64, 64, 0);
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 0);
+    nq_atlas_add_region(a, "a", nq_rect(0, 0, 8, 8));
+    nq_atlas_add_region(a, "b", nq_rect(8, 0, 8, 8));
+    nq_atlas_add_region(a, "c", nq_rect(16, 0, 8, 8));
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 3);
+    /* Remove one — count drops by 1 */
+    nq_atlas_remove_region(a, "b");
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 2);
+    /* Add one — reuses the freed slot, count back to 3 */
+    nq_atlas_add_region(a, "d", nq_rect(24, 0, 8, 8));
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 3);
+    nq_atlas_destroy(a);
+}
+
+static void test_count_regions_null_safe(void) {
+    NQ_ASSERT_EQ(nq_atlas_count_regions(NULL), 0);
+}
+
+NQ_TEST_REGISTER("atlas_count_regions_tracks_live", test_count_regions_tracks_live);
+NQ_TEST_REGISTER("atlas_count_regions_null_safe",  test_count_regions_null_safe);
 NQ_TEST_REGISTER("atlas_draw_null_safe",          test_atlas_draw_null_safe);
 NQ_TEST_REGISTER("atlas_draw_unknown_region",     test_atlas_draw_unknown_region_null_texture);
