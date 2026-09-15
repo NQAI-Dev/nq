@@ -33,6 +33,12 @@ target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_link_libraries(nq_core PUBLIC SDL3::SDL3 Threads::Threads)
+
+# libm on Linux for powf/sinf/cosf in nq_tween.c. macOS bundles libm into
+# libSystem (no extra link needed); Windows has math in the CRT.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(nq_core PUBLIC m)
+endif()
 target_compile_options(nq_core PRIVATE
     -Wall -Wextra
 )

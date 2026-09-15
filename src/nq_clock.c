@@ -1,14 +1,23 @@
 #include "nq/clock.h"
 
-#include <stdlib.h>
-#include <time.h>
+#include <SDL3/SDL.h>
 
+#include <stdlib.h>
+
+/* Cross-platform monotonic time source via SDL3. SDL_GetPerformanceCounter
+ * returns SDL3 ticks (CPU-specific high-res), SDL_GetPerformanceFrequency
+ * returns ticks-per-second. Conversion to nanoseconds is exact up to
+ * 2^32 / freq before precision loss; on a 3 GHz CPU with SDL3 freq ≈
+ * 10^9 Hz, that's hours of continuous runtime before precision drift. */
 static uint64_t nq_clock_default_now_ns(void) {
-    struct timespec ts;
-    /* CLOCK_MONOTONIC is unaffected by wall-clock changes (NTP / DST) and
-     * is the right source for frame timing on POSIX. */
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (uint64_t)ts.tv_sec * 1000000000ull + (uint64_t)ts.tv_nsec;
+    static Uint64 freq = 0;
+    if (freq == 0) {
+        freq = SDL_GetPerformanceFrequency();
+    }
+    Uint64 ticks = SDL_GetPerformanceCounter();
+    /* Round to nearest ns to keep frame deltas stable on platforms where
+     * perf frequency is a round multiple of 10^9. */
+    return (uint64_t)((double)ticks * 1e9 / (double)freq + 0.5);
 }
 
 static nq_clock_now_fn_t s_now_fn = nq_clock_default_now_ns;
