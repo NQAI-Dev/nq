@@ -76,4 +76,18 @@ static inline NqRect nq_rect_inflate(NqRect r, int dx, int dy) {
     return nq_rect(r.x - dx, r.y - dy, r.w + 2 * dx, r.h + 2 * dy);
 }
 
+/* Linear interpolation between two rects. Each component (x, y, w, h) is
+ * interpolated independently and rounded to int. t is clamped to [0,1]
+ * so this composes cleanly with `nq_ease` outputs. */
+static inline NqRect nq_rect_lerp(NqRect a, NqRect b, float t) {
+    if (t < 0.0f) t = 0.0f;
+    if (t > 1.0f) t = 1.0f;
+    return nq_rect(
+        (int)(a.x + (b.x - a.x) * t),
+        (int)(a.y + (b.y - a.y) * t),
+        (int)(a.w + (b.w - a.w) * t),
+        (int)(a.h + (b.h - a.h) * t)
+    );
+}
+
 #endif /* NQ_RECT_H */
