@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 project(nq C)
 
+# Tools (currently just nq-conv) live in their own subdirectory with
+# their own CMakeLists. Adding here builds them as part of the top-level
+# CMake project so `ctest` and friends can run them.
+add_subdirectory(tools/nq-conv)
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
