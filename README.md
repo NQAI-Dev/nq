@@ -12,7 +12,7 @@ window, clears to dark blue, draws a single bouncing colored square that
 bounces off the edges. SDL3 is wired through the public engine API; the
 example never calls SDL3 directly.
 
-Phase 1 (engine core primitives) is in progress.
+Phases 1, 2, and 3 are complete. See [Roadmap](#roadmap) below for the full picture.
 
 ## Roadmap
 
@@ -24,7 +24,7 @@ work is incremental via 30-min cron ticks.
 - `CMakeLists.txt` — `find_package(SDL3)`, `-Wall -Wextra -Wpedantic -Werror`
 - `README.md`, `.gitignore`
 
-### Phase 1 — engine core (in progress)
+### Phase 1 — engine core ✅
 Pure-C geometric primitives and basic subsystems, no SDL3 dependency on the
 math side so they're unit-testable in isolation. Each lands behind a public
 header in `include/nq/`.
@@ -40,13 +40,13 @@ header in `include/nq/`.
 - Test infra: `tests/test_main.c` runner + per-module `tests/test_*.c`,
   `assert.h` only (no external deps), CMake `nq_test` target + ctest
 
-### Phase 2 — animation + timing
+### Phase 2 — animation + timing ✅
 - `nq_clock` — high-res timer, delta-time, fixed-step / variable-step modes
 - `nq_tween` — value lerpers (linear, ease-in/out, cubic, elastic)
 - `nq_animation` — track-based, target object + duration
 - `nq_atlas` — texture atlas, bin-packing or fixed-grid, runtime region by name
 
-### Phase 3 — scene graph + scheduling
+### Phase 3 — scene graph + scheduling ✅
 - `nq_node` — tree structure, transform2d, lifecycle (init/update/draw/destroy)
 - `nq_scene` — root scene, layering, scene stack (push/pop for pauses)
 - `nq_action` — scheduler with priorities. Tween / CallFunc / Repeat /
