@@ -119,3 +119,5 @@ NQ_TEST_REGISTER("atlas_remove_region",            test_remove_region);
 NQ_TEST_REGISTER("atlas_remove_then_readd",       test_remove_then_re_add);
 NQ_TEST_REGISTER("atlas_iter_only_live",           test_iter_visits_only_live);
 NQ_TEST_REGISTER("atlas_grows_beyond_initial",     test_grow_beyond_initial_capacity);
+NQ_TEST_REGISTER("atlas_draw_null_safe",          test_atlas_draw_null_safe);
+NQ_TEST_REGISTER("atlas_draw_unknown_region",     test_atlas_draw_unknown_region_null_texture);

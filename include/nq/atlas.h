@@ -47,6 +47,17 @@ int      nq_atlas_remove_region(NqAtlas *a, const char *name);
  * atlas destroyed. */
 NqRect   nq_atlas_find(const NqAtlas *a, const char *name);
 
+/* Draw a region through a paired NqTexture. Looks up the named region
+ * in the atlas, then forwards to nq_texture_draw_region. Returns 0 on
+ * success, -1 if either handle is NULL, the region doesn't exist, or the
+ * underlying SDL3 call failed. */
+int nq_atlas_draw(const NqAtlas *atlas, struct NqTexture *tex,
+                 const char *region_name, int dst_x, int dst_y);
+
+/* Forward declaration so atlas.h doesn't have to pull in texture.h
+ * itself; consumers include both. */
+struct NqTexture;
+
 /* Iteration. Returns NULL when iteration is exhausted. */
 typedef struct NqAtlasIter NqAtlasIter;
 NqAtlasIter *nq_atlas_iter_begin(const NqAtlas *a);

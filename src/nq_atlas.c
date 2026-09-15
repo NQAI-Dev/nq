@@ -1,4 +1,5 @@
 #include "nq/atlas.h"
+#include "nq/texture.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -129,6 +130,16 @@ NqRect nq_atlas_find(const NqAtlas *a, const char *name) {
         }
     }
     return nq_rect(0, 0, 0, 0);
+}
+
+
+int nq_atlas_draw(const NqAtlas *atlas, struct NqTexture *tex,
+                 const char *region_name, int dst_x, int dst_y) {
+    if (!atlas || !tex || !region_name) return -1;
+    NqRect r = nq_atlas_find(atlas, region_name);
+    if (nq_rect_empty(r)) return -1;
+    return nq_texture_draw_region(tex, dst_x, dst_y,
+                                 r.x, r.y, r.w, r.h);
 }
 
 /* Iterator. Stores the next index to visit; iter_next returns 0 when the
