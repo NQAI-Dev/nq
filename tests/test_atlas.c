@@ -1,6 +1,14 @@
 #include <nq/atlas.h>
 #include "test_main.c"
 
+/* Forward declarations for tests defined further down — the
+ * NQ_TEST_REGISTER macro generates constructor code that references
+ * these by name and the compiler must see them declared. */
+static void test_atlas_draw_null_safe(void);
+static void test_atlas_draw_unknown_region_null_texture(void);
+
+static void test_create_destroy(void) {
+
 static void test_create_destroy(void) {
     NqAtlas *a = nq_atlas_create(512, 512, 0);
     NQ_ASSERT(a != NULL);
