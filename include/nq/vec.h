@@ -57,4 +57,25 @@ static inline NqVec2f nq_vec2f_scale(NqVec2f v, float s) {
     return nq_vec2f(v.x * s, v.y * s);
 }
 
+/* Linear interpolation between two vectors. Each component is
+ * interpolated independently. t is clamped to [0,1] so these compose
+ * cleanly with `nq_ease` outputs. */
+static inline NqVec2i nq_vec2i_lerp(NqVec2i a, NqVec2i b, float t) {
+    if (t < 0.0f) t = 0.0f;
+    if (t > 1.0f) t = 1.0f;
+    return nq_vec2i(
+        (int)(a.x + (b.x - a.x) * t),
+        (int)(a.y + (b.y - a.y) * t)
+    );
+}
+
+static inline NqVec2f nq_vec2f_lerp(NqVec2f a, NqVec2f b, float t) {
+    if (t < 0.0f) t = 0.0f;
+    if (t > 1.0f) t = 1.0f;
+    return nq_vec2f(
+        a.x + (b.x - a.x) * t,
+        a.y + (b.y - a.y) * t
+    );
+}
+
 #endif /* NQ_VEC_H */
