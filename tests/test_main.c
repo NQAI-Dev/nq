@@ -24,11 +24,16 @@ typedef struct {
 static nq_test_entry nq_test_table[NQ_TEST_MAX];
 static int nq_test_count = 0;
 
-#define NQ_TEST_REGISTER(name, fn)                                          \
-    __attribute__((constructor)) static void nq_test_reg_##fn(void) {       \
+/* Parameter names `test_name` and `test_fn` (not `name` and `fn`) so
+ * the textual substitution doesn't collide with the `name` and `fn`
+ * member fields of nq_test_entry. Without this, the preprocessor
+ * replaces both the LHS member access AND the LHS argument with
+ * the user's string, producing `."string literal")` — invalid C. */
+#define NQ_TEST_REGISTER(test_name, test_fn)                                  \
+    __attribute__((constructor)) static void nq_test_reg_##test_fn(void) {   \
         if (nq_test_count < NQ_TEST_MAX) {                                 \
-            nq_test_table[nq_test_count].name = (name);                    \
-            nq_test_table[nq_test_count].fn   = (fn);                      \
+            nq_test_table[nq_test_count].name = (test_name);                 \
+            nq_test_table[nq_test_count].fn   = (test_fn);                   \
             nq_test_count++;                                                \
         }                                                                   \
     }
