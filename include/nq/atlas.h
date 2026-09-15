@@ -49,6 +49,9 @@ int      nq_atlas_remove_region(NqAtlas *a, const char *name);
  * atlas destroyed. */
 NqRect   nq_atlas_find(const NqAtlas *a, const char *name);
 
+/* Number of LIVE regions (excludes slots freed by remove_region). */
+size_t   nq_atlas_count_regions(const NqAtlas *a);
+
 /* Forward declaration so atlas.h doesn't have to pull in texture.h
  * itself; consumers include both. Forward-declared at file scope so the
  * name is visible inside the nq_atlas_draw declaration below. */
