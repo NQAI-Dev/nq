@@ -70,4 +70,10 @@ int nq_input_mouse_dy(const NqInput *in);
 int nq_input_mouse_down(const NqInput *in, int button_mask);
 int nq_input_mouse_pressed(const NqInput *in, int button_mask);
 
+/* Reset all keys / mouse buttons / mouse position to defaults. Useful
+ * when a window loses focus (otherwise the "still pressed" state leaks
+ * into the next scene) or after switching scenes that had different
+ * input semantics. */
+void nq_input_clear(NqInput *in);
+
 #endif /* NQ_INPUT_H */

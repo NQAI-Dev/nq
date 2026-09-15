@@ -69,3 +69,12 @@ int nq_input_mouse_pressed(const NqInput *in, int button_mask) {
     int prev = in->mouse.prev_buttons & button_mask;
     return now && !prev;
 }
+
+void nq_input_clear(NqInput *in) {
+    if (!in) return;
+    /* Zero both keyboard snapshots so no "still pressed" edge fires on
+     * the next begin_frame(); zero mouse position and deltas so a stale
+     * cursor doesn't bleed into the new scene. */
+    memset(&in->kb, 0, sizeof(in->kb));
+    memset(&in->mouse, 0, sizeof(in->mouse));
+}
