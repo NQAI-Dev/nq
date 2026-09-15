@@ -14,20 +14,27 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* CMake injects the absolute path to the built nq-conv binary so the
+ * test works regardless of which directory ctest runs from (CI typically
+ * runs tests from build/, not the source root). */
+#ifndef NQ_CONV_BIN
+#define NQ_CONV_BIN "tools/nq-conv/nq-conv"
+#endif
+
 /* Run `nq-conv <out> <name> <cols> <rows> [tex_w] [tex_h]`, capture stdout
  * (which the tool prints on success), return it in a malloc'd buffer.
  * Caller frees. On failure returns NULL. */
 static char *nq_conv_run(int cols, int rows, int tex_w, int tex_h,
                         const char *atlas_name) {
-    char cmd[512];
+    char cmd[1024];
     if (tex_w > 0 && tex_h > 0) {
         snprintf(cmd, sizeof(cmd),
-                 "tools/nq-conv/nq-conv /tmp/nq_conv_test_out.h %s %d %d %d %d",
-                 atlas_name, cols, rows, tex_w, tex_h);
+                 ""%s" /tmp/nq_conv_test_out.h %s %d %d %d %d",
+                 NQ_CONV_BIN, atlas_name, cols, rows, tex_w, tex_h);
     } else {
         snprintf(cmd, sizeof(cmd),
-                 "tools/nq-conv/nq-conv /tmp/nq_conv_test_out.h %s %d %d",
-                 atlas_name, cols, rows);
+                 ""%s" /tmp/nq_conv_test_out.h %s %d %d",
+                 NQ_CONV_BIN, atlas_name, cols, rows);
     }
     /* The tool writes the generated header to the path passed as argv[1];
      * /dev/null suppresses that file. We capture stdout instead. */

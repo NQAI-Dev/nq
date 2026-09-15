@@ -111,5 +111,13 @@ if(NQ_BUILD_TESTS)
     )
     target_link_libraries(nq_test PRIVATE nq_core Threads::Threads SDL3::SDL3)
 
+    # nq-conv binary is built in a subdir; pass its absolute path to the
+    # test via a compile definition so test_conv.c can popen() it
+    # regardless of the working directory ctest runs from. Also force a
+    # build-order dependency so the binary exists before the test runs.
+    add_dependencies(nq_test nq-conv)
+    target_compile_definitions(nq_test PRIVATE
+        NQ_CONV_BIN="$<TARGET_FILE:nq-conv>")
+
     add_test(NAME nq_test COMMAND nq_test)
 endif()
