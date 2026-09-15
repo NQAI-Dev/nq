@@ -41,6 +41,12 @@
 #define SQUARE_SIZE 80
 #define COLOR_PERIOD_SECONDS 3.0f
 
+/* Last-frame dt shared between the main loop and on_each_frame — the
+ * node callback signature doesn't take dt so we route it through a
+ * file-scope variable. A future tick can extend the callback signature
+ * with dt if this pattern becomes common. */
+static float g_last_dt = 0.016f;
+
 /* Three animations: red, green, blue — each on its own period so they
  * cycle out of phase, giving the square a continuously shifting colour.
  * Stack-allocated, lifetime matches the program. */
@@ -74,9 +80,10 @@ static void on_each_frame(NqNode *n, void *user) {
     (void)user;
     /* The action manager's tick() drives the colour animations; this
      * node callback only owns the bounce physics. In a real game this
-     * would be split across multiple nodes via the scene tree. */
-    box_x += (int)(vel_x * 0.016f);   /* assume ~60fps; real value comes from clock dt */
-    box_y += (int)(vel_y * 0.016f);
+     * would be split across multiple nodes via the scene tree. dt is the
+     * file-scope g_last_dt set from the main loop's nq_clock_tick. */
+    box_x += (int)(vel_x * g_last_dt);
+    box_y += (int)(vel_y * g_last_dt);
 
     if (box_x <= 0 || box_x + SQUARE_SIZE >= WIN_W) {
         vel_x = -vel_x;
@@ -151,9 +158,9 @@ int main(void) {
         while (SDL_PollEvent(&event)) {
             if (should_quit(&event)) running = 0;
         }
-        nq_clock_tick(clock, NULL);          /* advances time, but we don't need the dt — see below */
         NqFrameTime ft;
-        nq_clock_tick(clock, &ft);           /* re-tick to capture dt (cleaner would be to fold into one call) */
+        nq_clock_tick(clock, &ft);
+        g_last_dt = ft.delta_seconds;
         nq_action_manager_tick(am, ft.delta_seconds);
         nq_node_update(nq_scene_root(scene), ft.delta_seconds);
         nq_node_draw(nq_scene_root(scene));
