@@ -16,6 +16,8 @@
 #ifndef NQ_ATLAS_H
 #define NQ_ATLAS_H
 
+#include <stddef.h>
+
 #include <nq/common.h>
 #include <nq/rect.h>
 
@@ -47,6 +49,11 @@ int      nq_atlas_remove_region(NqAtlas *a, const char *name);
  * atlas destroyed. */
 NqRect   nq_atlas_find(const NqAtlas *a, const char *name);
 
+/* Forward declaration so atlas.h doesn't have to pull in texture.h
+ * itself; consumers include both. Forward-declared at file scope so the
+ * name is visible inside the nq_atlas_draw declaration below. */
+struct NqTexture;
+
 /* Draw a region through a paired NqTexture. Looks up the named region
  * in the atlas, then forwards to nq_texture_draw_region. Returns 0 on
  * success, -1 if either handle is NULL, the region doesn't exist, or the
@@ -54,11 +61,7 @@ NqRect   nq_atlas_find(const NqAtlas *a, const char *name);
 int nq_atlas_draw(const NqAtlas *atlas, struct NqTexture *tex,
                  const char *region_name, int dst_x, int dst_y);
 
-/* Forward declaration so atlas.h doesn't have to pull in texture.h
- * itself; consumers include both. */
-struct NqTexture;
-
-/* Iteration. Returns NULL when iteration is exhausted. */
+/* Iterator. Returns NULL when iteration is exhausted. */
 typedef struct NqAtlasIter NqAtlasIter;
 NqAtlasIter *nq_atlas_iter_begin(const NqAtlas *a);
 int          nq_atlas_iter_next(NqAtlasIter *it,

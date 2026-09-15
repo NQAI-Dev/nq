@@ -11,6 +11,7 @@
 #ifndef NQ_TEXTURE_H
 #define NQ_TEXTURE_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include "nq/graphics.h"  /* NqRenderer */
 
