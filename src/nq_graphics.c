@@ -72,15 +72,16 @@ int nq_renderer_fill_rect(NqRenderer *r, NqColor c,
 }
 
 void nq_renderer_present(NqRenderer *r) {
-SDL_Renderer *nq_renderer_sdl(NqRenderer *r) {
-    /* Same trick as the static helper above — public for nq_texture.c
-     * to draw through SDL3 directly. The cast is safe because both
-     * call sites reach the same NqRenderer via nq_renderer_create(). */
-    return ((struct NqRenderer *)r)->sdl_renderer;
-}
-
     if (!r) {
         return;
     }
     SDL_RenderPresent(r->sdl_renderer);
+}
+
+/* Backend escape hatch: returns the underlying SDL_Renderer* for code
+ * that needs direct SDL access (notably nq_texture.c, which draws via
+ * SDL_RenderTexture). Same cast as the static helper above, just at
+ * module scope so other translation units can call it. */
+SDL_Renderer *nq_renderer_sdl(NqRenderer *r) {
+    return ((struct NqRenderer *)r)->sdl_renderer;
 }
