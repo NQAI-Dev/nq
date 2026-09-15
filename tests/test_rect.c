@@ -111,3 +111,44 @@ static void test_rect_center_empty(void) {
 NQ_TEST_REGISTER("rect_center_basic",  test_rect_center_basic);
 NQ_TEST_REGISTER("rect_center_origin", test_rect_center_origin);
 NQ_TEST_REGISTER("rect_center_empty",  test_rect_center_empty);
+
+static void test_rect_circle_inside(void) {
+    /* Circle completely inside the rect → 1 */
+    NQ_ASSERT(nq_rect_contains_circle(nq_rect(0, 0, 100, 100), 50, 50, 5));
+    /* Circle touching an edge from inside → 1 */
+    NQ_ASSERT(nq_rect_contains_circle(nq_rect(0, 0, 100, 100), 5, 50, 5));
+}
+
+static void test_rect_circle_outside(void) {
+    /* Circle clearly outside → 0 */
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -10, 50, 5));
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(0, 0, 100, 100), 150, 150, 5));
+}
+
+static void test_rect_circle_edge(void) {
+    /* Circle just touching the rect from outside → 1 (inclusive)
+     * Circle just past touching → 0 */
+    NQ_ASSERT(nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -5, 50, 5));   /* center at -5, radius 5 → touches edge at 0 */
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -6, 50, 5));  /* center at -6, radius 5 → 1px outside */
+}
+
+static void test_rect_circle_corner(void) {
+    /* Circle in the corner — closest point on rect is the corner (0,0),
+     * so distance² to (0,0) should be <= radius². */
+    NQ_ASSERT(nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -3, -3, 5));   /* dist² = 18, radius² = 25 → inside */
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -5, -5, 5));  /* dist² = 50, radius² = 25 → outside */
+}
+
+static void test_rect_circle_empty_or_zero_radius(void) {
+    /* Empty rect → always no overlap */
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(10, 10, 0, 0), 10, 10, 5));
+    /* Zero radius → behaves like contains() */
+    NQ_ASSERT(nq_rect_contains_circle(nq_rect(0, 0, 100, 100), 50, 50, 0));
+    NQ_ASSERT(!nq_rect_contains_circle(nq_rect(0, 0, 100, 100), -5, -5, 0));
+}
+
+NQ_TEST_REGISTER("rect_circle_inside",          test_rect_circle_inside);
+NQ_TEST_REGISTER("rect_circle_outside",         test_rect_circle_outside);
+NQ_TEST_REGISTER("rect_circle_edge",            test_rect_circle_edge);
+NQ_TEST_REGISTER("rect_circle_corner",          test_rect_circle_corner);
+NQ_TEST_REGISTER("rect_circle_empty_or_zero",  test_rect_circle_empty_or_zero_radius);

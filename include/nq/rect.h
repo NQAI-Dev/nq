@@ -83,6 +83,23 @@ static inline NqVec2i nq_rect_center(NqRect r) {
     return nq_vec2i(r.x + r.w / 2, r.y + r.h / 2);
 }
 
+/* Circle-vs-rect collision: returns 1 if a circle of `radius` centred
+ * at (cx, cy) overlaps (or touches) the rect, 0 otherwise. Useful for
+ * entity-radius-vs-tile / particle-vs-wall checks. Edge cases:
+ * - Empty rect (w<=0 || h<=0): no overlap → returns 0
+ * - radius <= 0: only returns 1 if the centre point is inside the rect
+ * - Negative radius: undefined input, treated as radius = 0 */
+static inline int nq_rect_contains_circle(NqRect r, int cx, int cy, int radius) {
+    if (radius <= 0) return nq_rect_contains(r, nq_vec2i(cx, cy));
+    if (r.w <= 0 || r.h <= 0) return 0;
+    /* Closest point on the rect to the circle centre. */
+    int min_x = (cx < r.x) ? r.x : (cx > r.x + r.w ? r.x + r.w : cx);
+    int min_y = (cy < r.y) ? r.y : (cy > r.y + r.h ? r.y + r.h : cy);
+    int dx = cx - min_x;
+    int dy = cy - min_y;
+    return (dx * dx + dy * dy) <= (radius * radius);
+}
+
 /* Linear interpolation between two rects. Each component (x, y, w, h) is
  * interpolated independently and rounded to int. t is clamped to [0,1]
  * so this composes cleanly with `nq_ease` outputs. */
