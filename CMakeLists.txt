@@ -82,7 +82,7 @@ if(NQ_BUILD_TESTS)
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${CMAKE_CURRENT_SOURCE_DIR}/tests
     )
-    target_link_libraries(nq_test PRIVATE nq_core Threads::Threads)
+    target_link_libraries(nq_test PRIVATE nq_core Threads::Threads SDL3::SDL3)
 
     add_test(NAME nq_test COMMAND nq_test)
 endif()
