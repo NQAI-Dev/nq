@@ -88,8 +88,7 @@ header in `include/nq/`.
   - `examples/controlled_square.c` — input-driven square via
     `nq_input_pump_sdl3_event`
   - `examples/parallax.c` — three layered scrolls at different speeds
-- Examples pending: tiny arcanoid (animatedsprite + parallax scrolldemo
-  deferred — see commit 5fb66b5 for context)
+- Examples pending: tiny arcanoid (animatedsprite at 3705109, parallax at 5fb66b5)
 - CI ✅ — GitHub Actions on ubuntu-24.04 / macos-latest / windows-latest
   via `.github/workflows/build.yml`
 - `nq_bench.h` ✅ — header-only RAII profiler via
