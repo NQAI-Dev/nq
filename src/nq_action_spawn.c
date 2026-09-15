@@ -49,7 +49,7 @@ static void spawn_reset(void *user) {
     if (s) s->finished_subs = 0;
 }
 
-NqActionSpawn *nq_action_spawn_create(const NqAction **subs, size_t count,
+NqActionSpawn *nq_action_spawn_create(NqAction **subs, size_t count,
                                      int take_ownership) {
     if (!subs && count > 0) return NULL;
     if (count > NQ_ACTION_SPAWN_MAX) return NULL;

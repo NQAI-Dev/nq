@@ -28,7 +28,7 @@ static void test_seq_runs_through_subs(void) {
     NqAction *a1 = nq_action_create(counter_tick, NULL, &c1);
     NqAction *a2 = nq_action_create(counter_tick, NULL, &c2);
     NqAction *a3 = nq_action_create(counter_tick, NULL, &c3);
-    const NqAction *subs[] = { a1, a2, a3 };
+    NqAction *subs[] = { a1, a2, a3 };
 
     NqActionSequence *s = nq_action_sequence_create(subs, 3, 0);
     NQ_ASSERT(s != NULL);
@@ -61,7 +61,7 @@ static void test_seq_owns_subs_and_destroys(void) {
     /* take_ownership=1: sequence.destroy() also destroys sub-actions. */
     TickCtx c1 = {1, 0};
     NqAction *a1 = nq_action_create(counter_tick, NULL, &c1);
-    const NqAction *subs[] = { a1 };
+    NqAction *subs[] = { a1 };
 
     NqActionSequence *s = nq_action_sequence_create(subs, 1, 1);
     NQ_ASSERT(s != NULL);

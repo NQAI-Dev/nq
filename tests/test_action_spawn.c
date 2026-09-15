@@ -27,7 +27,7 @@ static void test_spawn_ticks_all_subs_per_frame(void) {
     NqAction *a1 = nq_action_create(counter_tick, NULL, &c1);
     NqAction *a2 = nq_action_create(counter_tick, NULL, &c2);
     NqAction *a3 = nq_action_create(counter_tick, NULL, &c3);
-    const NqAction *subs[] = { a1, a2, a3 };
+    NqAction *subs[] = { a1, a2, a3 };
 
     NqActionSpawn *s = nq_action_spawn_create(subs, 3, 0);
     NQ_ASSERT(s != NULL);
@@ -50,7 +50,7 @@ static void test_spawn_waits_for_slowest_sub(void) {
     TickCtx c_fast = {1, 0}, c_slow = {3, 0};
     NqAction *a_fast = nq_action_create(counter_tick, NULL, &c_fast);
     NqAction *a_slow = nq_action_create(counter_tick, NULL, &c_slow);
-    const NqAction *subs[] = { a_fast, a_slow };
+    NqAction *subs[] = { a_fast, a_slow };
 
     NqActionSpawn *s = nq_action_spawn_create(subs, 2, 0);
     /* Tick 1: a_fast finishes (ticks 1), a_slow still RUNNING. */
@@ -71,7 +71,7 @@ static void test_spawn_waits_for_slowest_sub(void) {
 static void test_spawn_owns_subs(void) {
     TickCtx c = {1, 0};
     NqAction *a = nq_action_create(counter_tick, NULL, &c);
-    const NqAction *subs[] = { a };
+    NqAction *subs[] = { a };
     NqActionSpawn *s = nq_action_spawn_create(subs, 1, 1);  /* take_ownership=1 */
     nq_action_spawn_destroy(s);
     /* If we tried nq_action_destroy(a) here, double-free. Just confirm we

@@ -34,8 +34,14 @@ typedef struct {
 } NqActionSequence;
 
 /* Build a sequence from an array of NQ_ACTION_SEQUENCE_MAX-sub-action
- * list. NUL-terminated? No — caller passes count. */
-NqActionSequence *nq_action_sequence_create(const NqAction **subs,
+ * list. NUL-terminated? No — caller passes count.
+ *
+ * Note: `subs` is non-const even though the wrapper doesn't reassign
+ * the slots — the wrapper DOES call `nq_action_update` on each
+ * sub-action during execution, which mutates the sub's internal
+ * state. The caller's `subs[]` array elements must therefore be
+ * writable references (i.e. `NqAction *`), not const pointers. */
+NqActionSequence *nq_action_sequence_create(NqAction **subs,
                                             size_t count,
                                             int take_ownership);
 

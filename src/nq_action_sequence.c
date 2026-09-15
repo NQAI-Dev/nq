@@ -31,7 +31,7 @@ static void seq_reset(void *user) {
     if (s) s->current = 0;
 }
 
-NqActionSequence *nq_action_sequence_create(const NqAction **subs,
+NqActionSequence *nq_action_sequence_create(NqAction **subs,
                                             size_t count,
                                             int take_ownership) {
     if (!subs && count > 0) return NULL;

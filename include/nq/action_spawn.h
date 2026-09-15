@@ -33,7 +33,7 @@ typedef struct {
     int       finished_subs;  /* count of subs that have terminated */
 } NqActionSpawn;
 
-NqActionSpawn *nq_action_spawn_create(const NqAction **subs, size_t count,
+NqActionSpawn *nq_action_spawn_create(NqAction **subs, size_t count,
                                      int take_ownership);
 int            nq_action_spawn_add(NqActionSpawn *s, NqAction *a,
                                   int take_ownership);
