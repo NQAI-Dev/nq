@@ -305,6 +305,22 @@ int nq_text_draw(NqText *t, const char *s, int x, int y) {
     return cur_x;
 }
 
+int nq_text_width(NqText *t, const char *s) {
+    if (!t || !s) return 0;
+    int max_w = 0;
+    int cur_w = 0;
+    for (const char *p = s; *p; p++) {
+        if (*p == '\n') {
+            if (cur_w > max_w) max_w = cur_w;
+            cur_w = 0;
+            continue;
+        }
+        cur_w += NQ_TEXT_ADV_W * NQ_TEXT_SCALE;
+    }
+    if (cur_w > max_w) max_w = cur_w;
+    return max_w;
+}
+
 int nq_text_glyph_w(NqText *t, char c) {
     (void)t; (void)c;
     return NQ_TEXT_GLYPH_W * NQ_TEXT_SCALE;

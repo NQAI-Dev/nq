@@ -7,7 +7,7 @@ static void test_text_create_destroy_null(void) {
      * the NULL-safe paths. CI on linux/macos/windows has SDL3 and runs
      * a fuller check (nq_text_create with a real renderer). */
     nq_text_destroy(NULL);
-    NQ_ASSERT(nq_text_set_color(NULL, 255, 0, 0, 255) == (void)0);
+    nq_text_set_color(NULL, 255, 0, 0, 255);  /* NULL-safe — must not crash */
     NQ_ASSERT_EQ(nq_text_draw(NULL, "hi", 0, 0), 0);
     NQ_ASSERT_EQ(nq_text_glyph_w(NULL, 'A'), 5);
     NQ_ASSERT_EQ(nq_text_glyph_h(NULL, 'A'), 7);
