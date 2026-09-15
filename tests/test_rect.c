@@ -85,3 +85,29 @@ NQ_TEST_REGISTER("rect_intersects",   test_rect_intersects);
 NQ_TEST_REGISTER("rect_intersection", test_rect_intersection);
 NQ_TEST_REGISTER("rect_union",        test_rect_union);
 NQ_TEST_REGISTER("rect_inflate",      test_rect_inflate);
+
+static void test_rect_center_basic(void) {
+    /* 100x200 rect at (10, 20) → center at (60, 120) */
+    NqVec2i c = nq_rect_center(nq_rect(10, 20, 100, 200));
+    NQ_ASSERT_EQ(c.x, 60);
+    NQ_ASSERT_EQ(c.y, 120);
+}
+
+static void test_rect_center_origin(void) {
+    /* 4x4 rect at origin → center at (2, 2) — integer division */
+    NqVec2i c = nq_rect_center(nq_rect(0, 0, 4, 4));
+    NQ_ASSERT_EQ(c.x, 2);
+    NQ_ASSERT_EQ(c.y, 2);
+}
+
+static void test_rect_center_empty(void) {
+    /* Empty rect (w=0 or h=0) → returns the top-left corner */
+    NQ_ASSERT(nq_vec2i_eq(nq_rect_center(nq_rect(50, 70, 0, 0)), nq_vec2i(50, 70)));
+    /* Negative size: still returns top-left (well-defined even when
+     * w/h is negative; useful so callers don't need to special-case) */
+    NQ_ASSERT(nq_vec2i_eq(nq_rect_center(nq_rect(50, 70, -10, -10)), nq_vec2i(50, 70)));
+}
+
+NQ_TEST_REGISTER("rect_center_basic",  test_rect_center_basic);
+NQ_TEST_REGISTER("rect_center_origin", test_rect_center_origin);
+NQ_TEST_REGISTER("rect_center_empty",  test_rect_center_empty);
