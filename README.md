@@ -7,7 +7,7 @@ pace.
 
 ## Status
 
-Pre-alpha. Four example programs:
+Pre-alpha. Five example programs:
 - `nq_hello_window` — opens a 640x480 SDL3 window, draws a single bouncing
   colored square that bounces off the edges
 - `nq_animated_square` — kitchen-sink demo wiring `nq_clock + nq_scene +
@@ -19,10 +19,29 @@ Pre-alpha. Four example programs:
 - `nq_parallax` — three coloured rectangles scroll at different speeds
   (parallax factor 0.20 / 0.50 / 1.00). Pure procedural rectangles — no
   texture fixtures needed in tree
+- `nq_animatedsprite` — single sprite cycling through four
+  procedurally-generated atlas frames via `NqAnimFloat`. Exercises the
+  texture + atlas + animation pipeline end-to-end
+
+Auxiliary utility primitives shipped alongside the engine core:
+- `nq_color_lerp` + `nq_color_from_uint32` — RGBA interpolation
+- `nq_rect_lerp`, `nq_vec2i_lerp`, `nq_vec2f_lerp` — geometric lerps
+  (compose with `nq_ease` outputs)
+- `nq_anim_color` — per-frame color animator mirroring `NqAnimFloat`
+- `nq_action_tween_color` — action bridge for `NqAnimColor`
+- `nq_action_reset` + composition-primitive resets — re-arms actions
+  via the engine (delay/tween/sequence/spawn/repeat all supported)
+- `nq_input_clear` — resets keyboard + mouse state for scene swaps
+- `nq_input_text` — UTF-8 text input buffer with SDL3 event pump
+  (TEXT_INPUT, Backspace, Delete, Home/End, Left/Right)
+- `nq_text` — procedural 5x7 bitmap font for debug / dev HUDs
+  (no asset file needed; for a real game replace with TTF)
 
 SDL3 is wired through the public engine API; the examples never call
-SDL3 directly. Phases 1, 2, and 3 are complete. Phase 6 (tooling and
-examples) is in progress.
+SDL3 directly. Phases 1, 2, and 3 are complete. Phase 6 (tooling,
+examples, and auxiliary utilities) is essentially complete — only
+`tiny arcanoid` (the one roadmap example remaining) is deferred until
+a dedicated session is available.
 
 ## Roadmap
 
