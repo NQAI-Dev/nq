@@ -82,13 +82,16 @@ header in `include/nq/`.
 - Mix bus (master + SFX + music), per-source pitch/volume, sound pooling
 
 ### Phase 6 — tooling & examples (in progress)
-- Examples done (4/5):
+- Examples done (5/5):
   - `examples/hello_window.c` — SDL3 hello window, basic square bounce
   - `examples/animated_square.c` — kitchen-sink demo of Phase 2 + Phase 3
   - `examples/controlled_square.c` — input-driven square via
     `nq_input_pump_sdl3_event`
   - `examples/parallax.c` — three layered scrolls at different speeds
-- Examples pending: tiny arcanoid (animatedsprite at 3705109, parallax at 5fb66b5)
+  - `examples/animatedsprite.c` — single sprite cycling through four
+    procedurally-generated atlas frames via NqAnimFloat
+- Examples pending: tiny arcanoid (~250-400 lines; deferred until a
+  dedicated session is available)
 - CI ✅ — GitHub Actions on ubuntu-24.04 / macos-latest / windows-latest
   via `.github/workflows/build.yml`
 - `nq_bench.h` ✅ — header-only RAII profiler via
