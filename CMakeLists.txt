@@ -31,6 +31,7 @@ add_library(nq_core STATIC
     src/nq_action_tween.c
     src/nq_action_delay.c
     src/nq_action_manager.c
+    src/nq_input_sdl3.c
 )
 target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
