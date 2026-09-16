@@ -8,6 +8,24 @@
 #include <nq/log.h>
 #include "test_main.c"  /* NQ_TEST_REGISTER / NQ_ASSERT / NQ_ASSERT_EQ */
 
+/* Helper log emitters — passed to capture_stderr as function pointers.
+ * Defined at file scope so they're visible to the test functions that
+ * follow (C doesn't have inline lambdas). */
+static void emit_filter_messages(void) {
+    NQ_LOG_DEBUG("debug-line");
+    NQ_LOG_INFO("info-line");
+    NQ_LOG_WARN("warn-line");
+    NQ_LOG_ERROR("error-line");
+}
+
+static void emit_all_log_messages(void) {
+    NQ_LOG_DEBUG("d");
+    NQ_LOG_INFO("i");
+    NQ_LOG_WARN("w");
+    NQ_LOG_ERROR("e");
+    NQ_LOG_FATAL("f");
+}
+
 /* The logger writes to stderr by default. Capture it via dup2 for test. */
 static int capture_stderr(char *buf, size_t cap, void (*fn)(void)) {
     int orig = dup(STDERR_FILENO);
