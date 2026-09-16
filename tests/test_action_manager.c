@@ -141,7 +141,7 @@ static void test_manager_capacity_constant(void) {
     NqActionManager *m = nq_action_manager_create();
     NQ_ASSERT_EQ(nq_action_manager_capacity(), NQ_ACTION_MANAGER_MAX);
     /* Add a few actions and verify capacity unchanged. */
-    TickCtx ctx = {0, 1000, 0};
+    CounterCtx ctx = {0, 1000};
     NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
     nq_action_manager_add(m, a);
     nq_action_manager_add(m, a);
