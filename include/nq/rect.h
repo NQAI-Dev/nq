@@ -10,6 +10,7 @@
 #ifndef NQ_RECT_H
 #define NQ_RECT_H
 
+#include <math.h>
 #include <stdbool.h>
 
 #include <nq/vec.h>
