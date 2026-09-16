@@ -181,3 +181,28 @@ NQ_TEST_REGISTER("circle_overlap_overlapping",   test_circle_overlap_overlapping
 NQ_TEST_REGISTER("circle_overlap_disjoint",      test_circle_overlap_disjoint_returns_false);
 NQ_TEST_REGISTER("circle_overlap_touching",      test_circle_overlap_touching_returns_true);
 NQ_TEST_REGISTER("circle_overlap_zero_radius",   test_circle_overlap_zero_radius);
+
+static void test_circle_overlap_f_overlapping(void) {
+    /* Float version: same semantics as int, just on floats */
+    NQ_ASSERT(nq_circle_overlap_f(0.0f, 0.0f, 5.0f, 6.0f, 0.0f, 5.0f));
+    NQ_ASSERT(nq_circle_overlap_f(0.5f, 0.5f, 1.0f, 1.0f, 1.5f, 1.0f));
+}
+
+static void test_circle_overlap_f_touching(void) {
+    /* Distance² == r_sum² → touching, inclusive */
+    NQ_ASSERT(nq_circle_overlap_f(0.0f, 0.0f, 5.0f, 10.0f, 0.0f, 5.0f));
+}
+
+static void test_circle_overlap_f_disjoint(void) {
+    NQ_ASSERT(!nq_circle_overlap_f(0.0f, 0.0f, 5.0f, 100.0f, 100.0f, 5.0f));
+}
+
+static void test_circle_overlap_f_negative_radius(void) {
+    /* Negative radius clamped to 0 */
+    NQ_ASSERT(nq_circle_overlap_f(0.0f, 0.0f, -5.0f, 0.0f, 0.0f, 0.0f));
+}
+
+NQ_TEST_REGISTER("circle_overlap_f_overlapping",   test_circle_overlap_f_overlapping);
+NQ_TEST_REGISTER("circle_overlap_f_touching",      test_circle_overlap_f_touching);
+NQ_TEST_REGISTER("circle_overlap_f_disjoint",      test_circle_overlap_f_disjoint);
+NQ_TEST_REGISTER("circle_overlap_f_neg_radius",    test_circle_overlap_f_negative_radius);

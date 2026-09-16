@@ -98,6 +98,19 @@ static inline int nq_circle_overlap(int cx1, int cy1, int r1,
     return dist_sq <= r_sum;
 }
 
+/* Float variant of nq_circle_overlap. Useful for physics where
+ * positions / radii are stored as float (e.g. post-multiplication by
+ * a dt-derived scale). Same algorithm, no overflow handling. */
+static inline int nq_circle_overlap_f(float cx1, float cy1, float r1,
+                                      float cx2, float cy2, float r2) {
+    if (r1 < 0.0f) r1 = 0.0f;
+    if (r2 < 0.0f) r2 = 0.0f;
+    float dx   = cx2 - cx1;
+    float dy   = cy2 - cy1;
+    float r    = r1 + r2;
+    return (dx * dx + dy * dy) <= (r * r);
+}
+
 /* Circle-vs-rect collision: returns 1 if a circle of `radius` centred
  * at (cx, cy) overlaps (or touches) the rect, 0 otherwise. Useful for
  * entity-radius-vs-tile / particle-vs-wall checks. Edge cases:
