@@ -348,3 +348,50 @@ NQ_TEST_REGISTER("circle_penetration_separates",      test_circle_penetration_se
 NQ_TEST_REGISTER("circle_penetration_no_overlap",    test_circle_penetration_no_overlap_returns_zero);
 NQ_TEST_REGISTER("circle_penetration_concentric",    test_circle_penetration_concentric_pushes_x);
 NQ_TEST_REGISTER("circle_penetration_int_variant",    test_circle_penetration_int_variant);
+
+static void test_rect_penetration_circle_outside(void) {
+    /* Circle clearly outside the rect, on the right side */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqVec2f v = nq_rect_penetration_vector_f(r, 120.0f, 50.0f, 10.0f);
+    /* Closest point on rect = (100, 50). Distance = 20. Push -X by (10 - 20) = -10. So v should be (-10, 0). */
+    NQ_ASSERT(v.x == -10.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
+static void test_rect_penetration_circle_no_overlap(void) {
+    /* Circle completely outside rect → zero vector */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqVec2f v = nq_rect_penetration_vector_f(r, 200.0f, 200.0f, 10.0f);
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
+static void test_rect_penetration_circle_pokes_corner(void) {
+    /* Circle centred at (-3, -3) with radius 5 — closest point is the
+     * rect's corner (0, 0). Distance² = 18, radius² = 25, so dist = √18 ≈ 4.24,
+     * overlap = 5 - 4.24 ≈ 0.76. Push direction is from corner outward
+     * (away from rect), so vector is (-(-3)/4.24 * 0.76, -(-3)/4.24 * 0.76)
+     * ≈ (-0.54, -0.54). */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqVec2f v = nq_rect_penetration_vector_f(r, -3.0f, -3.0f, 5.0f);
+    NQ_ASSERT(v.x < 0.0f);
+    NQ_ASSERT(v.y < 0.0f);
+    /* Both components should have the same magnitude */
+    NQ_ASSERT(v.x == v.y);
+}
+
+static void test_rect_penetration_circle_inside_pushes_axis(void) {
+    /* Circle centred inside the rect */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqVec2f v = nq_rect_penetration_vector_f(r, 50.0f, 50.0f, 10.0f);
+    /* Push along the shorter axis to the nearest edge.
+     * Distance to nearest edge: left=50, right=50, top=50, bottom=50.
+     * All equal — picks left (-1, 0). Push magnitude = 50 + 10 = 60. */
+    NQ_ASSERT(v.y == 0.0f);
+    NQ_ASSERT(v.x == -60.0f);
+}
+
+NQ_TEST_REGISTER("rect_penetration_circle_outside", test_rect_penetration_circle_outside);
+NQ_TEST_REGISTER("rect_penetration_circle_no_overlap", test_rect_penetration_circle_no_overlap_returns_zero);
+NQ_TEST_REGISTER("rect_penetration_circle_corner", test_rect_penetration_circle_pokes_corner);
+NQ_TEST_REGISTER("rect_penetration_circle_inside", test_rect_penetration_circle_inside_pushes_axis);

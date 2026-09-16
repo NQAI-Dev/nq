@@ -184,6 +184,48 @@ static inline NqVec2f nq_circle_penetration_vector(int ax, int ay, int ar,
     );
 }
 
+/* Rect-as-obstacle vs mobile-circle penetration resolution. Returns the
+ * vector to translate the circle (centred at cx, cy with radius) so it
+ * just touches the rect on the closest face / corner.
+ *
+ * Algorithm: find the closest point on the rect's surface to the
+ * circle centre; if the centre is inside the rect, the closest point
+ * is the centre itself (the circle is fully enveloped, push along
+ * the shortest axis to the nearest edge). If the centre is outside,
+ * the closest point is on a face or a corner — push along the
+ * contact axis from that closest point outward by (radius - distance).
+ *
+ * Useful for: entity-with-radius vs tile-AABB collision response
+ * (the most common 2D game collision shape pair).
+ */
+static inline NqVec2f nq_rect_penetration_vector_f(NqRect r, float cx, float cy, float radius) {
+    /* Closest point on the rect's surface to (cx, cy). */
+    float min_x = (cx < (float)r.x) ? (float)r.x : (cx > (float)(r.x + r.w) ? (float)(r.x + r.w) : cx);
+    float min_y = (cy < (float)r.y) ? (float)r.y : (cy > (float)(r.y + r.h) ? (float)(r.y + r.h) : cy);
+    float dx = cx - min_x;
+    float dy = cy - min_y;
+    float dist_sq = dx * dx + dy * dy;
+    if (dist_sq >= radius * radius) {
+        return nq_vec2f(0.0f, 0.0f);  /* no overlap */
+    }
+    if (dist_sq == 0.0f) {
+        /* Centre is inside the rect — push along the shorter axis to
+         * the nearest edge. */
+        float left   = cx - (float)r.x;
+        float right  = (float)(r.x + r.w) - cx;
+        float top    = cy - (float)r.y;
+        float bottom = (float)(r.y + r.h) - cy;
+        float min_axis = left; int dir_x = -1; int dir_y = 0;
+        if (right  < min_axis) { min_axis = right;  dir_x =  1; dir_y = 0; }
+        if (top    < min_axis) { min_axis = top;    dir_x =  0; dir_y = -1; }
+        if (bottom < min_axis) {                       dir_x =  0; dir_y =  1; }
+        return nq_vec2f((float)dir_x * (min_axis + radius), (float)dir_y * (min_axis + radius));
+    }
+    float dist = sqrtf(dist_sq);
+    float overlap = radius - dist;
+    return nq_vec2f(-dx / dist * overlap, -dy / dist * overlap);
+}
+
 static inline NqRect nq_rect_intersect_circle(NqRect r, int cx, int cy, int radius) {
     /* Same circle-vs-rect no-overlap check as nq_rect_contains_circle's
      * counterpart — bail early when there is nothing to clip. */
