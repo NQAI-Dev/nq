@@ -128,6 +128,33 @@ static inline int nq_rect_contains_circle(NqRect r, int cx, int cy, int radius) 
     return (dx * dx + dy * dy) <= (radius * radius);
 }
 
+/* Circle-vs-rect *intersection*: returns the rect of overlap between
+ * a circle of `radius` centred at (cx, cy) and the rect `r`. Useful
+ * for swept-volume collision (knowing WHERE two objects intersect,
+ * not just whether they do). The returned rect is the box bounding
+ * the circle-rect overlap region; for most cases (where the circle
+ * is much smaller than the rect), this is a tight approximation.
+ *
+ * Edge cases:
+ * - radius <= 0: returns `nq_rect_intersection(r, nq_rect(cx, cy, 0, 0))`
+ * - No overlap (circle entirely outside rect): returns an empty rect
+ *   (w<=0 || h<=0)
+ * - Empty rect (r.w<=0 || r.h<=0): returns an empty rect
+ */
+static inline NqRect nq_rect_intersect_circle(NqRect r, int cx, int cy, int radius) {
+    /* Same circle-vs-rect no-overlap check as nq_rect_contains_circle's
+     * counterpart — bail early when there is nothing to clip. */
+    if (!nq_rect_contains_circle(r, cx, cy, radius)) {
+        return nq_rect(0, 0, 0, 0);
+    }
+    /* The overlap box is the intersection of:
+     *   A = (cx - radius, cy - radius, 2*radius, 2*radius)  — circle's AABB
+     *   B = r                                             — original rect
+     * Use nq_rect_intersection to compute the overlap. */
+    NqRect circle_aabb = nq_rect(cx - radius, cy - radius, 2 * radius, 2 * radius);
+    return nq_rect_intersection(r, circle_aabb);
+}
+
 /* Float variant of nq_rect_contains_circle. Useful for float-based
  * physics (post-multiply by dt scales, sub-pixel positioning, etc.).
  * Same algorithm: clamp circle centre to rect to find the closest

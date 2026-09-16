@@ -233,3 +233,46 @@ NQ_TEST_REGISTER("rect_contains_circle_f_inside",     test_rect_contains_circle_
 NQ_TEST_REGISTER("rect_contains_circle_f_outside",    test_rect_contains_circle_f_outside);
 NQ_TEST_REGISTER("rect_contains_circle_f_corner",     test_rect_contains_circle_f_corner);
 NQ_TEST_REGISTER("rect_contains_circle_f_zero_radius", test_rect_contains_circle_f_zero_radius);
+
+static void test_rect_intersect_circle_overlap_inside(void) {
+    /* Circle centred inside a 100x100 rect with small radius:
+     * the overlap is the circle's bounding box. */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle(r, 50, 50, 5);
+    /* Circle AABB is (45, 45, 10, 10), all contained inside r. */
+    NQ_ASSERT(nq_rect_eq(o, nq_rect(45, 45, 10, 10)));
+}
+
+static void test_rect_intersect_circle_partial_overlap(void) {
+    /* Circle pokes out of the rect on the right side. Overlap is the
+     * circle's AABB clipped to r. */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle(r, 105, 50, 10);
+    /* Circle AABB is (95, 40, 20, 20), clipped to r → (95, 40, 5, 20). */
+    NQ_ASSERT(o.x == 95);
+    NQ_ASSERT(o.y == 40);
+    NQ_ASSERT(o.w == 5);
+    NQ_ASSERT(o.h == 20);
+}
+
+static void test_rect_intersect_circle_no_overlap(void) {
+    /* Circle completely outside the rect → empty overlap */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle(r, 200, 200, 5);
+    NQ_ASSERT(o.w <= 0 || o.h <= 0);
+}
+
+static void test_rect_intersect_circle_zero_radius(void) {
+    /* Zero radius → behaves like a point intersection */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle(r, 50, 50, 0);
+    NQ_ASSERT(nq_rect_eq(o, nq_rect(50, 50, 0, 0)));
+    /* Point outside the rect → empty */
+    o = nq_rect_intersect_circle(r, 200, 200, 0);
+    NQ_ASSERT(o.w <= 0 || o.h <= 0);
+}
+
+NQ_TEST_REGISTER("rect_intersect_circle_inside",      test_rect_intersect_circle_overlap_inside);
+NQ_TEST_REGISTER("rect_intersect_circle_partial",     test_rect_intersect_circle_partial_overlap);
+NQ_TEST_REGISTER("rect_intersect_circle_no_overlap",   test_rect_intersect_circle_no_overlap);
+NQ_TEST_REGISTER("rect_intersect_circle_zero_radius", test_rect_intersect_circle_zero_radius);
