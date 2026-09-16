@@ -68,3 +68,32 @@ NQ_TEST_REGISTER("color_lerp_alpha",              test_lerp_alpha);
 NQ_TEST_REGISTER("color_lerp_clamps_t",           test_lerp_clamps_t);
 NQ_TEST_REGISTER("color_lerp_identity",           test_lerp_identity);
 NQ_TEST_REGISTER("color_from_uint32",             test_from_uint32);
+
+static void test_color_equal_identical_returns_true(void) {
+    NqColor c = NQ_COLOR_RGB(123, 45, 67);
+    NQ_ASSERT(nq_color_equal(c, c));
+    NQ_ASSERT(nq_color_equal(NQ_COLOR_RGBA(255, 0, 0, 128),
+                             NQ_COLOR_RGBA(255, 0, 0, 128)));
+}
+
+static void test_color_equal_one_channel_differs_returns_false(void) {
+    NqColor a = NQ_COLOR_RGB(255, 128, 0);
+    NqColor b = a;
+    b.r = 0;
+    NQ_ASSERT(!nq_color_equal(a, b));
+
+    b = a; b.g = 0;      NQ_ASSERT(!nq_color_equal(a, b));
+    b = a; b.b = 1;      NQ_ASSERT(!nq_color_equal(a, b));
+    b = a; b.a = 1;      NQ_ASSERT(!nq_color_equal(a, b));
+}
+
+static void test_color_equal_alpha_included(void) {
+    /* Two colours with same RGB but different alpha are NOT equal. */
+    NqColor opaque   = NQ_COLOR_RGBA(100, 100, 100, 255);
+    NqColor half     = NQ_COLOR_RGBA(100, 100, 100, 128);
+    NQ_ASSERT(!nq_color_equal(opaque, half));
+}
+
+NQ_TEST_REGISTER("color_equal_identical",            test_color_equal_identical_returns_true);
+NQ_TEST_REGISTER("color_equal_one_channel_differs",  test_color_equal_one_channel_differs_returns_false);
+NQ_TEST_REGISTER("color_equal_alpha_included",       test_color_equal_alpha_included);

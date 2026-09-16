@@ -19,4 +19,12 @@
 NqColor nq_color_lerp(NqColor a, NqColor b, float t);
 NqColor nq_color_from_uint32(uint32_t rgba);
 
+/* Returns 1 if a and b are byte-for-byte identical, 0 otherwise. Useful
+ * for animation-callback change detection ("did the colour actually
+ * move this frame?") without spelling out the four-component compare
+ * inline. */
+static inline int nq_color_equal(NqColor a, NqColor b) {
+    return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+}
+
 #endif /* NQ_COLOR_H */
