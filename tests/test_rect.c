@@ -380,6 +380,14 @@ static void test_rect_penetration_circle_pokes_corner(void) {
     NQ_ASSERT(v.x == v.y);
 }
 
+static void test_rect_penetration_circle_no_overlap_returns_zero(void) {
+    /* Circle completely outside rect → zero vector */
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqVec2f v = nq_rect_penetration_vector_f(r, 200.0f, 200.0f, 10.0f);
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
 static void test_rect_penetration_circle_inside_pushes_axis(void) {
     /* Circle centred inside the rect */
     NqRect r = nq_rect(0, 0, 100, 100);
