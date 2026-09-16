@@ -88,3 +88,10 @@ NqAction *nq_action_repeat_action(NqActionRepeat *r) {
 int nq_action_repeat_remaining(const NqActionRepeat *r) {
     return r ? r->remaining : 0;
 }
+
+int nq_action_repeat_total(const NqActionRepeat *r) {
+    /* Returns the iteration count this repeat was created with (-1 for
+     * forever). Useful for UIs that want to show "iteration N of M";
+     * call nq_action_repeat_remaining for N and total() for M. */
+    return r ? r->original_count : 0;
+}

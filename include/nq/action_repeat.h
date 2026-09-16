@@ -34,5 +34,6 @@ void          nq_action_repeat_destroy(NqActionRepeat *r);
 NqActionState nq_action_repeat_update(NqActionRepeat *r, float dt);
 NqAction     *nq_action_repeat_action(NqActionRepeat *r);
 int           nq_action_repeat_remaining(const NqActionRepeat *r);
+int           nq_action_repeat_total(const NqActionRepeat *r);
 
 #endif /* NQ_ACTION_REPEAT_H */

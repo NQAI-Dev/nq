@@ -101,3 +101,36 @@ NQ_TEST_REGISTER("repeat_three_iterations",          test_repeat_three_iteration
 NQ_TEST_REGISTER("repeat_forever_doesnt_finish",     test_repeat_forever_doesnt_finish);
 NQ_TEST_REGISTER("repeat_destroy_no_sub",            test_repeat_destroy_does_not_touch_sub);
 NQ_TEST_REGISTER("repeat_null_safe",                 test_repeat_null_safe);
+
+static void test_repeat_total_returns_create_count(void) {
+    /* total() exposes the original count the repeat was created with */
+    TickCtx ctx = {0, 1};
+    NqAction *sub = nq_action_create(counter_tick, NULL, &ctx);
+    NQ_ASSERT_EQ(sub, (NqAction *)sub);
+    NqActionRepeat *r = nq_action_repeat_create(sub, 5);
+    NQ_ASSERT_EQ(nq_action_repeat_total(r), 5);
+    /* remaining() drops toward zero as ticks run, total() stays at 5 */
+    (void)nq_action_repeat_update(r, 0.016f);
+    NQ_ASSERT_EQ(nq_action_repeat_remaining(r), 4);
+    NQ_ASSERT_EQ(nq_action_repeat_total(r), 5);
+    nq_action_repeat_destroy(r);
+    nq_action_destroy(sub);
+}
+
+static void test_repeat_total_forever_returns_minus_one(void) {
+    /* For infinite repeats, total() returns -1 (the "no count" sentinel). */
+    TickCtx ctx = {0, 1};
+    NqAction *sub = nq_action_create(counter_tick, NULL, &ctx);
+    NqActionRepeat *r = nq_action_repeat_forever_create(sub);
+    NQ_ASSERT_EQ(nq_action_repeat_total(r), -1);
+    nq_action_repeat_destroy(r);
+    nq_action_destroy(sub);
+}
+
+static void test_repeat_total_null_safe(void) {
+    NQ_ASSERT_EQ(nq_action_repeat_total(NULL), 0);
+}
+
+NQ_TEST_REGISTER("repeat_total_5",              test_repeat_total_returns_create_count);
+NQ_TEST_REGISTER("repeat_total_forever_minus1", test_repeat_total_forever_returns_minus_one);
+NQ_TEST_REGISTER("repeat_total_null_safe",      test_repeat_total_null_safe);
