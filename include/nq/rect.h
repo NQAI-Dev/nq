@@ -155,6 +155,23 @@ static inline NqRect nq_rect_intersect_circle(NqRect r, int cx, int cy, int radi
     return nq_rect_intersection(r, circle_aabb);
 }
 
+/* Float variant of nq_rect_intersect_circle. Same algorithm, uses
+ * nq_rect_contains_circle_f for the no-overlap early bail and
+ * (cx - radius, cy - radius, 2*radius, 2*radius) rounded to int
+ * for the circle AABB. Since rect components are ints, the final
+ * intersection is also int-valued — float precision is preserved
+ * only in the contained-test decision. */
+static inline NqRect nq_rect_intersect_circle_f(NqRect r, float cx, float cy, float radius) {
+    if (!nq_rect_contains_circle_f(r, cx, cy, radius)) {
+        return nq_rect(0, 0, 0, 0);
+    }
+    int cxi = (int)cx;
+    int cyi = (int)cy;
+    int ri  = (int)radius;
+    NqRect circle_aabb = nq_rect(cxi - ri, cyi - ri, 2 * ri, 2 * ri);
+    return nq_rect_intersection(r, circle_aabb);
+}
+
 /* Float variant of nq_rect_contains_circle. Useful for float-based
  * physics (post-multiply by dt scales, sub-pixel positioning, etc.).
  * Same algorithm: clamp circle centre to rect to find the closest

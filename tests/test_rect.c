@@ -276,3 +276,31 @@ NQ_TEST_REGISTER("rect_intersect_circle_inside",      test_rect_intersect_circle
 NQ_TEST_REGISTER("rect_intersect_circle_partial",     test_rect_intersect_circle_partial_overlap);
 NQ_TEST_REGISTER("rect_intersect_circle_no_overlap",   test_rect_intersect_circle_no_overlap);
 NQ_TEST_REGISTER("rect_intersect_circle_zero_radius", test_rect_intersect_circle_zero_radius);
+
+static void test_rect_intersect_circle_f_inside(void) {
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle_f(r, 50.5f, 50.5f, 5.0f);
+    /* (int)50.5 - 5 = 45; 2*5 = 10; clipped to r → (45, 45, 10, 10). */
+    NQ_ASSERT(nq_rect_eq(o, nq_rect(45, 45, 10, 10)));
+}
+
+static void test_rect_intersect_circle_f_partial(void) {
+    NqRect r = nq_rect(0, 0, 100, 100);
+    /* Circle centred slightly past right edge */
+    NqRect o = nq_rect_intersect_circle_f(r, 105.0f, 50.0f, 10.0f);
+    /* Circle AABB clipped: (105-10, 50-10, 20, 20) → (95, 40, 5, 20). */
+    NQ_ASSERT(o.x == 95);
+    NQ_ASSERT(o.y == 40);
+    NQ_ASSERT(o.w == 5);
+    NQ_ASSERT(o.h == 20);
+}
+
+static void test_rect_intersect_circle_f_no_overlap(void) {
+    NqRect r = nq_rect(0, 0, 100, 100);
+    NqRect o = nq_rect_intersect_circle_f(r, 200.0f, 200.0f, 5.0f);
+    NQ_ASSERT(o.w <= 0 || o.h <= 0);
+}
+
+NQ_TEST_REGISTER("rect_intersect_circle_f_inside",    test_rect_intersect_circle_f_inside);
+NQ_TEST_REGISTER("rect_intersect_circle_f_partial",   test_rect_intersect_circle_f_partial);
+NQ_TEST_REGISTER("rect_intersect_circle_f_no_overlap", test_rect_intersect_circle_f_no_overlap);
