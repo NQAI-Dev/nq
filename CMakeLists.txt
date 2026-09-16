@@ -95,6 +95,12 @@ target_link_libraries(nq_parallax PRIVATE nq_core)
 add_executable(nq_animatedsprite examples/animatedsprite.c)
 target_link_libraries(nq_animatedsprite PRIVATE nq_core)
 
+# Sixth example: action_pipeline — single square moves across the screen
+# under control of the action framework (NqAnimVec2 + nq_action_tween_vec2
+# + NqActionManager). Exercises the full animation-to-action pipeline.
+add_executable(nq_action_pipeline examples/action_pipeline.c)
+target_link_libraries(nq_action_pipeline PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
