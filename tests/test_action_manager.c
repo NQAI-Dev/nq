@@ -1,5 +1,5 @@
 #include "nq/action_manager.h"
-#include "test_main.h"
+#include "test_main.c"
 
 typedef struct { int ticks; int done; } CounterCtx;
 static NqActionState counter_tick(NqAction *a, float dt, void *user) {

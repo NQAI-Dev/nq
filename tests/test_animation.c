@@ -1,5 +1,6 @@
 #include <nq/animation.h>
 #include "test_main.c"
+#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 #define NQ_EPS 1e-4f
 

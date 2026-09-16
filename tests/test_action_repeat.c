@@ -1,4 +1,4 @@
-#include "nq_action_repeat.h"
+#include "nq/action_repeat.h"
 #include "test_main.c"
 
 /* Counter-driven action: ticks N times then FINISHED on Nth tick.

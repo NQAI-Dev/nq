@@ -70,7 +70,7 @@ void nq_log(NqLogLevel level,
     char timestamp[32];
     time_t now = time(NULL);
     struct tm tm;
-    localtime(localtime_r(&now, &tm);now);
+    localtime_r(&now, &tm);
     strftime(timestamp, sizeof(timestamp), "%H:%M:%S", &tm);
 
     pthread_mutex_lock(&nq_lock);

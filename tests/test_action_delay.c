@@ -1,5 +1,6 @@
 #include <nq/action_delay.h>
 #include "test_main.c"
+#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 static void test_delay_create_destroy(void) {
     NqActionDelay *d = nq_action_delay_create(1.0f);

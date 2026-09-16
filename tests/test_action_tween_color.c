@@ -1,4 +1,4 @@
-#include "nq_action_tween_color.h"
+#include "nq/action_tween_color.h"
 #include "test_main.c"
 
 static void test_create_destroy(void) {

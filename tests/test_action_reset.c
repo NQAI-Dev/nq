@@ -62,7 +62,7 @@ static void test_sequence_reset(void) {
     NqAction *a1 = nq_action_create(counter_tick, NULL, &c1);
     NqAction *a2 = nq_action_create(counter_tick, NULL, &c2);
     const NqAction *subs[] = { a1, a2 };
-    NqActionSequence *s = nq_action_sequence_create(subs, 2, 0);
+    NqActionSequence *s = nq_action_sequence_create((NqAction **)subs, 2, 0);
     nq_action_sequence_update(s, 0.016f);  /* a1 finishes */
     nq_action_sequence_update(s, 0.016f);  /* a2 finishes */
     NQ_ASSERT(nq_action_sequence_is_done(s));

@@ -148,6 +148,39 @@ static void test_count_regions_null_safe(void) {
 
 NQ_TEST_REGISTER("atlas_count_regions_tracks_live", test_count_regions_tracks_live);
 NQ_TEST_REGISTER("atlas_count_regions_null_safe",  test_count_regions_null_safe);
+
+static void test_atlas_clear_empties_all(void) {
+    NqAtlas *a = nq_atlas_create(64, 64, 0);
+    nq_atlas_add_region(a, "a", nq_rect(0, 0, 8, 8));
+    nq_atlas_add_region(a, "b", nq_rect(8, 0, 8, 8));
+    nq_atlas_add_region(a, "c", nq_rect(16, 0, 8, 8));
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 3);
+    int cleared = nq_atlas_clear(a);
+    NQ_ASSERT_EQ(cleared, 3);
+    NQ_ASSERT_EQ(nq_atlas_count_regions(a), 0);
+    /* find() now returns empty rect for everything */
+    NqRect r = nq_atlas_find(a, "a");
+    NQ_ASSERT(r.w <= 0 && r.h <= 0);
+    nq_atlas_destroy(a);
+}
+
+static void test_atlas_clear_returns_count_of_what_was_there(void) {
+    /* After removal, clear() should return 0 (nothing was live). */
+    NqAtlas *a = nq_atlas_create(64, 64, 0);
+    nq_atlas_add_region(a, "a", nq_rect(0, 0, 8, 8));
+    nq_atlas_remove_region(a, "a");
+    int cleared = nq_atlas_clear(a);
+    NQ_ASSERT_EQ(cleared, 0);
+    nq_atlas_destroy(a);
+}
+
+static void test_atlas_clear_null_safe(void) {
+    NQ_ASSERT_EQ(nq_atlas_clear(NULL), 0);
+}
+
+NQ_TEST_REGISTER("atlas_clear_empties_all",            test_atlas_clear_empties_all);
+NQ_TEST_REGISTER("atlas_clear_no_live_returns_zero",   test_atlas_clear_returns_count_of_what_was_there);
+NQ_TEST_REGISTER("atlas_clear_null_safe",              test_atlas_clear_null_safe);
 NQ_TEST_REGISTER("atlas_draw_null_safe",          test_atlas_draw_null_safe);
 NQ_TEST_REGISTER("atlas_draw_unknown_region",     test_atlas_draw_unknown_region_null_texture);
 

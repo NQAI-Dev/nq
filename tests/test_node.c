@@ -1,5 +1,6 @@
 #include <nq/node.h>
 #include "test_main.c"
+#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 /* Test callbacks — count calls, capture this, capture dt. */
 typedef struct {
