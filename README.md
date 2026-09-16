@@ -30,6 +30,9 @@ Auxiliary utility primitives shipped alongside the engine core:
 - `nq_color_lerp` + `nq_color_from_uint32` — RGBA interpolation
 - `nq_rect_lerp`, `nq_vec2i_lerp`, `nq_vec2f_lerp` — geometric lerps
   (compose with `nq_ease` outputs)
+- `nq_rect_contains_circle` + `nq_circle_overlap` (and `_f` float
+  variants) — collision primitives (rect-vs-circle contains, circle-
+  vs-circle overlap). All pure integer / float math, no sqrt call.
 - `nq_anim_color` + `nq_anim_rect` + `nq_anim_vec2` — per-frame animators
   for each primitive type, mirroring `NqAnimFloat`
 - `nq_action_tween_color` + `nq_action_tween_rect` + `nq_action_tween_vec2`
