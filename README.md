@@ -27,8 +27,10 @@ Auxiliary utility primitives shipped alongside the engine core:
 - `nq_color_lerp` + `nq_color_from_uint32` — RGBA interpolation
 - `nq_rect_lerp`, `nq_vec2i_lerp`, `nq_vec2f_lerp` — geometric lerps
   (compose with `nq_ease` outputs)
-- `nq_anim_color` — per-frame color animator mirroring `NqAnimFloat`
-- `nq_action_tween_color` — action bridge for `NqAnimColor`
+- `nq_anim_color` + `nq_anim_rect` + `nq_anim_vec2` — per-frame animators
+  for each primitive type, mirroring `NqAnimFloat`
+- `nq_action_tween_color` + `nq_action_tween_rect` + `nq_action_tween_vec2`
+  — action bridges for the corresponding animators
 - `nq_action_reset` + composition-primitive resets — re-arms actions
   via the engine (delay/tween/sequence/spawn/repeat all supported)
 - `nq_input_clear` — resets keyboard + mouse state for scene swaps
