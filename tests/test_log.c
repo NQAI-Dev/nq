@@ -127,3 +127,46 @@ NQ_TEST_REGISTER("log_level_filter",       test_log_level_filter);
 NQ_TEST_REGISTER("log_level_name",         test_log_level_name);
 NQ_TEST_REGISTER("log_set_get_level",      test_log_set_get_level);
 NQ_TEST_REGISTER("log_thread_safety",      test_log_thread_safety);
+
+static void test_log_set_level_by_name(void) {
+    /* Canonical names — exact case */
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("DEBUG"), 1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_DEBUG);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("INFO"), 1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_INFO);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("WARN"), 1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_WARN);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("ERROR"), 1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_ERROR);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("FATAL"), 1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_FATAL);
+}
+
+static void test_log_set_level_by_name_case_insensitive(void) {
+    /* strcasecmp: upper, lower, mixed */
+    nq_log_set_level(NQ_LOG_INFO);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("warn"),  1);
+    NQ_ASSERT_EQ(nq_log_get_level(), NQ_LOG_WARN);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("Warn"),  1);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("WARN"),  1);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("wArN"),  1);
+}
+
+static void test_log_set_level_by_name_unknown_returns_zero(void) {
+    /* Unknown name leaves the level unchanged */
+    nq_log_set_level(NQ_LOG_INFO);
+    int prev = nq_log_get_level();
+    NQ_ASSERT_EQ(nq_log_set_level_by_name("FROBNICATE"), 0);
+    NQ_ASSERT_EQ(nq_log_get_level(), prev);
+    NQ_ASSERT_EQ(nq_log_set_level_by_name(""), 0);
+    NQ_ASSERT_EQ(nq_log_get_level(), prev);
+}
+
+static void test_log_set_level_by_name_null_safe(void) {
+    NQ_ASSERT_EQ(nq_log_set_level_by_name(NULL), 0);
+}
+
+NQ_TEST_REGISTER("log_set_level_by_name",               test_log_set_level_by_name);
+NQ_TEST_REGISTER("log_set_level_by_name_case",          test_log_set_level_by_name_case_insensitive);
+NQ_TEST_REGISTER("log_set_level_by_name_unknown",       test_log_set_level_by_name_unknown_returns_zero);
+NQ_TEST_REGISTER("log_set_level_by_name_null_safe",      test_log_set_level_by_name_null_safe);

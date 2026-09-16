@@ -24,6 +24,13 @@ typedef enum {
 
 void nq_log_set_level(NqLogLevel min_level);
 NqLogLevel nq_log_get_level(void);
+
+/* Parse a level name ("DEBUG", "INFO", "WARN", "ERROR", "FATAL") case-
+ * insensitively and apply it. Returns 1 on success, 0 if the name
+ * doesn't match any level. Useful for runtime config (CLI args,
+ * env vars, config files) without having to translate strings into
+ * enum values manually. */
+int nq_log_set_level_by_name(const char *name);
 void nq_log_set_file(const char *path);  /* NULL or "-" = stderr (default) */
 
 void nq_log(NqLogLevel level,

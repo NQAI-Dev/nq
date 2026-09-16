@@ -2,6 +2,7 @@
 
 #include <pthread.h>
 #include <stdarg.h>
+#include <strings.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -27,6 +28,17 @@ void nq_log_set_level(NqLogLevel min_level) {
 
 NqLogLevel nq_log_get_level(void) {
     return nq_min_level;
+}
+
+int nq_log_set_level_by_name(const char *name) {
+    if (!name || !name[0]) return 0;
+    /* Case-insensitive match against the canonical level names. */
+    if (strcasecmp(name, "DEBUG") == 0) { nq_log_set_level(NQ_LOG_DEBUG); return 1; }
+    if (strcasecmp(name, "INFO")  == 0) { nq_log_set_level(NQ_LOG_INFO);  return 1; }
+    if (strcasecmp(name, "WARN")  == 0) { nq_log_set_level(NQ_LOG_WARN);  return 1; }
+    if (strcasecmp(name, "ERROR") == 0) { nq_log_set_level(NQ_LOG_ERROR); return 1; }
+    if (strcasecmp(name, "FATAL") == 0) { nq_log_set_level(NQ_LOG_FATAL); return 1; }
+    return 0;
 }
 
 void nq_log_set_file(const char *path) {
