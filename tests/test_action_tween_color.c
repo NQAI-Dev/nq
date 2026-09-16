@@ -82,7 +82,6 @@ static void test_destroy_does_not_touch_anim(void) {
     /* Anim must still be valid (if destroy() killed it, the next call
      * would crash or trigger ASAN). */
     NQ_ASSERT_EQ(nq_anim_color_done(&anim), 0);
-    nq_anim_color_destroy(&anim);  /* not a thing; just sanity */
 }
 
 NQ_TEST_REGISTER("tween_color_create_destroy",    test_create_destroy);

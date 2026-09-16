@@ -52,6 +52,11 @@ NqRect   nq_atlas_find(const NqAtlas *a, const char *name);
 /* Number of LIVE regions (excludes slots freed by remove_region). */
 size_t   nq_atlas_count_regions(const NqAtlas *a);
 
+/* Clear all regions (mark them not-alive). Useful when swapping a
+ * texture's content — keep the atlas, drop the region table, refill.
+ * Returns the number of regions that were cleared (0 if none was live). */
+int      nq_atlas_clear(NqAtlas *a);
+
 /* Forward declaration so atlas.h doesn't have to pull in texture.h
  * itself; consumers include both. Forward-declared at file scope so the
  * name is visible inside the nq_atlas_draw declaration below. */

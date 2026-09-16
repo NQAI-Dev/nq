@@ -24,7 +24,7 @@ static void test_manager_create_destroy(void) {
 
 static void test_manager_add_remove(void) {
     NqActionManager *m = nq_action_manager_create();
-    CounterCtx ctx = {0, 3, 0};
+    CounterCtx ctx = {0, 3};
     NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
     NQ_ASSERT_EQ(nq_action_manager_add(m, a), 1);
     NQ_ASSERT_EQ(nq_action_manager_count(m), 1);
@@ -40,8 +40,8 @@ static void test_manager_add_remove(void) {
 
 static void test_manager_ticks_all_completes_removed(void) {
     NqActionManager *m = nq_action_manager_create();
-    CounterCtx a_ctx = {0, 2, 0};  /* completes on tick #2 */
-    CounterCtx b_ctx = {0, 4, 0};  /* completes on tick #4 */
+    CounterCtx a_ctx = {0, 2};  /* completes on tick #2 */
+    CounterCtx b_ctx = {0, 4};  /* completes on tick #4 */
     NqAction *a = nq_action_create(counter_tick, counter_done, &a_ctx);
     NqAction *b = nq_action_create(counter_tick, counter_done, &b_ctx);
     nq_action_manager_add(m, a);
@@ -84,7 +84,7 @@ static void test_manager_capacity_full(void) {
     NqActionManager *m = nq_action_manager_create();
     /* Fill past capacity and verify extras rejected */
     int i;
-    CounterCtx ctx = {0, 1000, 0};
+    CounterCtx ctx = {0, 1000};
     for (i = 0; i < NQ_ACTION_MANAGER_MAX; i++) {
         NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
         if (nq_action_manager_add(m, a) != 1) {
@@ -106,7 +106,7 @@ static void test_manager_capacity_full(void) {
 
 static void test_manager_clear_removes_without_destroying(void) {
     NqActionManager *m = nq_action_manager_create();
-    CounterCtx ctx = {0, 1000, 0};
+    CounterCtx ctx = {0, 1000};
     NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
     nq_action_manager_add(m, a);
     NQ_ASSERT_EQ(nq_action_manager_count(m), 1);
