@@ -47,6 +47,7 @@ add_library(nq_core STATIC
     src/nq_action_tween_color.c
     src/nq_action_tween_rect.c
     src/nq_anim_rect.c
+    src/nq_anim_vec2.c
 )
 target_include_directories(nq_core PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
