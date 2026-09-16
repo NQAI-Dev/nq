@@ -1,4 +1,5 @@
 #include "nq/action_tween_rect.h"
+#include <nq/rect.h>
 #include "test_main.c"
 
 /* User-supplied state: interpolates between two rects over 1 second. */
