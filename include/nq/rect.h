@@ -83,6 +83,21 @@ static inline NqVec2i nq_rect_center(NqRect r) {
     return nq_vec2i(r.x + r.w / 2, r.y + r.h / 2);
 }
 
+/* Circle-vs-circle collision: returns 1 if two circles (radius r1
+ * centred at (cx1, cy1), radius r2 centred at (cx2, cy2)) overlap or
+ * touch, 0 otherwise. Pure integer math via squared-distance compare
+ * — no sqrt, no float. Empty/negative radii behave like 0 (a point). */
+static inline int nq_circle_overlap(int cx1, int cy1, int r1,
+                                    int cx2, int cy2, int r2) {
+    int dx = cx2 - cx1;
+    int dy = cy2 - cy1;
+    int r  = (r1 < 0 ? 0 : r1) + (r2 < 0 ? 0 : r2);
+    /* Saturated subtract via long: avoid overflow on huge radii. */
+    long dist_sq = (long)dx * dx + (long)dy * dy;
+    long r_sum   = (long)r * r;
+    return dist_sq <= r_sum;
+}
+
 /* Circle-vs-rect collision: returns 1 if a circle of `radius` centred
  * at (cx, cy) overlaps (or touches) the rect, 0 otherwise. Useful for
  * entity-radius-vs-tile / particle-vs-wall checks. Edge cases:

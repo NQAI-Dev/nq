@@ -152,3 +152,32 @@ NQ_TEST_REGISTER("rect_circle_outside",         test_rect_circle_outside);
 NQ_TEST_REGISTER("rect_circle_edge",            test_rect_circle_edge);
 NQ_TEST_REGISTER("rect_circle_corner",          test_rect_circle_corner);
 NQ_TEST_REGISTER("rect_circle_empty_or_zero",  test_rect_circle_empty_or_zero_radius);
+
+static void test_circle_overlap_overlapping_returns_true(void) {
+    /* Two overlapping circles → 1 */
+    NQ_ASSERT(nq_circle_overlap(0, 0, 5, 6, 0, 5));   /* dist=6, r_sum=10, overlap */
+    NQ_ASSERT(nq_circle_overlap(0, 0, 10, 5, 5, 10)); /* concentric distance 7, r_sum=20, overlap */
+}
+
+static void test_circle_overlap_disjoint_returns_false(void) {
+    /* Two far-apart circles → 0 */
+    NQ_ASSERT(!nq_circle_overlap(0, 0, 5, 100, 100, 5));   /* dist²=20000, r_sum=10 */
+    NQ_ASSERT(!nq_circle_overlap(-50, 0, 5, 50, 0, 5));   /* dist²=10000, r_sum=10 */
+}
+
+static void test_circle_overlap_touching_returns_true(void) {
+    /* Two circles exactly touching → 1 (inclusive) */
+    NQ_ASSERT(nq_circle_overlap(0, 0, 5, 10, 0, 5));  /* dist=10, r_sum=10 */
+}
+
+static void test_circle_overlap_zero_radius(void) {
+    /* Zero/negative radius behaves like a point (radius 0) */
+    NQ_ASSERT(nq_circle_overlap(0, 0, 0, 0, 0, 0));  /* two points at origin */
+    NQ_ASSERT(nq_circle_overlap(0, 0, 0, 1, 0, 0));  /* points apart → no overlap */
+    NQ_ASSERT(nq_circle_overlap(0, 0, -5, 3, 0, 0)); /* negative radius → treated as 0 */
+}
+
+NQ_TEST_REGISTER("circle_overlap_overlapping",   test_circle_overlap_overlapping_returns_true);
+NQ_TEST_REGISTER("circle_overlap_disjoint",      test_circle_overlap_disjoint_returns_false);
+NQ_TEST_REGISTER("circle_overlap_touching",      test_circle_overlap_touching_returns_true);
+NQ_TEST_REGISTER("circle_overlap_zero_radius",   test_circle_overlap_zero_radius);
