@@ -206,3 +206,30 @@ NQ_TEST_REGISTER("circle_overlap_f_overlapping",   test_circle_overlap_f_overlap
 NQ_TEST_REGISTER("circle_overlap_f_touching",      test_circle_overlap_f_touching);
 NQ_TEST_REGISTER("circle_overlap_f_disjoint",      test_circle_overlap_f_disjoint);
 NQ_TEST_REGISTER("circle_overlap_f_neg_radius",    test_circle_overlap_f_negative_radius);
+
+static void test_rect_contains_circle_f_inside(void) {
+    /* Float circle fully inside the rect → 1 */
+    NQ_ASSERT(nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), 50.0f, 50.0f, 5.0f));
+}
+
+static void test_rect_contains_circle_f_outside(void) {
+    /* Float circle clearly outside the rect → 0 */
+    NQ_ASSERT(!nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), 200.0f, 200.0f, 5.0f));
+}
+
+static void test_rect_contains_circle_f_corner(void) {
+    /* Float circle in the corner — closest point on rect is the corner */
+    NQ_ASSERT(nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), -3.0f, -3.0f, 5.0f));   /* radius²=25, dist²=18 */
+    NQ_ASSERT(!nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), -5.0f, -5.0f, 5.0f));  /* dist²=50, > 25 */
+}
+
+static void test_rect_contains_circle_f_zero_radius(void) {
+    /* Zero radius → behaves like contains() */
+    NQ_ASSERT(nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), 50.0f, 50.0f, 0.0f));
+    NQ_ASSERT(!nq_rect_contains_circle_f(nq_rect(0, 0, 100, 100), 200.0f, 200.0f, 0.0f));
+}
+
+NQ_TEST_REGISTER("rect_contains_circle_f_inside",     test_rect_contains_circle_f_inside);
+NQ_TEST_REGISTER("rect_contains_circle_f_outside",    test_rect_contains_circle_f_outside);
+NQ_TEST_REGISTER("rect_contains_circle_f_corner",     test_rect_contains_circle_f_corner);
+NQ_TEST_REGISTER("rect_contains_circle_f_zero_radius", test_rect_contains_circle_f_zero_radius);

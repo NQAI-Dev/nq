@@ -128,6 +128,26 @@ static inline int nq_rect_contains_circle(NqRect r, int cx, int cy, int radius) 
     return (dx * dx + dy * dy) <= (radius * radius);
 }
 
+/* Float variant of nq_rect_contains_circle. Useful for float-based
+ * physics (post-multiply by dt scales, sub-pixel positioning, etc.).
+ * Same algorithm: clamp circle centre to rect to find the closest
+ * point on the rect's surface, then compare squared distance vs
+ * radius². The rect is integer (x, y, w, h) — float versions of
+ * the rect work the same way since float arithmetic is exact for
+ * the integer-component clamp step. */
+static inline int nq_rect_contains_circle_f(NqRect r, float cx, float cy, float radius) {
+    if (radius <= 0.0f) {
+        return nq_rect_contains(r, nq_vec2i((int)cx, (int)cy));
+    }
+    if (r.w <= 0 || r.h <= 0) return 0;
+    /* Closest point on the rect to the circle centre. */
+    float min_x = (cx < (float)r.x) ? (float)r.x : (cx > (float)(r.x + r.w) ? (float)(r.x + r.w) : cx);
+    float min_y = (cy < (float)r.y) ? (float)r.y : (cy > (float)(r.y + r.h) ? (float)(r.y + r.h) : cy);
+    float dx = cx - min_x;
+    float dy = cy - min_y;
+    return (dx * dx + dy * dy) <= (radius * radius);
+}
+
 /* Linear interpolation between two rects. Each component (x, y, w, h) is
  * interpolated independently and rounded to int. t is clamped to [0,1]
  * so this composes cleanly with `nq_ease` outputs. */
