@@ -141,6 +141,48 @@ static inline int nq_rect_contains_circle(NqRect r, int cx, int cy, int radius) 
  *   (w<=0 || h<=0)
  * - Empty rect (r.w<=0 || r.h<=0): returns an empty rect
  */
+/* Circle-vs-circle penetration resolution. Returns the vector to
+ * translate circle B (centred at bx, by with radius br) so it just
+ * touches circle A (centred at ax, ay with radius ar) — i.e. pushes
+ * B AWAY from A along the contact axis by the overlap distance.
+ *
+ * Returns (0, 0) if the circles are not currently overlapping. If
+ * the circles are concentric (distance 0), pushes B along +X by
+ * (ar + br) — an arbitrary axis but well-defined behaviour.
+ *
+ * Most useful form for physics: each frame, after checking overlap
+ * (nq_circle_overlap), if non-zero, call this and translate B by
+ * the returned vector. This makes a stable, non-sticking collision
+ * response without needing a full physics engine.
+ */
+static inline NqVec2f nq_circle_penetration_vector_f(float ax, float ay, float ar,
+                                                   float bx, float by, float br) {
+    float dx = bx - ax;
+    float dy = by - ay;
+    float dist_sq = dx * dx + dy * dy;
+    if (dist_sq == 0.0f) {
+        /* Concentric: push B in +X by total radii. */
+        return nq_vec2f(ar + br, 0.0f);
+    }
+    float dist = sqrtf(dist_sq);
+    float overlap = (ar + br) - dist;
+    if (overlap <= 0.0f) {
+        return nq_vec2f(0.0f, 0.0f);
+    }
+    return nq_vec2f(dx / dist * overlap, dy / dist * overlap);
+}
+
+/* Integer variant — same algorithm, integer arithmetic via Pythagorean
+ * approximation not needed (we still call sqrtf to get the unit
+ * direction, but with integer radii/distances). */
+static inline NqVec2f nq_circle_penetration_vector(int ax, int ay, int ar,
+                                                  int bx, int by, int br) {
+    return nq_circle_penetration_vector_f(
+        (float)ax, (float)ay, (float)ar,
+        (float)bx, (float)by, (float)br
+    );
+}
+
 static inline NqRect nq_rect_intersect_circle(NqRect r, int cx, int cy, int radius) {
     /* Same circle-vs-rect no-overlap check as nq_rect_contains_circle's
      * counterpart — bail early when there is nothing to clip. */
