@@ -45,12 +45,7 @@ static void test_log_level_filter(void) {
     nq_log_set_level(NQ_LOG_WARN);
 
     nq_log_set_file(NULL);  /* stderr */
-    int n = capture_stderr(buf, sizeof(buf), [](){
-        NQ_LOG_DEBUG("debug-line");
-        NQ_LOG_INFO("info-line");
-        NQ_LOG_WARN("warn-line");
-        NQ_LOG_ERROR("error-line");
-    });
+    int n = capture_stderr(buf, sizeof(buf), emit_filter_messages);
     nq_log_set_level(NQ_LOG_INFO);
     NQ_ASSERT(n > 0);
     NQ_ASSERT(strstr(buf, "warn-line") != NULL);
@@ -64,13 +59,7 @@ static void test_log_level_name(void) {
     char buf[4096];
     nq_log_set_level(NQ_LOG_DEBUG);
     nq_log_set_file(NULL);
-    int n = capture_stderr(buf, sizeof(buf), [](){
-        NQ_LOG_DEBUG("d");
-        NQ_LOG_INFO("i");
-        NQ_LOG_WARN("w");
-        NQ_LOG_ERROR("e");
-        NQ_LOG_FATAL("f");
-    });
+    int n = capture_stderr(buf, sizeof(buf), emit_all_log_messages);
     NQ_ASSERT(n > 0);
     NQ_ASSERT(strstr(buf, "[DEBUG]") != NULL);
     NQ_ASSERT(strstr(buf, "[INFO]")  != NULL);
