@@ -32,7 +32,13 @@ Auxiliary utility primitives shipped alongside the engine core:
   (compose with `nq_ease` outputs)
 - `nq_rect_contains_circle` + `nq_circle_overlap` (and `_f` float
   variants) — collision primitives (rect-vs-circle contains, circle-
-  vs-circle overlap). All pure integer / float math, no sqrt call.
+  vs-circle overlap). All pure integer / float math.
+- `nq_rect_intersect_circle` (and `_f`) — rect-circle overlap rect
+  (the box bounding the intersection region).
+- `nq_circle_penetration_vector` (and `_f`) — circle-circle separation
+  vector: how much + which direction to translate B out of A. Closes
+  the persistent-collision-response primitive without needing a full
+  physics engine.
 - `nq_anim_color` + `nq_anim_rect` + `nq_anim_vec2` — per-frame animators
   for each primitive type, mirroring `NqAnimFloat`
 - `nq_action_tween_color` + `nq_action_tween_rect` + `nq_action_tween_vec2`
