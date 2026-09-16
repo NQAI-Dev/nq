@@ -7,7 +7,7 @@ pace.
 
 ## Status
 
-Pre-alpha. Five example programs:
+Pre-alpha. Six example programs:
 - `nq_hello_window` — opens a 640x480 SDL3 window, draws a single bouncing
   colored square that bounces off the edges
 - `nq_animated_square` — kitchen-sink demo wiring `nq_clock + nq_scene +
@@ -22,6 +22,9 @@ Pre-alpha. Five example programs:
 - `nq_animatedsprite` — single sprite cycling through four
   procedurally-generated atlas frames via `NqAnimFloat`. Exercises the
   texture + atlas + animation pipeline end-to-end
+- `nq_action_pipeline` — single square moves across the screen under
+  control of `NqAnimVec2` + `nq_action_tween_vec2` + `NqActionManager`.
+  Exercises the full animation-to-action pipeline
 
 Auxiliary utility primitives shipped alongside the engine core:
 - `nq_color_lerp` + `nq_color_from_uint32` — RGBA interpolation
@@ -103,7 +106,7 @@ header in `include/nq/`.
 - Mix bus (master + SFX + music), per-source pitch/volume, sound pooling
 
 ### Phase 6 — tooling & examples (in progress)
-- Examples done (5/5):
+- Examples done (6/6):
   - `examples/hello_window.c` — SDL3 hello window, basic square bounce
   - `examples/animated_square.c` — kitchen-sink demo of Phase 2 + Phase 3
   - `examples/controlled_square.c` — input-driven square via
@@ -111,6 +114,9 @@ header in `include/nq/`.
   - `examples/parallax.c` — three layered scrolls at different speeds
   - `examples/animatedsprite.c` — single sprite cycling through four
     procedurally-generated atlas frames via NqAnimFloat
+  - `examples/action_pipeline.c` — single square moves across the
+    screen under control of `NqAnimVec2` + `nq_action_tween_vec2` +
+    `NqActionManager`. Exercises the full animation-to-action pipeline
 - Examples pending: tiny arcanoid (~250-400 lines; deferred until a
   dedicated session is available)
 - CI ✅ — GitHub Actions on ubuntu-24.04 / macos-latest / windows-latest
