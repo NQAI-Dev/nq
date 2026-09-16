@@ -133,3 +133,21 @@ NQ_TEST_REGISTER("manager_ticks_all_completes",     test_manager_ticks_all_compl
 NQ_TEST_REGISTER("manager_capacity_full",           test_manager_capacity_full);
 NQ_TEST_REGISTER("manager_clear_no_destroy",        test_manager_clear_removes_without_destroying);
 NQ_TEST_REGISTER("manager_null_safe",               test_manager_null_safe);
+
+static void test_manager_capacity_constant(void) {
+    /* The capacity is fixed at compile time. */
+    NQ_ASSERT_EQ(nq_action_manager_capacity(), NQ_ACTION_MANAGER_MAX);
+    /* Independent of how many actions are tracked. */
+    NqActionManager *m = nq_action_manager_create();
+    NQ_ASSERT_EQ(nq_action_manager_capacity(), NQ_ACTION_MANAGER_MAX);
+    /* Add a few actions and verify capacity unchanged. */
+    TickCtx ctx = {0, 1000, 0};
+    NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
+    nq_action_manager_add(m, a);
+    nq_action_manager_add(m, a);
+    NQ_ASSERT_EQ(nq_action_manager_capacity(), NQ_ACTION_MANAGER_MAX);
+    nq_action_manager_destroy(m);
+    nq_action_destroy(a);
+}
+
+NQ_TEST_REGISTER("manager_capacity_constant",  test_manager_capacity_constant);

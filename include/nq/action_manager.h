@@ -50,4 +50,10 @@ void nq_action_manager_clear(NqActionManager *m);
 /* Queries. */
 size_t nq_action_manager_count(const NqActionManager *m);
 
+/* Returns the maximum number of actions the manager can track (the
+ * fixed upper bound set at compile time as NQ_ACTION_MANAGER_MAX).
+ * Useful for callers that want to check capacity before add() — saves
+ * a trial-and-error add() that would return 0 only at saturation. */
+int nq_action_manager_capacity(void);
+
 #endif /* NQ_ACTION_MANAGER_H */

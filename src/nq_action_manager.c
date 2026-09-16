@@ -80,3 +80,7 @@ void nq_action_manager_clear(NqActionManager *m) {
 size_t nq_action_manager_count(const NqActionManager *m) {
     return m ? m->count : 0;
 }
+
+int nq_action_manager_capacity(void) {
+    return NQ_ACTION_MANAGER_MAX;
+}
