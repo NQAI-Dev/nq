@@ -403,3 +403,51 @@ NQ_TEST_REGISTER("rect_penetration_circle_outside", test_rect_penetration_circle
 NQ_TEST_REGISTER("rect_penetration_circle_no_overlap", test_rect_penetration_circle_no_overlap_returns_zero);
 NQ_TEST_REGISTER("rect_penetration_circle_corner", test_rect_penetration_circle_pokes_corner);
 NQ_TEST_REGISTER("rect_penetration_circle_inside", test_rect_penetration_circle_inside_pushes_axis);
+
+static void test_circle_overlap_with_penetration_no_overlap(void) {
+    /* Disjoint circles → zero vector */
+    NqVec2f v = nq_circle_overlap_with_penetration_f(0.0f, 0.0f, 5.0f,
+                                                     100.0f, 0.0f, 5.0f);
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
+static void test_circle_overlap_with_penetration_overlapping(void) {
+    /* Two overlapping circles centred 6 apart, each radius 5.
+     * Distance = 6, r_sum = 10, overlap = 4.
+     * Expected vector: (4, 0) — push B along +X by 4 units. */
+    NqVec2f v = nq_circle_overlap_with_penetration_f(0.0f, 0.0f, 5.0f,
+                                                     6.0f, 0.0f, 5.0f);
+    NQ_ASSERT(v.y == 0.0f);
+    float mag = sqrtf(v.x * v.x + v.y * v.y);
+    NQ_ASSERT(mag > 3.99f && mag < 4.01f);
+    NQ_ASSERT(v.x > 0.0f);
+}
+
+static void test_circle_overlap_with_penetration_concentric(void) {
+    /* Concentric circles (A and B at same point, both radius 5).
+     * Expected vector: (10, 0) — push B along +X by r_sum. */
+    NqVec2f v = nq_circle_overlap_with_penetration_f(5.0f, 5.0f, 5.0f,
+                                                     5.0f, 5.0f, 5.0f);
+    NQ_ASSERT(v.y == 0.0f);
+    NQ_ASSERT(v.x == 10.0f);
+}
+
+static void test_circle_overlap_with_penetration_diagonal(void) {
+    /* Two overlapping circles at 45°. Distance² = 32 (4² + 4²),
+     * distance = √32 ≈ 5.66, r_sum = 10, overlap = 10 - 5.66 ≈ 4.34.
+     * Push along diagonal axis (4/√32, 4/√32). */
+    NqVec2f v = nq_circle_overlap_with_penetration_f(0.0f, 0.0f, 5.0f,
+                                                     4.0f, 4.0f, 5.0f);
+    float mag = sqrtf(v.x * v.x + v.y * v.y);
+    NQ_ASSERT(mag > 4.30f && mag < 4.38f);
+    /* Both components should be approximately equal (diagonal push) */
+    NQ_ASSERT(v.x == v.y);
+    /* Both positive (push away from origin) */
+    NQ_ASSERT(v.x > 0.0f);
+}
+
+NQ_TEST_REGISTER("circle_overlap_with_penetration_no_overlap", test_circle_overlap_with_penetration_no_overlap);
+NQ_TEST_REGISTER("circle_overlap_with_penetration_overlapping", test_circle_overlap_with_penetration_overlapping);
+NQ_TEST_REGISTER("circle_overlap_with_penetration_concentric", test_circle_overlap_with_penetration_concentric);
+NQ_TEST_REGISTER("circle_overlap_with_penetration_diagonal", test_circle_overlap_with_penetration_diagonal);
