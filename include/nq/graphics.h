@@ -33,6 +33,18 @@ int        nq_renderer_clear(NqRenderer *r, NqColor color);
 int        nq_renderer_set_draw_color(NqRenderer *r, NqColor color);
 int        nq_renderer_fill_rect(NqRenderer *r, NqColor color,
                                  int x, int y, int w, int h);
+
+/* Filled circle (disk) centred at (cx, cy) with radius r.
+ * Backing implementation: SDL_RenderFillCircle (SDL3 >= 3.0).
+ * Returns 0 on success, -1 on invalid args or SDL failure. */
+int        nq_renderer_fill_circle(NqRenderer *renderer, NqColor color,
+                                   int cx, int cy, int radius);
+
+/* Circle outline (1px ring) centred at (cx, cy) with radius r.
+ * Backing implementation: SDL_RenderCircle (SDL3 >= 3.0).
+ * Returns 0 on success, -1 on invalid args or SDL failure. */
+int        nq_renderer_draw_circle(NqRenderer *renderer, NqColor color,
+                                   int cx, int cy, int radius);
 void       nq_renderer_present(NqRenderer *r);
 
 /* Backend escape hatch: returns the underlying SDL_Renderer* for code

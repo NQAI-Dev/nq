@@ -71,6 +71,29 @@ int nq_renderer_fill_rect(NqRenderer *r, NqColor c,
     return SDL_RenderFillRect(r->sdl_renderer, &rect) ? -1 : 0;
 }
 
+int nq_renderer_fill_circle(NqRenderer *renderer, NqColor c,
+                            int cx, int cy, int radius) {
+    if (!renderer || radius <= 0) {
+        return -1;
+    }
+    if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
+        return -1;
+    }
+    /* SDL_RenderFillCircle returns 0 on success — wrap as our convention. */
+    return SDL_RenderFillCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+}
+
+int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
+                            int cx, int cy, int radius) {
+    if (!renderer || radius <= 0) {
+        return -1;
+    }
+    if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
+        return -1;
+    }
+    return SDL_RenderCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+}
+
 void nq_renderer_present(NqRenderer *r) {
     if (!r) {
         return;
