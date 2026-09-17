@@ -255,6 +255,48 @@ static inline NqVec2f nq_rect_penetration_vector_f(NqRect r, float cx, float cy,
     return nq_vec2f(-dx / dist * overlap, -dy / dist * overlap);
 }
 
+/* Combined rect-vs-rect overlap-check + penetration-vector: returns the
+ * vector to translate rect b out of rect a when they overlap, or
+ * NqVec2f{0, 0} when they don't. Saves a branch for callers that want
+ * both the bool check AND the separation vector in the same call
+ * (the standard per-frame physics-loop pattern for tile-map collision
+ * response).
+ *
+ * The returned vector matches the convention of
+ * nq_rect_penetration_vector_f (already shipped at 01cffa7): smallest-
+ * overlap axis wins, direction chosen by comparing the two rect centres.
+ */
+static inline NqVec2f nq_rect_overlap_with_penetration_f(NqRect a, NqRect b) {
+    /* Empty-rect early bail: matches nq_rect_intersects' convention. */
+    if (a.w <= 0 || a.h <= 0 || b.w <= 0 || b.h <= 0) {
+        return nq_vec2f(0.0f, 0.0f);
+    }
+    float bx_l = (float)b.x;
+    float bx_r = (float)(b.x + b.w);
+    float ax_l = (float)a.x;
+    float ax_r = (float)(a.x + a.w);
+    float overlap_x = (bx_r < ax_r ? bx_r : ax_r) - (bx_l > ax_l ? bx_l : ax_l);
+
+    float by_t = (float)b.y;
+    float by_b = (float)(b.y + b.h);
+    float ay_t = (float)a.y;
+    float ay_b = (float)(a.y + a.h);
+    float overlap_y = (by_b < ay_b ? by_b : ay_b) - (by_t > ay_t ? by_t : ay_t);
+
+    if (overlap_x <= 0.0f || overlap_y <= 0.0f) {
+        return nq_vec2f(0.0f, 0.0f);  /* not overlapping on at least one axis */
+    }
+    if (overlap_x < overlap_y) {
+        float a_cx = (ax_l + ax_r) * 0.5f;
+        float b_cx = (bx_l + bx_r) * 0.5f;
+        return nq_vec2f(a_cx < b_cx ? -overlap_x : overlap_x, 0.0f);
+    }
+    float a_cy = (ay_t + ay_b) * 0.5f;
+    float b_cy = (by_t + by_b) * 0.5f;
+    return nq_vec2f(0.0f, a_cy < b_cy ? -overlap_y : overlap_y);
+}
+
+
 static inline NqRect nq_rect_intersect_circle(NqRect r, int cx, int cy, int radius) {
     /* Same circle-vs-rect no-overlap check as nq_rect_contains_circle's
      * counterpart — bail early when there is nothing to clip. */
