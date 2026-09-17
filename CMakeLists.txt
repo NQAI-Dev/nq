@@ -101,6 +101,14 @@ target_link_libraries(nq_animatedsprite PRIVATE nq_core)
 add_executable(nq_action_pipeline examples/action_pipeline.c)
 target_link_libraries(nq_action_pipeline PRIVATE nq_core)
 
+# Seventh example: mouse_paint — click-and-drag paint app demonstrating
+# the full Phase 7 input API (inside_rect, pressed, down, wheel) plus
+# the FPS counter overlay. Uses every mouse primitive + fps primitive
+# in a single real example, so docs and CI logs both show Phase 7
+# primitives working end-to-end.
+add_executable(nq_mouse_paint examples/mouse_paint.c)
+target_link_libraries(nq_mouse_paint PRIVATE nq_core)
+
 # SDL3's headers trip -Wpedantic at -std=c11 (GNU extensions upstream).
 # Drop it only for SDL3 transitive headers; keep our own code strict.
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
