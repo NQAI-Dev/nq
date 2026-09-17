@@ -94,6 +94,17 @@ int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
     return SDL_RenderCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
 }
 
+int nq_renderer_draw_line(NqRenderer *renderer, NqColor c,
+                          int x1, int y1, int x2, int y2) {
+    if (!renderer) {
+        return -1;
+    }
+    if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
+        return -1;
+    }
+    return SDL_RenderLine(renderer->sdl_renderer, (float)x1, (float)y1, (float)x2, (float)y2) ? -1 : 0;
+}
+
 void nq_renderer_present(NqRenderer *r) {
     if (!r) {
         return;

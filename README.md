@@ -168,6 +168,11 @@ to continue»). Phase 7 закрывает input + perf observability story
 
 - **C11, zero warnings.** `-Wall -Wextra -Wpedantic -Werror` for own code. SDL3
   headers get `-Wno-pedantic` (GNU extensions upstream).
+- **Render primitives:** `clear` / `fill_rect` / `draw_circle` (outline) /
+  `fill_circle` (disk) / `draw_line`. All backed by SDL3 (`SDL_RenderFillRect`,
+  `SDL_RenderFillCircle`, `SDL_RenderLine`). 1px lines at integer
+  coords render half-on/half-off the pixel — for crisp lines offset
+  by +0.5 or set `clip_rect` on the SDL_Renderer.
 - **Static lib `nq_core` + public headers in `include/nq/`.** Consumers link to
   the core, never see SDL3 directly.
 - **Opaque structs** (`NqRenderer`, `NqTexture`, `NqNode`) so a future

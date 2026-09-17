@@ -45,6 +45,14 @@ int        nq_renderer_fill_circle(NqRenderer *renderer, NqColor color,
  * Returns 0 on success, -1 on invalid args or SDL failure. */
 int        nq_renderer_draw_circle(NqRenderer *renderer, NqColor color,
                                    int cx, int cy, int radius);
+
+/* Line from (x1, y1) to (x2, y2) in screen coords.
+ * Backing implementation: SDL_RenderLine (SDL3 >= 3.0).
+ * Returns 0 on success, -1 on invalid args or SDL failure.
+ * Note: a 1px line at integer coords is rendered half-on / half-off
+ * the pixel — for crisp lines use x+1 / y+1 or NqRenderer::clip_rect. */
+int        nq_renderer_draw_line(NqRenderer *renderer, NqColor color,
+                                 int x1, int y1, int x2, int y2);
 void       nq_renderer_present(NqRenderer *r);
 
 /* Backend escape hatch: returns the underlying SDL_Renderer* for code
