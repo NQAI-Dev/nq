@@ -112,6 +112,35 @@ static inline int nq_circle_overlap_f(float cx1, float cy1, float r1,
     return (dx * dx + dy * dy) <= (r * r);
 }
 
+/* Combined overlap-check + penetration-vector: returns the vector to
+ * translate circle B out of circle A when they overlap, or
+ * NqVec2f{0,0} when they don't. Saves a sqrt + branch for callers
+ * that want both the bool check AND the separation vector in the
+ * same call (the standard per-frame physics-loop pattern).
+ *
+ * Handles the concentric edge case (distance 0) by pushing along
+ * +X by r_sum, matching nq_circle_penetration_vector_f's convention.
+ */
+static inline NqVec2f nq_circle_overlap_with_penetration_f(float ax, float ay, float ar,
+                                                          float bx, float by, float br) {
+    if (ar < 0.0f) ar = 0.0f;
+    if (br < 0.0f) br = 0.0f;
+    float dx = bx - ax;
+    float dy = by - ay;
+    float dist_sq = dx * dx + dy * dy;
+    float r_sum = ar + br;
+    float r_sum_sq = r_sum * r_sum;
+    if (dist_sq >= r_sum_sq) {
+        return nq_vec2f(0.0f, 0.0f);
+    }
+    if (dist_sq == 0.0f) {
+        return nq_vec2f(r_sum, 0.0f);
+    }
+    float dist = sqrtf(dist_sq);
+    float overlap = r_sum - dist;
+    return nq_vec2f(dx / dist * overlap, dy / dist * overlap);
+}
+
 /* Circle-vs-rect collision: returns 1 if a circle of `radius` centred
  * at (cx, cy) overlaps (or touches) the rect, 0 otherwise. Useful for
  * entity-radius-vs-tile / particle-vs-wall checks. Edge cases:
