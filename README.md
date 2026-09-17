@@ -134,6 +134,36 @@ header in `include/nq/`.
   `SDL_GetPerformanceCounter`, gated by `NQ_BENCH` for production builds
 - `tools/nq-conv` ✅ — sprite-sheet → NqAtlas C-header generator
 
+### Phase 7 — input handling + perf observability ✅
+
+Закрыто в этом релизе (commit'ы `cc4a967`, `7a9a4de`, `65ea94d`):
+
+- **Mouse wheel scroll** (`nq_input_mouse_wheel`) — accumulated wheel
+  ticks з момента последнего `nq_input_begin_frame()`. Аналог SDL3
+  relative-motion model: несколько events в одном кадре суммируются.
+- **Hit-test helper** (`nq_input_mouse_inside_rect`) — half-open
+  rect convention как у `nq_rect_contains`: `x ∈ [x, x+w)`,
+  `y ∈ [y, y+h)`. Empty rect (`w<=0 || h<=0`) → `0`. Полезно для
+  hover detection на UI elements.
+- **FPS counter** (`NqFpsCounter` + `nq_fps_counter_*`) — rolling
+  1-second window. `init()` збрасывает состояние, `tick(elapsed_seconds)`
+  инкрементирует и пересчитывает FPS когда window ≥ 1.0s, `get()`
+  возвращает округлённое к ближайшему int значение (0 до первого
+  полного окна). Trigger threshold `>= 0.999` обрабатывает IEEE 754
+  drift на exactly-1-second inputs.
+- **`examples/mouse_paint.c`** — drag-paint app демонстрирует
+  полный Phase 7 API в одном render loop: `inside_rect` для canvas
+  bounds и clear-button hit-test, `pressed` как edge-trigger для
+  clear, `down` как level-trigger для drag-paint, `wheel` для brush
+  size (1..3 cells), `nq_fps_counter_get` для overlay без text
+  rendering API. FPS показан через row of coloured bars (green
+  <60, yellow 60-99, red ≥100).
+
+Phase 4 (2D physics) и Phase 5 (audio) — deferred per `Edu's
+direction` («nq Phase 6 closed, will need explicit instruction when
+to continue»). Phase 7 закрывает input + perf observability story
+до того как перейдём к ним.
+
 ## Architectural principles
 
 - **C11, zero warnings.** `-Wall -Wextra -Wpedantic -Werror` for own code. SDL3
