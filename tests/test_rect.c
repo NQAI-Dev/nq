@@ -451,3 +451,48 @@ NQ_TEST_REGISTER("circle_overlap_with_penetration_no_overlap", test_circle_overl
 NQ_TEST_REGISTER("circle_overlap_with_penetration_overlapping", test_circle_overlap_with_penetration_overlapping);
 NQ_TEST_REGISTER("circle_overlap_with_penetration_concentric", test_circle_overlap_with_penetration_concentric);
 NQ_TEST_REGISTER("circle_overlap_with_penetration_diagonal", test_circle_overlap_with_penetration_diagonal);
+
+static void test_rect_overlap_with_penetration_no_overlap(void) {
+    /* Two disjoint rects → zero vector */
+    NqVec2f v = nq_rect_overlap_with_penetration_f(
+        nq_rect(0, 0, 100, 100),
+        nq_rect(200, 200, 50, 50));
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
+static void test_rect_overlap_with_penetration_simple_overlap(void) {
+    /* Two rects overlapping on both axes. Overlap on X = 50 (a.x=0..100, b.x=50..150)
+     * Overlap on Y = 60 (a.y=0..100, b.y=40..140)
+     * Pick smaller overlap (X = 50), direction based on centre comparison. */
+    NqRect a = nq_rect(0, 0, 100, 100);
+    NqRect b = nq_rect(50, 40, 100, 100);
+    NqVec2f v = nq_rect_overlap_with_penetration_f(a, b);
+    /* b is to the right of a's centre (a_cx=50, b_cx=100), so push +X by overlap_x=50. */
+    NQ_ASSERT(v.y == 0.0f);
+    NQ_ASSERT(v.x == 50.0f);
+}
+
+static void test_rect_overlap_with_penetration_y_axis_wins(void) {
+    /* Smaller overlap on Y → push on Y axis. */
+    NqRect a = nq_rect(0, 0, 100, 100);
+    NqRect b = nq_rect(20, 80, 100, 100);
+    NqVec2f v = nq_rect_overlap_with_penetration_f(a, b);
+    /* Overlap X = 80, Overlap Y = 20 → push Y. b is below a's centre → push -Y by 20. */
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == -20.0f);
+}
+
+static void test_rect_overlap_with_penetration_empty_rect(void) {
+    /* Empty rects → zero vector (matches nq_rect_intersects convention). */
+    NqVec2f v = nq_rect_overlap_with_penetration_f(
+        nq_rect(0, 0, 100, 100),
+        nq_rect(50, 50, 0, 0));  /* w=0, h=0 → empty */
+    NQ_ASSERT(v.x == 0.0f);
+    NQ_ASSERT(v.y == 0.0f);
+}
+
+NQ_TEST_REGISTER("rect_overlap_with_penetration_no_overlap", test_rect_overlap_with_penetration_no_overlap);
+NQ_TEST_REGISTER("rect_overlap_with_penetration_simple_overlap", test_rect_overlap_with_penetration_simple_overlap);
+NQ_TEST_REGISTER("rect_overlap_with_penetration_y_axis_wins", test_rect_overlap_with_penetration_y_axis_wins);
+NQ_TEST_REGISTER("rect_overlap_with_penetration_empty_rect", test_rect_overlap_with_penetration_empty_rect);
