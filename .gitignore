@@ -26,3 +26,4 @@ Thumbs.db
 
 # Local build artifacts (verification, not committed)
 build-tools-test/
+*.gch
