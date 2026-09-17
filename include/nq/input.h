@@ -37,6 +37,7 @@ typedef struct {
     int  rel_y;
     int  buttons;   /* bitmask of NQ_MOUSE_BUTTON_* */
     int  prev_buttons;
+    int  wheel;     /* accumulated wheel ticks since last begin_frame() */
 } NqMouse;
 
 typedef struct {
@@ -52,10 +53,13 @@ void nq_input_init(NqInput *in);
 void nq_input_begin_frame(NqInput *in);
 
 /* Backend setters — called by the platform event pump, once per
- * physical event. Key scancodes follow SDL3 convention (1..512). */
+ * physical event. Key scancodes follow SDL3 convention (1..512).
+ * Wheel ticks accumulate into NqMouse.wheel until the next
+ * nq_input_begin_frame(). */
 void nq_input_set_key(NqInput *in, int scancode, int down);
 void nq_input_set_mouse_pos(NqInput *in, int x, int y);
 void nq_input_set_mouse_button(NqInput *in, int button_mask);
+void nq_input_set_mouse_wheel(NqInput *in, int delta);
 
 /* Queries. `pressed` = edge down this frame; `released` = edge up.
  * `down` = currently held (regardless of when pressed). */
@@ -69,6 +73,8 @@ int nq_input_mouse_dx(const NqInput *in);
 int nq_input_mouse_dy(const NqInput *in);
 int nq_input_mouse_down(const NqInput *in, int button_mask);
 int nq_input_mouse_pressed(const NqInput *in, int button_mask);
+int nq_input_mouse_wheel(const NqInput *in);
+int nq_input_mouse_inside_rect(const NqInput *in, int x, int y, int w, int h);
 
 /* Reset all keys / mouse buttons / mouse position to defaults. Useful
  * when a window loses focus (otherwise the "still pressed" state leaks
