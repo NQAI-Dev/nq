@@ -48,7 +48,45 @@ jobs:
         shell: bash
         run: ${{ matrix.install }}
 
-      - name: Configure
+      # ccache dramatically speeds up re-runs of CI (5-10x faster
+      # compilation when only a few files changed versus a clean
+      # rebuild). Ubuntu/macOS ship ccache; Windows runner uses
+      # cl.exe natively so ccache is skipped there.
+      - name: Install ccache (ubuntu/macos)
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get install -y ccache
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            brew install ccache
+          fi
+          ccache --version
+
+      - name: Cache ccache
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-latest'
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ${{ runner.os }}-ccache-${{ hashFiles('CMakeLists.txt', 'include/nq/*.h', 'src/*.c') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
+      - name: Show ccache stats (post-restore)
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-latest'
+        shell: bash
+        run: ccache --show-config || true
+
+      - name: Configure (with ccache)
+        if: matrix.os == 'ubuntu-24.04' || matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          cmake -S . -B build -G Ninja -DNQ_BUILD_TESTS=ON \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Configure (no ccache)
+        if: matrix.os != 'ubuntu-24.04' && matrix.os != 'macos-latest'
         shell: bash
         run: cmake -S . -B build -G Ninja -DNQ_BUILD_TESTS=ON
 
