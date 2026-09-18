@@ -122,3 +122,12 @@ int nq_renderer_draw_round_rect(NqRenderer *r, NqColor color, NqRect rect, int r
 
     return 0;
 }
+
+int nq_renderer_draw_cross(NqRenderer *r, NqColor color, int x, int y, int size) {
+    if (!r || size <= 0) return -1;
+    
+    int ret1 = nq_renderer_draw_line(r, color, x - size, y, x + size, y);
+    int ret2 = nq_renderer_draw_line(r, color, x, y - size, x, y + size);
+    
+    return (ret1 == 0 && ret2 == 0) ? 0 : -1;
+}

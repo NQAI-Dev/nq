@@ -8,3 +8,6 @@ int nq_renderer_fill_round_rect(NqRenderer *r, NqColor color, NqRect rect, int r
 int nq_renderer_draw_round_rect(NqRenderer *r, NqColor color, NqRect rect, int radius);
 
 #endif
+
+/* Optional utility function for a crosshair */
+int nq_renderer_draw_cross(NqRenderer *r, NqColor color, int x, int y, int size);
