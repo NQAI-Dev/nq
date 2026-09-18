@@ -131,3 +131,42 @@ int nq_renderer_draw_cross(NqRenderer *r, NqColor color, int x, int y, int size)
     
     return (ret1 == 0 && ret2 == 0) ? 0 : -1;
 }
+
+int nq_renderer_draw_thick_line(NqRenderer *r, NqColor color, int x1, int y1, int x2, int y2, int thickness) {
+    if (!r || thickness <= 0) return -1;
+    if (thickness == 1) {
+        return nq_renderer_draw_line(r, color, x1, y1, x2, y2);
+    }
+    
+    // We would ideally compute the polygon points and draw it.
+    // Given SDL3's limitations with filled polygons out of the box (in standard 2D render API),
+    // drawing a thick line with pure SDL_RenderLines without a dedicated geometric rasterizer
+    // is tricky. Since NqRenderer uses the generic SDL renderer, we'll approximate with multiple lines
+    // along the perpendicular vector for simplicity.
+    // For a real game, passing a 1x1 white texture to RenderGeometry is correct, but we lack
+    // direct access to texture/geometry API here without polluting the dependency scope.
+    
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    
+    // Rough length squared
+    float len_sq = (float)(dx * dx + dy * dy);
+    if (len_sq < 1.0f) return 0;
+    
+    // Perpendicular vector normalized
+    #include <math.h>
+    float len = sqrtf(len_sq);
+    float nx = -dy / len;
+    float ny =  dx / len;
+    
+    int ret = 0;
+    int half_thickness = thickness / 2;
+    for (int i = -half_thickness; i <= half_thickness; i++) {
+        int ox = (int)(nx * i);
+        int oy = (int)(ny * i);
+        if (nq_renderer_draw_line(r, color, x1 + ox, y1 + oy, x2 + ox, y2 + oy) != 0) {
+            ret = -1;
+        }
+    }
+    return ret;
+}

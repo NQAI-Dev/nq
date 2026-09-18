@@ -11,3 +11,5 @@ int nq_renderer_draw_round_rect(NqRenderer *r, NqColor color, NqRect rect, int r
 
 /* Optional utility function for a crosshair */
 int nq_renderer_draw_cross(NqRenderer *r, NqColor color, int x, int y, int size);
+/* Thick line utility using rotated rectangle */
+int nq_renderer_draw_thick_line(NqRenderer *r, NqColor color, int x1, int y1, int x2, int y2, int thickness);
