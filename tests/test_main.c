@@ -56,6 +56,14 @@ static int nq_test_count = 0;
     }                                                                       \
 } while (0)
 
+void nq_test_register_internal(const char* name, void (*fn)(void)) {
+    if (nq_test_count < NQ_TEST_MAX) {
+        nq_test_table[nq_test_count].name = name;
+        nq_test_table[nq_test_count].fn = fn;
+        nq_test_count++;
+    }
+}
+
 static int nq_test_run(const char *name_filter) {
     int passed = 0;
     int failed = 0;

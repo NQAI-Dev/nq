@@ -37,6 +37,8 @@ add_library(nq_core STATIC
     src/nq_scene.c
     src/nq_action.c
     src/nq_action_tween.c
+    src/nq_action_tween_rect.c
+    src/nq_action_tween_vec2.c
     src/nq_action_delay.c
     src/nq_action_manager.c
     src/nq_input_sdl3.c
@@ -48,6 +50,8 @@ add_library(nq_core STATIC
     src/nq_input_text.c
     src/nq_anim_color.c
     src/nq_action_tween_color.c
+    src/nq_action_tween_rect.c
+    src/nq_action_tween_vec2.c
     src/nq_action_tween_rect.c
     src/nq_anim_rect.c
     src/nq_anim_vec2.c
