@@ -27,6 +27,8 @@ Pre-alpha. Six example programs:
   Exercises the full animation-to-action pipeline
 
 Auxiliary utility primitives shipped alongside the engine core:
+- `nq_camera2d` — backend-independent world/screen transforms, panning,
+  positive zoom validation, and anchor-preserving cursor zoom
 - `nq_color_lerp` + `nq_color_from_uint32` — RGBA interpolation
 - `nq_rect_lerp`, `nq_vec2i_lerp`, `nq_vec2f_lerp` — geometric lerps
   (compose with `nq_ease` outputs)
