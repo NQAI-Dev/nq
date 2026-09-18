@@ -105,6 +105,18 @@ int nq_renderer_draw_line(NqRenderer *renderer, NqColor c,
     return SDL_RenderLine(renderer->sdl_renderer, (float)x1, (float)y1, (float)x2, (float)y2) ? -1 : 0;
 }
 
+int nq_renderer_draw_rect(NqRenderer *r, NqColor c,
+                          int x, int y, int w, int h) {
+    if (!r) {
+        return -1;
+    }
+    if (!SDL_SetRenderDrawColor(r->sdl_renderer, c.r, c.g, c.b, c.a)) {
+        return -1;
+    }
+    SDL_FRect rect = { (float)x, (float)y, (float)w, (float)h };
+    return SDL_RenderRect(r->sdl_renderer, &rect) ? -1 : 0;
+}
+
 int nq_renderer_draw_triangle(NqRenderer *renderer, NqColor c,
                               int x0, int y0,
                               int x1, int y1,

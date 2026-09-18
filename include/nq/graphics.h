@@ -34,6 +34,12 @@ int        nq_renderer_set_draw_color(NqRenderer *r, NqColor color);
 int        nq_renderer_fill_rect(NqRenderer *r, NqColor color,
                                  int x, int y, int w, int h);
 
+/* Rectangle outline.
+ * Backing implementation: SDL_RenderRect (SDL3).
+ * Returns 0 on success, -1 on invalid args or SDL failure. */
+int        nq_renderer_draw_rect(NqRenderer *r, NqColor color,
+                                 int x, int y, int w, int h);
+
 /* Filled circle (disk) centred at (cx, cy) with radius r.
  * Backing implementation: SDL_RenderFillCircle (SDL3 >= 3.0).
  * Returns 0 on success, -1 on invalid args or SDL failure. */
