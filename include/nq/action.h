@@ -42,6 +42,7 @@ typedef void (*nq_action_reset_fn)(void *user);
 NqAction *nq_action_create(nq_action_tick_fn tick,
                            nq_action_done_fn done,
                            void *user);
+void *nq_action_get_user(NqAction *a);
 void      nq_action_destroy(NqAction *a);
 
 /* Step the action forward by dt seconds. Returns the post-update state. */

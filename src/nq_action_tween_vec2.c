@@ -5,7 +5,7 @@
 static NqActionState vec2_tick_dispatch(NqAction *a, float dt, void *user) {
     nq_action_tick_fn user_tick = (nq_action_tick_fn)user;
     if (!user_tick) return NQ_ACTION_FINISHED;
-    return user_tick(a, dt, a->user);
+    return user_tick(a, dt, NULL);
 }
 
 NqActionTweenVec2 *nq_action_tween_vec2_create(nq_action_tick_fn vec2_tick,

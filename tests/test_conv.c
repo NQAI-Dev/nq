@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 /*
  * Integration tests for tools/nq-conv. We invoke the nq-conv CLI as a
  * subprocess (via popen) and validate the generated header against

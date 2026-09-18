@@ -5,7 +5,7 @@
  * empty-rect handling, negative-coordinate cells, pool overflow (silent
  * drop), clear/reuse, and the entry_count diagnostic.
  */
-#include "test_main.h"
+#include "test_main.c"
 
 #include "nq/spatial_hash.h"
 #include "nq/rect.h"

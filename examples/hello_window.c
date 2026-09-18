@@ -103,7 +103,7 @@ int main(void) {
             NQ_COLOR_RGB(
                 (uint8_t)((box_x * 255) / NQ_WINDOW_W),
                 (uint8_t)((box_y * 255) / NQ_WINDOW_H),
-                (uint8_t)200, 255),
+                (uint8_t)200),
             box_x, box_y, NQ_BOX_W, NQ_BOX_H);
         nq_renderer_present(renderer);
     }

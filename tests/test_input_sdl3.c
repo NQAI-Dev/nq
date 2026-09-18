@@ -9,7 +9,7 @@ static SDL_Event make_key(SDL_EventType t, SDL_Keycode k) {
     SDL_Event e = {0};
     e.type = t;
     e.key.key = k;
-    e.key.scancode = SDL_GetScancodeFromKey(k);  /* safe without init */
+    e.key.scancode = SDL_GetScancodeFromKey(k, NULL);  /* safe without init */
     return e;
 }
 static SDL_Event make_btn(SDL_EventType t, uint8_t button) {
@@ -36,12 +36,11 @@ static void test_key_down_up_pump(void) {
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &down), 1);
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &up),   1);
     /* After down: key down. After up: key up. */
-    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE)), 1);
+    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE, NULL)), 1);
     /* Press → released edge in current frame: */
     nq_input_begin_frame(&in);
-    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE)), 0);
-    NQ_ASSERT_EQ(nq_input_key_released(&in, SDL_GetScancodeFromKey(SDLK_SPACE)), 1);
-    nq_input_destroy(&in);
+    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE, NULL)), 0);
+    NQ_ASSERT_EQ(nq_input_key_released(&in, SDL_GetScancodeFromKey(SDLK_SPACE, NULL)), 1);
 }
 
 static void test_mouse_button_pump(void) {
@@ -53,7 +52,7 @@ static void test_mouse_button_pump(void) {
     SDL_Event lu = make_btn(SDL_EVENT_MOUSE_BUTTON_UP,   SDL_BUTTON_LEFT);
     SDL_Event rd = make_btn(SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_BUTTON_RIGHT);
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &ld), 1);
-    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE)), 0);  /* unchanged */
+    NQ_ASSERT_EQ(nq_input_key_down(&in, SDL_GetScancodeFromKey(SDLK_SPACE, NULL)), 0);  /* unchanged */
     NQ_ASSERT(nq_input_mouse_down(&in, NQ_MOUSE_BUTTON_LEFT));
     NQ_ASSERT(!nq_input_mouse_down(&in, NQ_MOUSE_BUTTON_RIGHT));
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &rd), 1);
@@ -62,7 +61,6 @@ static void test_mouse_button_pump(void) {
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &lu), 1);
     NQ_ASSERT(!nq_input_mouse_down(&in, NQ_MOUSE_BUTTON_LEFT));
     NQ_ASSERT(nq_input_mouse_down(&in, NQ_MOUSE_BUTTON_RIGHT));
-    nq_input_destroy(&in);
 }
 
 static void test_mouse_motion_pump(void) {
@@ -76,7 +74,6 @@ static void test_mouse_motion_pump(void) {
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &m2), 1);
     NQ_ASSERT_EQ(nq_input_mouse_x(&in), 150);
     NQ_ASSERT_EQ(nq_input_mouse_y(&in), 80);
-    nq_input_destroy(&in);
 }
 
 static void test_unknown_event_returns_zero(void) {
@@ -85,7 +82,6 @@ static void test_unknown_event_returns_zero(void) {
     SDL_Event e = {0};
     e.type = SDL_EVENT_QUIT;  /* quit isn't an input event */
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, &e), 0);
-    nq_input_destroy(&in);
 }
 
 static void test_null_safe(void) {
@@ -95,7 +91,6 @@ static void test_null_safe(void) {
     NqInput in;
     nq_input_init(&in);
     NQ_ASSERT_EQ(nq_input_pump_sdl3_event(&in, NULL), 0);
-    nq_input_destroy(&in);
 }
 
 NQ_TEST_REGISTER("input_sdl3_key_down_up",    test_key_down_up_pump);

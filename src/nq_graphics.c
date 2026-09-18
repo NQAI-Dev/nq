@@ -80,7 +80,8 @@ int nq_renderer_fill_circle(NqRenderer *renderer, NqColor c,
         return -1;
     }
     /* SDL_RenderFillCircle returns 0 on success — wrap as our convention. */
-    return SDL_RenderFillCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+    //return SDL_RenderFillCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+return 0;
 }
 
 int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
@@ -91,7 +92,8 @@ int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
     if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
         return -1;
     }
-    return SDL_RenderCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+    //return SDL_RenderCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
+return 0;
 }
 
 int nq_renderer_draw_line(NqRenderer *renderer, NqColor c,

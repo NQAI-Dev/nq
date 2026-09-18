@@ -40,8 +40,8 @@ static int should_quit(const SDL_Event *e) {
 /* Maps a held key to an axis sign (-1, 0, +1). Both arrow keys and
  * WASD are recognised so the example is comfortable on any layout. */
 static int axis_sign(const NqInput *in, SDL_Keycode neg, SDL_Keycode pos) {
-    int n = nq_input_key_down(in, SDL_GetScancodeFromKey(neg));
-    int p = nq_input_key_down(in, SDL_GetScancodeFromKey(pos));
+    int n = nq_input_key_down(in, SDL_GetScancodeFromKey(neg, NULL));
+    int p = nq_input_key_down(in, SDL_GetScancodeFromKey(pos, NULL));
     return (int)p - (int)n;
 }
 

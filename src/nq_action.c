@@ -25,6 +25,11 @@ NqAction *nq_action_create(nq_action_tick_fn tick,
     return a;
 }
 
+void *nq_action_get_user(NqAction *a) {
+    if (!a) return NULL;
+    return a->user;
+}
+
 void nq_action_destroy(NqAction *a) {
     free(a);
 }

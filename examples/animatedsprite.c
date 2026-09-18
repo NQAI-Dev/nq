@@ -37,6 +37,7 @@
 #include <string.h>
 
 #define TEX_SIZE   8
+SDL_Texture *nq_texture_get_sdl_texture(const NqTexture *tex);
 #define TEX_FRAMES 4
 #define SPRITE_PX  200
 
@@ -44,7 +45,8 @@
  * example can write its procedural pixels into the texture once at
  * startup. This is the "backend escape hatch" the docs call out. */
 static SDL_Texture *tex_sdl(NqTexture *tex) {
-    return nq_renderer_sdl(((NqRenderer *)(0)), tex);  /* placeholder, see below */
+     
+    return nq_texture_get_sdl_texture(tex);
 }
 
 /* Generates a single 8x8 SDL_Texture (RGBA8888) and paints four 4x4

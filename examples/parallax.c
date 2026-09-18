@@ -117,14 +117,14 @@ int main(void) {
 
         /* Camera input. Arrow keys contribute a constant velocity per
          * held key; mouse x is used as a soft target. */
-        int kx = (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_RIGHT))
-               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_LEFT)))
-              + (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_D))
-               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_A)));
-        int ky = (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_DOWN))
-               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_UP)))
-              + (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_S))
-               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_W)));
+        int kx = (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_RIGHT, NULL))
+               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_LEFT, NULL)))
+              + (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_D, NULL))
+               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_A, NULL)));
+        int ky = (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_DOWN, NULL))
+               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_UP, NULL)))
+              + (nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_S, NULL))
+               - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_W, NULL)));
 
         camera_x += (float)kx * 220.0f * dt;  /* arrow-key velocity */
         camera_y_offset:

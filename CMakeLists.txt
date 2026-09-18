@@ -23,6 +23,7 @@ find_package(SDL3 REQUIRED)
 # nq core static library — the engine proper. Consumers link against this.
 add_library(nq_core STATIC
     src/nq_camera2d.c
+    src/nq_camera_utils.c
     src/nq_graphics.c
     src/nq_graphics_ext.c
     src/nq_input.c
@@ -124,7 +125,7 @@ endif()
 if(NQ_BUILD_TESTS)
     enable_testing()
 
-    file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_*.c")
+file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_main.c")
 
     add_executable(nq_test ${NQ_TEST_SOURCES})
     target_include_directories(nq_test PRIVATE

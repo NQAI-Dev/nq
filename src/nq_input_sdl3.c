@@ -10,7 +10,7 @@ int nq_input_pump_sdl3_event(NqInput *in, const SDL_Event *event) {
          * numeric domain as our internal key table. Convert with the
          * explicit cast so future SDL3 changes can't silently break us. */
         SDL_Keycode key = event->key.key;
-        SDL_Scancode sc = SDL_GetScancodeFromKey(key);
+        SDL_Scancode sc = SDL_GetScancodeFromKey(key, NULL);
         int scancode = (sc >= 0) ? (int)sc : -1;
         nq_input_set_key(in, scancode, event->type == SDL_EVENT_KEY_DOWN);
         return 1;

@@ -75,7 +75,7 @@ static int clamp_axis(int pos, int size, int max) {
     return pos;
 }
 
-static void on_each_frame(NqNode *n, void *user) {
+static void on_each_frame(NqNode *n, float dt, void *user) { (void)dt;
     (void)n;
     (void)user;
     /* The action manager's tick() drives the colour animations; this

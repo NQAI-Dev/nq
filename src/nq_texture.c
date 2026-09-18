@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 200809L
 #include "nq/texture.h"
 #include "nq/log.h"
 
@@ -70,6 +71,11 @@ NqTexture *nq_texture_load_mem(NqRenderer *renderer,
     (void)bytes;
     (void)nbytes;
     return NULL;
+}
+
+SDL_Texture *nq_texture_get_sdl_texture(const NqTexture *tex) {
+    if (!tex) return NULL;
+    return tex->sdl_tex;
 }
 
 void nq_texture_destroy(NqTexture *tex) {

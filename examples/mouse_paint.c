@@ -96,7 +96,7 @@ int main(void) {
         return 1;
     }
 
-    NqWindow *window = nq_window_wrap_sdl(sdl_window);
+    NqWindow *window = (NqWindow *)sdl_window;
     NqRenderer *ren = nq_renderer_create(window);
     if (!ren) {
         fprintf(stderr, "nq: nq_renderer_create failed\n");
@@ -108,8 +108,8 @@ int main(void) {
     NqInput input;
     nq_input_init(&input);
 
-    NqFpsCounter fps;
-    nq_fps_counter_init(&fps);
+    NqFpsCounter fps_counter;
+    nq_fps_counter_init(&fps_counter);
 
     int running = 1;
     SDL_Event event;
@@ -132,7 +132,7 @@ int main(void) {
 
         Uint64 now = SDL_GetPerformanceCounter();
         double elapsed = (double)now / (double)freq;
-        nq_fps_counter_tick(&fps, elapsed);
+        nq_fps_counter_tick(&fps_counter, elapsed);
         last = now;
 
         int mx = nq_input_mouse_x(&input);
@@ -211,8 +211,8 @@ int main(void) {
         /* FPS overlay — drawn as a row of small filled squares (1 per
          * 10 fps), so the user sees FPS at a glance without needing a
          * text renderer. nq's renderer has no text API yet. */
-        int fps = nq_fps_counter_get(&fps);
-        int bars = (fps + 5) / 10;  /* round to nearest 10 */
+        int fps_val = nq_fps_counter_get(&fps_counter);
+        int bars = (fps_val + 5) / 10;  /* round to nearest 10 */
         if (bars > 12) bars = 12;
         for (int i = 0; i < bars; i++) {
             NqColor c = (i < 6)  ? NQ_COLOR_RGB(80, 220, 110)
