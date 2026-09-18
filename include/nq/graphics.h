@@ -53,6 +53,24 @@ int        nq_renderer_draw_circle(NqRenderer *renderer, NqColor color,
  * the pixel — for crisp lines use x+1 / y+1 or NqRenderer::clip_rect. */
 int        nq_renderer_draw_line(NqRenderer *renderer, NqColor color,
                                  int x1, int y1, int x2, int y2);
+
+/* Triangle outline: three edges (x0,y0)→(x1,y1)→(x2,y2)→(x0,y0).
+ * Vertices may be in any winding order.
+ * Returns 0 on success, -1 if renderer is NULL or any edge draw fails. */
+int        nq_renderer_draw_triangle(NqRenderer *renderer, NqColor color,
+                                     int x0, int y0,
+                                     int x1, int y1,
+                                     int x2, int y2);
+
+/* Filled triangle using scanline rasterization (CPU-side, no GPU textures).
+ * Vertices may be in any winding order; concave/degenerate inputs are safe
+ * (degenerate collapses to a line or point and returns 0).
+ * Returns 0 on success, -1 if renderer is NULL or a scanline draw fails. */
+int        nq_renderer_fill_triangle(NqRenderer *renderer, NqColor color,
+                                     int x0, int y0,
+                                     int x1, int y1,
+                                     int x2, int y2);
+
 void       nq_renderer_present(NqRenderer *r);
 
 /* Backend escape hatch: returns the underlying SDL_Renderer* for code
