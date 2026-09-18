@@ -170,3 +170,9 @@ int nq_renderer_draw_thick_line(NqRenderer *r, NqColor color, int x1, int y1, in
     }
     return ret;
 }
+
+int nq_renderer_draw_point(NqRenderer *r, NqColor color, int x, int y) {
+    if (!r) return -1;
+    // We can draw a 1px line to itself, which SDL standardizes as a point
+    return nq_renderer_draw_line(r, color, x, y, x, y);
+}
