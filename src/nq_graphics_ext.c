@@ -176,3 +176,33 @@ int nq_renderer_draw_point(NqRenderer *r, NqColor color, int x, int y) {
     // We can draw a 1px line to itself, which SDL standardizes as a point
     return nq_renderer_draw_line(r, color, x, y, x, y);
 }
+
+int nq_renderer_draw_grid(NqRenderer *r, NqColor color, int x, int y, int w, int h, int cell_w, int cell_h) {
+    if (!r || cell_w <= 0 || cell_h <= 0) return -1;
+    if (w <= 0 || h <= 0) return 0;
+    
+    int ret = 0;
+    // Draw vertical lines
+    for (int i = 0; i <= w; i += cell_w) {
+        if (nq_renderer_draw_line(r, color, x + i, y, x + i, y + h) != 0) {
+            ret = -1;
+        }
+    }
+    // Ensure the rightmost edge is drawn if it doesn't align exactly with cell_w
+    if (w % cell_w != 0) {
+        if (nq_renderer_draw_line(r, color, x + w, y, x + w, y + h) != 0) ret = -1;
+    }
+    
+    // Draw horizontal lines
+    for (int j = 0; j <= h; j += cell_h) {
+        if (nq_renderer_draw_line(r, color, x, y + j, x + w, y + j) != 0) {
+            ret = -1;
+        }
+    }
+    // Ensure the bottom edge is drawn if it doesn't align exactly with cell_h
+    if (h % cell_h != 0) {
+        if (nq_renderer_draw_line(r, color, x, y + h, x + w, y + h) != 0) ret = -1;
+    }
+    
+    return ret;
+}

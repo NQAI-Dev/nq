@@ -15,3 +15,5 @@ int nq_renderer_draw_cross(NqRenderer *r, NqColor color, int x, int y, int size)
 int nq_renderer_draw_thick_line(NqRenderer *r, NqColor color, int x1, int y1, int x2, int y2, int thickness);
 /* Draws a discrete point */
 int nq_renderer_draw_point(NqRenderer *r, NqColor color, int x, int y);
+/* Utility to draw a grid over a rectangle (useful for debugging, tilemaps, etc.) */
+int nq_renderer_draw_grid(NqRenderer *r, NqColor color, int x, int y, int w, int h, int cell_w, int cell_h);
