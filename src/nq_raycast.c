@@ -102,3 +102,66 @@ nq_raycast_hit nq_raycast_aabb(nq_ray ray, NqRect aabb, float max_dist) {
     
     return result;
 }
+
+
+nq_raycast_hit nq_raycast_circle(nq_ray ray, NqVec2f center,
+                                  float radius, float max_dist) {
+    nq_raycast_hit result = {
+        .hit = false,
+        .point = {0.0f, 0.0f},
+        .normal = {0.0f, 0.0f},
+        .distance = 0.0f
+    };
+    float offset_x;
+    float offset_y;
+    float direction_len_sq;
+    float projection;
+    float discriminant;
+    float t;
+
+    if (radius < 0.0f || max_dist < 0.0f) {
+        return result;
+    }
+
+    offset_x = ray.origin.x - center.x;
+    offset_y = ray.origin.y - center.y;
+    direction_len_sq = ray.dir.x * ray.dir.x + ray.dir.y * ray.dir.y;
+
+    if (offset_x * offset_x + offset_y * offset_y <= radius * radius) {
+        float direction_len = sqrtf(direction_len_sq);
+
+        result.hit = true;
+        result.point = ray.origin;
+        if (direction_len > 0.0f) {
+            result.normal.x = -ray.dir.x / direction_len;
+            result.normal.y = -ray.dir.y / direction_len;
+        }
+        return result;
+    }
+
+    if (direction_len_sq <= 0.0f) {
+        return result;
+    }
+
+    projection = offset_x * ray.dir.x + offset_y * ray.dir.y;
+    discriminant = projection * projection - direction_len_sq *
+                   (offset_x * offset_x + offset_y * offset_y - radius * radius);
+    if (discriminant < 0.0f) {
+        return result;
+    }
+
+    t = (-projection - sqrtf(discriminant)) / direction_len_sq;
+    if (t < 0.0f || t > max_dist) {
+        return result;
+    }
+
+    result.hit = true;
+    result.distance = t;
+    result.point.x = ray.origin.x + ray.dir.x * t;
+    result.point.y = ray.origin.y + ray.dir.y * t;
+    if (radius > 0.0f) {
+        result.normal.x = (result.point.x - center.x) / radius;
+        result.normal.y = (result.point.y - center.y) / radius;
+    }
+    return result;
+}

@@ -32,4 +32,19 @@ typedef struct nq_raycast_hit {
  */
 nq_raycast_hit nq_raycast_aabb(nq_ray ray, NqRect aabb, float max_dist);
 
+/**
+ * @brief Tests intersection between a ray and a circle.
+ *
+ * A ray that starts inside the circle reports an immediate hit at the
+ * origin, with a normal opposite to the ray direction.
+ *
+ * @param ray The ray. Its direction should be normalized.
+ * @param center Circle center.
+ * @param radius Circle radius. A negative radius never hits.
+ * @param max_dist Maximum distance to check. A negative limit never hits.
+ * @return Hit information.
+ */
+nq_raycast_hit nq_raycast_circle(nq_ray ray, NqVec2f center,
+                                  float radius, float max_dist);
+
 #endif /* NQ_RAYCAST_H */
