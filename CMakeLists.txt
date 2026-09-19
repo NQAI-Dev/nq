@@ -22,6 +22,7 @@ find_package(SDL3 REQUIRED)
 
 # nq core static library — the engine proper. Consumers link against this.
 add_library(nq_core STATIC
+    src/nq_particle.c
     src/nq_camera2d.c
     src/nq_camera_utils.c
     src/nq_graphics.c
