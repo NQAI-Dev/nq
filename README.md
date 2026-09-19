@@ -109,7 +109,9 @@ header in `include/nq/`.
 ### Phase 4 — 2D physics
 - `nq_physics2d` — AABB + circles + oriented boxes (SAT if I get there)
 - Integrator: semi-implicit Euler, fixed timestep 1/60s
-- Broadphase: sweep-and-prune or spatial hash
+- Broadphase: sweep-and-prune or spatial hash — ✅ both shipped
+  (`nq/spatial_hash.h` fixed-cell queries + `nq/sweep.h` SAP pair
+  enumeration)
 - Collision callbacks: begin / overlap / end with mask filters
 
 ### Phase 5 — audio

@@ -3,7 +3,16 @@
 All notable changes to `nq` are documented here. The format is based
 on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — 2026-09-15 → 2026-09-16
+## [Unreleased] — 2026-09-15 → 2026-09-19
+
+### Broadphase: sweep-and-prune (Phase 4 roadmap item)
+
+* `nq/spatial_hash.h` companion: `nq/sweep.h` — sweep-and-prune
+  broadphase that enumerates ALL overlapping pairs in one call
+  (`nq_sweep_for_each_pair` with callback), where the spatial hash
+  answers point/region queries. Single-axis (x) sweep with y-interval
+  pruning, stable insertion sort for deterministic pair order,
+  half-open AABB convention matching the rest of nq. 13 tests.
 
 ### Phase 6 closed: animation, action/tween, collision sets fully symmetric
 
