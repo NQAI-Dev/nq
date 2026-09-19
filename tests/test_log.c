@@ -130,10 +130,10 @@ static void test_log_thread_safety(void) {
     NQ_ASSERT(1);
 }
 
-NQ_TEST_REGISTER("log_level_filter",       test_log_level_filter);
-NQ_TEST_REGISTER("log_level_name",         test_log_level_name);
-NQ_TEST_REGISTER("log_set_get_level",      test_log_set_get_level);
-NQ_TEST_REGISTER("log_thread_safety",      test_log_thread_safety);
+NQ_TEST_REGISTER("log_level_filter",       test_log_level_filter)
+NQ_TEST_REGISTER("log_level_name",         test_log_level_name)
+NQ_TEST_REGISTER("log_set_get_level",      test_log_set_get_level)
+NQ_TEST_REGISTER("log_thread_safety",      test_log_thread_safety)
 
 static void test_log_set_level_by_name(void) {
     /* Canonical names — exact case */
@@ -173,7 +173,7 @@ static void test_log_set_level_by_name_null_safe(void) {
     NQ_ASSERT_EQ(nq_log_set_level_by_name(NULL), 0);
 }
 
-NQ_TEST_REGISTER("log_set_level_by_name",               test_log_set_level_by_name);
-NQ_TEST_REGISTER("log_set_level_by_name_case",          test_log_set_level_by_name_case_insensitive);
-NQ_TEST_REGISTER("log_set_level_by_name_unknown",       test_log_set_level_by_name_unknown_returns_zero);
-NQ_TEST_REGISTER("log_set_level_by_name_null_safe",      test_log_set_level_by_name_null_safe);
+NQ_TEST_REGISTER("log_set_level_by_name",               test_log_set_level_by_name)
+NQ_TEST_REGISTER("log_set_level_by_name_case",          test_log_set_level_by_name_case_insensitive)
+NQ_TEST_REGISTER("log_set_level_by_name_unknown",       test_log_set_level_by_name_unknown_returns_zero)
+NQ_TEST_REGISTER("log_set_level_by_name_null_safe",      test_log_set_level_by_name_null_safe)

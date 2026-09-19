@@ -37,16 +37,15 @@ static char *nq_conv_run(int cols, int rows, int tex_w, int tex_h,
                  "%s /tmp/nq_conv_test_out.h %s %d %d",
                  NQ_CONV_BIN, atlas_name, cols, rows);
     }
-    /* The tool writes the generated header to the path passed as argv[1];
-     * /dev/null suppresses that file. We capture stdout instead. */
-    /* (nq-conv prints "wrote X cells to <path>" on success.) */
-    FILE *p = popen(cmd, "r");
+    int status = system(cmd);
+    if (status != 0) return NULL;
+    FILE *p = fopen("/tmp/nq_conv_test_out.h", "r");
     if (!p) return NULL;
-    char *out = calloc(1, 4096);
-    if (!out) { pclose(p); return NULL; }
-    size_t n = fread(out, 1, 4095, p);
+    char *out = calloc(1, 65536);
+    if (!out) { fclose(p); return NULL; }
+    size_t n = fread(out, 1, 65535, p);
     out[n] = '\0';
-    pclose(p);
+    fclose(p);
     return out;
 }
 
@@ -130,8 +129,8 @@ static void test_conv_one_cell_at_origin(void) {
 /* Always register — if nq-conv binary is missing, popen fails and the
  * tests below NQ_ASSERT on NULL output. CI builds nq-conv as a test
  * dependency via add_subdirectory(tools/nq-conv), so it's always there. */
-NQ_TEST_REGISTER("conv_basic_output",       test_conv_basic_output);
-NQ_TEST_REGISTER("conv_64x64_layout",        test_conv_64x64_layout);
-NQ_TEST_REGISTER("conv_sanitizes_name",     test_conv_sanitizes_name);
-NQ_TEST_REGISTER("conv_unspecified_tex_size", test_conv_unspecified_tex_size);
-NQ_TEST_REGISTER("conv_one_cell_at_origin", test_conv_one_cell_at_origin);
+NQ_TEST_REGISTER("conv_basic_output",       test_conv_basic_output)
+NQ_TEST_REGISTER("conv_64x64_layout",        test_conv_64x64_layout)
+NQ_TEST_REGISTER("conv_sanitizes_name",     test_conv_sanitizes_name)
+NQ_TEST_REGISTER("conv_unspecified_tex_size", test_conv_unspecified_tex_size)
+NQ_TEST_REGISTER("conv_one_cell_at_origin", test_conv_one_cell_at_origin)

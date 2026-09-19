@@ -84,9 +84,9 @@ static void test_destroy_does_not_touch_anim(void) {
     NQ_ASSERT_EQ(nq_anim_color_done(&anim), 0);
 }
 
-NQ_TEST_REGISTER("tween_color_create_destroy",    test_create_destroy);
-NQ_TEST_REGISTER("tween_color_advances_anim",     test_advances_anim);
-NQ_TEST_REGISTER("tween_color_completes",        test_completes_when_anim_done);
-NQ_TEST_REGISTER("tween_color_with_ease",        test_with_ease_quad_in);
-NQ_TEST_REGISTER("tween_color_null_safe",        test_null_safe);
-NQ_TEST_REGISTER("tween_color_no_touch_anim",   test_destroy_does_not_touch_anim);
+NQ_TEST_REGISTER("tween_color_create_destroy",    test_create_destroy)
+NQ_TEST_REGISTER("tween_color_advances_anim",     test_advances_anim)
+NQ_TEST_REGISTER("tween_color_completes",        test_completes_when_anim_done)
+NQ_TEST_REGISTER("tween_color_with_ease",        test_with_ease_quad_in)
+NQ_TEST_REGISTER("tween_color_null_safe",        test_null_safe)
+NQ_TEST_REGISTER("tween_color_no_touch_anim",   test_destroy_does_not_touch_anim)

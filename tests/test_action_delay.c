@@ -1,6 +1,6 @@
 #include <nq/action_delay.h>
 #include "test_main.c"
-#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
+#define NQ_FE(a, b) NQ_ASSERT((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 static void test_delay_create_destroy(void) {
     NqActionDelay *d = nq_action_delay_create(1.0f);
@@ -54,9 +54,9 @@ static void test_delay_null_safe(void) {
     NQ_FE(nq_action_delay_duration(NULL), 0.0f);
 }
 
-NQ_TEST_REGISTER("delay_create_destroy",          test_delay_create_destroy);
-NQ_TEST_REGISTER("delay_runs_until_duration",    test_delay_runs_until_duration);
-NQ_TEST_REGISTER("delay_saturates_at_duration",  test_delay_saturates_at_duration);
-NQ_TEST_REGISTER("delay_zero_finishes_immediate", test_delay_zero_duration_finishes_immediately);
-NQ_TEST_REGISTER("delay_negative_clamped_to_zero", test_delay_negative_duration_treated_as_zero);
-NQ_TEST_REGISTER("delay_null_safe",              test_delay_null_safe);
+NQ_TEST_REGISTER("delay_create_destroy",          test_delay_create_destroy)
+NQ_TEST_REGISTER("delay_runs_until_duration",    test_delay_runs_until_duration)
+NQ_TEST_REGISTER("delay_saturates_at_duration",  test_delay_saturates_at_duration)
+NQ_TEST_REGISTER("delay_zero_finishes_immediate", test_delay_zero_duration_finishes_immediately)
+NQ_TEST_REGISTER("delay_negative_clamped_to_zero", test_delay_negative_duration_treated_as_zero)
+NQ_TEST_REGISTER("delay_null_safe",              test_delay_null_safe)

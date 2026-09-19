@@ -57,18 +57,10 @@ void nq_action_cancel(NqAction *a) {
 
 void nq_action_reset(NqAction *a) {
     if (!a) return;
-    /* Reverse the FINISHED/CANCELLED transition so the action becomes
-     * RUNNING again, then let the action's reset_fn (if any) zero
-     * internal counters. Without a reset_fn we still flip the state
-     * so the next update() reaches the tick callback, but the tick
-     * callback will see stale internal state — that's why the
-     * primitives install their own reset_fn. */
-    if (a->state == NQ_ACTION_RUNNING) return;
+    /* Reset is explicit and may restart an action while it is running. */
     a->state = NQ_ACTION_RUNNING;
     a->done_fired = 0;
-    if (a->reset) {
-        a->reset(a->user);
-    }
+    if (a->reset) a->reset(a->user);
 }
 
 void nq_action_set_reset(NqAction *a, nq_action_reset_fn reset) {

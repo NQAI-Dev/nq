@@ -53,12 +53,14 @@ static void test_null_safe(void) {
     nq_action_tween_vec2_destroy(NULL);
     NQ_ASSERT_EQ(nq_action_tween_vec2_update(NULL, 0.016f), NQ_ACTION_FINISHED);
     NQ_ASSERT(nq_action_tween_vec2_action(NULL) == NULL);
-    /* NULL callback → constructor returns NULL */
-    NQ_ASSERT(nq_action_tween_vec2_create(NULL, NULL) == NULL);
+    /* NULL callback is valid: an animator can be attached afterwards. */
+    NqActionTweenVec2 *t = nq_action_tween_vec2_create(NULL, NULL);
+    NQ_ASSERT(t != NULL);
+    nq_action_tween_vec2_destroy(t);
 }
 
-NQ_TEST_REGISTER("tween_vec2_create_destroy",     test_create_destroy);
-NQ_TEST_REGISTER("tween_vec2_advances",           test_advances);
-NQ_TEST_REGISTER("tween_vec2_completes",          test_completes_when_callback_returns_finished);
-NQ_TEST_REGISTER("tween_vec2_no_touch_user",      test_destroy_does_not_touch_user);
-NQ_TEST_REGISTER("tween_vec2_null_safe",          test_null_safe);
+NQ_TEST_REGISTER("tween_vec2_create_destroy",     test_create_destroy)
+NQ_TEST_REGISTER("tween_vec2_advances",           test_advances)
+NQ_TEST_REGISTER("tween_vec2_completes",          test_completes_when_callback_returns_finished)
+NQ_TEST_REGISTER("tween_vec2_no_touch_user",      test_destroy_does_not_touch_user)
+NQ_TEST_REGISTER("tween_vec2_null_safe",          test_null_safe)

@@ -26,9 +26,9 @@ static void test_key_down_pressed_released(void) {
     NQ_ASSERT_EQ(nq_input_key_released(&in, 42), 0);
 
     /* Frame 1: release scancode 42 */
+    nq_input_begin_frame(&in);  /* snapshot held state before events */
     nq_input_set_key(&in, 42, 0);
-    nq_input_begin_frame(&in);  /* snapshot */
-    /* Frame 2: released this frame */
+    /* Released during this frame. */
     NQ_ASSERT_EQ(nq_input_key_down(&in, 42), 0);
     NQ_ASSERT_EQ(nq_input_key_pressed(&in, 42), 0);
     NQ_ASSERT_EQ(nq_input_key_released(&in, 42), 1);
@@ -119,10 +119,10 @@ static void test_mouse_button_mask_combo(void) {
     NQ_ASSERT_EQ(nq_input_mouse_pressed(&in, NQ_MOUSE_BUTTON_RIGHT), 0);
 }
 
-NQ_TEST_REGISTER("input_init_zeroes",              test_input_init_zeroes);
-NQ_TEST_REGISTER("key_down_pressed_released",     test_key_down_pressed_released);
-NQ_TEST_REGISTER("key_press_edge_only_once",       test_key_press_edge_only_once);
-NQ_TEST_REGISTER("out_of_range_scancode_safe",     test_out_of_range_scancode_safe);
-NQ_TEST_REGISTER("mouse_position_and_delta",       test_mouse_position_and_delta);
-NQ_TEST_REGISTER("mouse_button_down_pressed",     test_mouse_button_down_pressed);
-NQ_TEST_REGISTER("mouse_button_mask_combo",       test_mouse_button_mask_combo);
+NQ_TEST_REGISTER("input_init_zeroes",              test_input_init_zeroes)
+NQ_TEST_REGISTER("key_down_pressed_released",     test_key_down_pressed_released)
+NQ_TEST_REGISTER("key_press_edge_only_once",       test_key_press_edge_only_once)
+NQ_TEST_REGISTER("out_of_range_scancode_safe",     test_out_of_range_scancode_safe)
+NQ_TEST_REGISTER("mouse_position_and_delta",       test_mouse_position_and_delta)
+NQ_TEST_REGISTER("mouse_button_down_pressed",     test_mouse_button_down_pressed)
+NQ_TEST_REGISTER("mouse_button_mask_combo",       test_mouse_button_mask_combo)

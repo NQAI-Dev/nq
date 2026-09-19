@@ -23,6 +23,7 @@ typedef struct {
 
 static nq_test_entry nq_test_table[NQ_TEST_MAX];
 static int nq_test_count = 0;
+static int nq_test_assert_failures = 0;
 
 /* Parameter names `test_name` and `test_fn` (not `name` and `fn`) so
  * the textual substitution doesn't collide with the `name` and `fn`
@@ -42,6 +43,7 @@ static int nq_test_count = 0;
     if (!(cond)) {                                                          \
         fprintf(stderr, "    ASSERT FAIL %s:%d: %s\n",                     \
                 __FILE__, __LINE__, #cond);                                \
+        nq_test_assert_failures++;                                          \
         return;                                                             \
     }                                                                       \
 } while (0)
@@ -52,6 +54,7 @@ static int nq_test_count = 0;
     if (_a != _b) {                                                         \
         fprintf(stderr, "    ASSERT FAIL %s:%d: %s (%lld) != %s (%lld)\n", \
                 __FILE__, __LINE__, #a, _a, #b, _b);                       \
+        nq_test_assert_failures++;                                          \
         return;                                                             \
     }                                                                       \
 } while (0)
@@ -66,25 +69,25 @@ void nq_test_register_internal(const char* name, void (*fn)(void)) {
 
 static int nq_test_run(const char *name_filter) {
     int passed = 0;
-    int failed = 0;
+    int failed_tests = 0;
     for (int i = 0; i < nq_test_count; i++) {
         if (name_filter && strstr(nq_test_table[i].name, name_filter) == NULL) {
             continue;
         }
         printf("  RUN  %-32s ... ", nq_test_table[i].name);
         fflush(stdout);
-        int failures_before = failed;
+        int failures_before = nq_test_assert_failures;
         nq_test_table[i].fn();
-        if (failed == failures_before) {
+        if (nq_test_assert_failures == failures_before) {
             printf("OK\n");
             passed++;
         } else {
             printf("FAIL\n");
-            failed++;
+            failed_tests++;
         }
     }
-    printf("\n%d passed, %d failed\n", passed, failed);
-    return failed > 0 ? 1 : 0;
+    printf("\n%d passed, %d failed\n", passed, failed_tests);
+    return failed_tests > 0 ? 1 : 0;
 }
 
 int main(int argc, char **argv) {

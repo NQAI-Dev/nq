@@ -47,7 +47,7 @@ void nq_action_tween_vec2_destroy(NqActionTweenVec2 *t) {
 }
 
 NqActionState nq_action_tween_vec2_update(NqActionTweenVec2 *t, float dt) {
-    if (!t || !t->action) return NQ_ACTION_CANCELLED;
+    if (!t || !t->action) return NQ_ACTION_FINISHED;
     return nq_action_update(t->action, dt);
 }
 

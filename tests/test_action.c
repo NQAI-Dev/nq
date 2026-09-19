@@ -73,7 +73,6 @@ static void test_action_cancel_fires_done_with_cancelled_state(void) {
     CounterCtx ctx = {0, 0, 100, 0};
     NqAction *a = nq_action_create(counter_tick, counter_done, &ctx);
 
-    nq_action_action_cancel:
     nq_action_cancel(a);
     NQ_ASSERT_EQ(ctx.done_calls, 1);
     NQ_ASSERT(nq_action_state(a) == NQ_ACTION_CANCELLED);
@@ -133,10 +132,10 @@ static void test_action_finished_does_not_advance(void) {
     nq_action_destroy(a);
 }
 
-NQ_TEST_REGISTER("action_create_running",         test_action_create_starts_running);
-NQ_TEST_REGISTER("action_tick_drives_state",     test_action_tick_drives_state);
-NQ_TEST_REGISTER("action_done_fires_once",        test_action_done_fires_once);
-NQ_TEST_REGISTER("action_cancel_state",          test_action_cancel_fires_done_with_cancelled_state);
-NQ_TEST_REGISTER("action_tick_cancelled",        test_action_tick_returns_cancelled_propagates);
-NQ_TEST_REGISTER("action_null_safe",             test_action_null_safe);
-NQ_TEST_REGISTER("action_finished_static",       test_action_finished_does_not_advance);
+NQ_TEST_REGISTER("action_create_running",         test_action_create_starts_running)
+NQ_TEST_REGISTER("action_tick_drives_state",     test_action_tick_drives_state)
+NQ_TEST_REGISTER("action_done_fires_once",        test_action_done_fires_once)
+NQ_TEST_REGISTER("action_cancel_state",          test_action_cancel_fires_done_with_cancelled_state)
+NQ_TEST_REGISTER("action_tick_cancelled",        test_action_tick_returns_cancelled_propagates)
+NQ_TEST_REGISTER("action_null_safe",             test_action_null_safe)
+NQ_TEST_REGISTER("action_finished_static",       test_action_finished_does_not_advance)

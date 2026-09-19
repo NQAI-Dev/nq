@@ -28,6 +28,7 @@ static void test_clear_zeros_mouse_position(void) {
     NqInput in;
     nq_input_init(&in);
     nq_input_set_mouse_pos(&in, 200, 150);
+    nq_input_begin_frame(&in);
     /* Add another move to accumulate deltas. */
     nq_input_set_mouse_pos(&in, 250, 170);
     NQ_ASSERT_EQ(nq_input_mouse_x(&in), 250);
@@ -61,8 +62,8 @@ static void test_clear_null_safe(void) {
     NQ_ASSERT(1);
 }
 
-NQ_TEST_REGISTER("input_clear_zeros_keys",            test_clear_zeros_keys);
-NQ_TEST_REGISTER("input_clear_zeros_mouse_buttons",   test_clear_zeros_mouse_buttons);
-NQ_TEST_REGISTER("input_clear_zeros_mouse_position",  test_clear_zeros_mouse_position);
-NQ_TEST_REGISTER("input_clear_makes_pressed_safe",    test_clear_makes_pressed_safe);
-NQ_TEST_REGISTER("input_clear_null_safe",              test_clear_null_safe);
+NQ_TEST_REGISTER("input_clear_zeros_keys",            test_clear_zeros_keys)
+NQ_TEST_REGISTER("input_clear_zeros_mouse_buttons",   test_clear_zeros_mouse_buttons)
+NQ_TEST_REGISTER("input_clear_zeros_mouse_position",  test_clear_zeros_mouse_position)
+NQ_TEST_REGISTER("input_clear_makes_pressed_safe",    test_clear_makes_pressed_safe)
+NQ_TEST_REGISTER("input_clear_null_safe",              test_clear_null_safe)

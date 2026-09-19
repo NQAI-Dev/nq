@@ -129,22 +129,42 @@ endif()
 if(NQ_BUILD_TESTS)
     enable_testing()
 
-file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_main.c")
-
-    add_executable(nq_test ${NQ_TEST_SOURCES})
-    target_include_directories(nq_test PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    # Most test files include test_main.c to get the tiny test harness.
+    # Build them separately: combining them would define main and the
+    # harness globals once per translation unit. Standalone tests fit the
+    # same one-source-per-executable model.
+    file(GLOB NQ_TEST_SOURCES CONFIGURE_DEPENDS "tests/test_*.c")
+    list(REMOVE_ITEM NQ_TEST_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/test_main.c"
     )
-    target_link_libraries(nq_test PRIVATE nq_core Threads::Threads SDL3::SDL3)
 
-    # nq-conv binary is built in a subdir; pass its absolute path to the
-    # test via a compile definition so test_conv.c can popen() it
-    # regardless of the working directory ctest runs from. Also force a
-    # build-order dependency so the binary exists before the test runs.
-    add_dependencies(nq_test nq-conv)
-    target_compile_definitions(nq_test PRIVATE
-        NQ_CONV_BIN="$<TARGET_FILE:nq-conv>")
+    set(NQ_TEST_TARGETS)
+    foreach(NQ_TEST_SOURCE IN LISTS NQ_TEST_SOURCES)
+        get_filename_component(NQ_TEST_NAME "${NQ_TEST_SOURCE}" NAME_WE)
+        set(NQ_TEST_TARGET "nq_${NQ_TEST_NAME}")
 
-    add_test(NAME nq_test COMMAND nq_test)
+        add_executable("${NQ_TEST_TARGET}" "${NQ_TEST_SOURCE}")
+        target_include_directories("${NQ_TEST_TARGET}" PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+            ${CMAKE_CURRENT_SOURCE_DIR}/tests
+        )
+        target_link_libraries("${NQ_TEST_TARGET}" PRIVATE
+            nq_core Threads::Threads SDL3::SDL3
+        )
+        target_compile_options("${NQ_TEST_TARGET}" PRIVATE
+            -Wall -Wextra -Wpedantic -Werror
+        )
+        if(NQ_TEST_NAME STREQUAL "test_conv")
+            add_dependencies("${NQ_TEST_TARGET}" nq-conv)
+            target_compile_definitions("${NQ_TEST_TARGET}" PRIVATE
+                NQ_CONV_BIN="$<TARGET_FILE:nq-conv>"
+            )
+        endif()
+        add_test(NAME "${NQ_TEST_NAME}" COMMAND "${NQ_TEST_TARGET}")
+        list(APPEND NQ_TEST_TARGETS "${NQ_TEST_TARGET}")
+    endforeach()
+
+
+    # Preserve the documented aggregate build target.
+    add_custom_target(nq_test DEPENDS ${NQ_TEST_TARGETS})
 endif()

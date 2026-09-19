@@ -14,7 +14,7 @@
 
 /* NQ_FE (float equality) is file-local in test_bench.c; redefine here
  * since test_action_reset.c needs it too. */
-#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
+#define NQ_FE(a, b) NQ_ASSERT((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 typedef struct { int target; int ticks; } TickCtx;
 static NqActionState counter_tick(NqAction *a, float dt, void *user) {
@@ -123,10 +123,10 @@ static void test_set_reset_to_null_disables_reset(void) {
     nq_action_delay_destroy(d);
 }
 
-NQ_TEST_REGISTER("reset_null_safe",              test_reset_null_safe);
-NQ_TEST_REGISTER("reset_delay",                  test_delay_reset);
-NQ_TEST_REGISTER("reset_tween",                  test_tween_reset);
-NQ_TEST_REGISTER("reset_sequence",               test_sequence_reset);
-NQ_TEST_REGISTER("reset_repeat_finite",         test_repeat_finite_reset);
-NQ_TEST_REGISTER("reset_repeat_forever",        test_repeat_forever_reset_stays_infinite);
-NQ_TEST_REGISTER("reset_set_null_disables",     test_set_reset_to_null_disables_reset);
+NQ_TEST_REGISTER("reset_null_safe",              test_reset_null_safe)
+NQ_TEST_REGISTER("reset_delay",                  test_delay_reset)
+NQ_TEST_REGISTER("reset_tween",                  test_tween_reset)
+NQ_TEST_REGISTER("reset_sequence",               test_sequence_reset)
+NQ_TEST_REGISTER("reset_repeat_finite",         test_repeat_finite_reset)
+NQ_TEST_REGISTER("reset_repeat_forever",        test_repeat_forever_reset_stays_infinite)
+NQ_TEST_REGISTER("reset_set_null_disables",     test_set_reset_to_null_disables_reset)

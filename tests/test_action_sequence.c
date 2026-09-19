@@ -85,10 +85,7 @@ static void test_seq_add_dynamically(void) {
     NQ_ASSERT_EQ(nq_action_sequence_add(s, a2, 0), 1);
     NQ_ASSERT_EQ(nq_action_sequence_sub_count(s), 2);
 
-    /* Empty sequence finished immediately on creation; running it now
-     * with subs added should run them. */
-    (void)nq_action_sequence_update(s, 0.016f);  /* kicks off */
-    NQ_ASSERT_EQ(nq_action_sequence_update(s, 0.016f), NQ_ACTION_RUNNING);  /* a2 ticks */
+    NQ_ASSERT_EQ(nq_action_sequence_update(s, 0.016f), NQ_ACTION_RUNNING);
     NQ_ASSERT_EQ(nq_action_sequence_update(s, 0.016f), NQ_ACTION_FINISHED);
 
     nq_action_sequence_destroy(s);
@@ -132,9 +129,9 @@ static void test_seq_null_safe(void) {
     NQ_ASSERT_EQ(nq_action_sequence_add(NULL, NULL, 0), 0);
 }
 
-NQ_TEST_REGISTER("seq_create_empty",                 test_seq_create_empty);
-NQ_TEST_REGISTER("seq_runs_through_subs",            test_seq_runs_through_subs);
-NQ_TEST_REGISTER("seq_owns_subs_and_destroys",       test_seq_owns_subs_and_destroys);
-NQ_TEST_REGISTER("seq_add_dynamically",                 test_seq_add_dynamically);
-NQ_TEST_REGISTER("seq_overflow",                       test_seq_overflow);
-NQ_TEST_REGISTER("seq_null_safe",                      test_seq_null_safe);
+NQ_TEST_REGISTER("seq_create_empty",                 test_seq_create_empty)
+NQ_TEST_REGISTER("seq_runs_through_subs",            test_seq_runs_through_subs)
+NQ_TEST_REGISTER("seq_owns_subs_and_destroys",       test_seq_owns_subs_and_destroys)
+NQ_TEST_REGISTER("seq_add_dynamically",                 test_seq_add_dynamically)
+NQ_TEST_REGISTER("seq_overflow",                       test_seq_overflow)
+NQ_TEST_REGISTER("seq_null_safe",                      test_seq_null_safe)

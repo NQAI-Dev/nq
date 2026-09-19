@@ -24,5 +24,5 @@ static void test_load_mem_returns_null(void) {
     NQ_ASSERT(t == NULL);
 }
 
-NQ_TEST_REGISTER("texture_init_zeroes",       test_texture_init_zeroes);
-NQ_TEST_REGISTER("texture_load_mem_null",     test_load_mem_returns_null);
+NQ_TEST_REGISTER("texture_init_zeroes",       test_texture_init_zeroes)
+NQ_TEST_REGISTER("texture_load_mem_null",     test_load_mem_returns_null)

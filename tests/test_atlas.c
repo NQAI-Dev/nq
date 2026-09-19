@@ -117,14 +117,14 @@ static void test_grow_beyond_initial_capacity(void) {
     nq_atlas_destroy(a);
 }
 
-NQ_TEST_REGISTER("atlas_create_destroy",          test_create_destroy);
-NQ_TEST_REGISTER("atlas_add_find_roundtrip",       test_add_find_roundtrip);
-NQ_TEST_REGISTER("atlas_find_missing_empty",       test_find_missing_returns_empty);
-NQ_TEST_REGISTER("atlas_duplicate_rejected",       test_duplicate_name_rejected);
-NQ_TEST_REGISTER("atlas_remove_region",            test_remove_region);
-NQ_TEST_REGISTER("atlas_remove_then_readd",       test_remove_then_re_add);
-NQ_TEST_REGISTER("atlas_iter_only_live",           test_iter_visits_only_live);
-NQ_TEST_REGISTER("atlas_grows_beyond_initial",     test_grow_beyond_initial_capacity);
+NQ_TEST_REGISTER("atlas_create_destroy",          test_create_destroy)
+NQ_TEST_REGISTER("atlas_add_find_roundtrip",       test_add_find_roundtrip)
+NQ_TEST_REGISTER("atlas_find_missing_empty",       test_find_missing_returns_empty)
+NQ_TEST_REGISTER("atlas_duplicate_rejected",       test_duplicate_name_rejected)
+NQ_TEST_REGISTER("atlas_remove_region",            test_remove_region)
+NQ_TEST_REGISTER("atlas_remove_then_readd",       test_remove_then_re_add)
+NQ_TEST_REGISTER("atlas_iter_only_live",           test_iter_visits_only_live)
+NQ_TEST_REGISTER("atlas_grows_beyond_initial",     test_grow_beyond_initial_capacity)
 
 static void test_count_regions_tracks_live(void) {
     NqAtlas *a = nq_atlas_create(64, 64, 0);
@@ -146,8 +146,8 @@ static void test_count_regions_null_safe(void) {
     NQ_ASSERT_EQ(nq_atlas_count_regions(NULL), 0);
 }
 
-NQ_TEST_REGISTER("atlas_count_regions_tracks_live", test_count_regions_tracks_live);
-NQ_TEST_REGISTER("atlas_count_regions_null_safe",  test_count_regions_null_safe);
+NQ_TEST_REGISTER("atlas_count_regions_tracks_live", test_count_regions_tracks_live)
+NQ_TEST_REGISTER("atlas_count_regions_null_safe",  test_count_regions_null_safe)
 
 static void test_atlas_clear_empties_all(void) {
     NqAtlas *a = nq_atlas_create(64, 64, 0);
@@ -178,11 +178,11 @@ static void test_atlas_clear_null_safe(void) {
     NQ_ASSERT_EQ(nq_atlas_clear(NULL), 0);
 }
 
-NQ_TEST_REGISTER("atlas_clear_empties_all",            test_atlas_clear_empties_all);
-NQ_TEST_REGISTER("atlas_clear_no_live_returns_zero",   test_atlas_clear_returns_count_of_what_was_there);
-NQ_TEST_REGISTER("atlas_clear_null_safe",              test_atlas_clear_null_safe);
-NQ_TEST_REGISTER("atlas_draw_null_safe",          test_atlas_draw_null_safe);
-NQ_TEST_REGISTER("atlas_draw_unknown_region",     test_atlas_draw_unknown_region_null_texture);
+NQ_TEST_REGISTER("atlas_clear_empties_all",            test_atlas_clear_empties_all)
+NQ_TEST_REGISTER("atlas_clear_no_live_returns_zero",   test_atlas_clear_returns_count_of_what_was_there)
+NQ_TEST_REGISTER("atlas_clear_null_safe",              test_atlas_clear_null_safe)
+NQ_TEST_REGISTER("atlas_draw_null_safe",          test_atlas_draw_null_safe)
+NQ_TEST_REGISTER("atlas_draw_unknown_region",     test_atlas_draw_unknown_region_null_texture)
 
 /* Stub definitions for the two atlas-draw tests that were registered
  * earlier but whose function bodies are missing. Without these the

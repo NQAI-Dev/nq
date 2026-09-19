@@ -125,10 +125,10 @@ static void test_spawn_null_safe(void) {
     NQ_ASSERT_EQ(nq_action_spawn_add(NULL, NULL, 0), 0);
 }
 
-NQ_TEST_REGISTER("spawn_create_empty",                 test_spawn_create_empty);
-NQ_TEST_REGISTER("spawn_ticks_all_per_frame",          test_spawn_ticks_all_subs_per_frame);
-NQ_TEST_REGISTER("spawn_waits_for_slowest_sub",       test_spawn_waits_for_slowest_sub);
-NQ_TEST_REGISTER("spawn_owns_subs",                    test_spawn_owns_subs);
-NQ_TEST_REGISTER("spawn_add_dynamically",              test_spawn_add_dynamically);
-NQ_TEST_REGISTER("spawn_overflow",                     test_spawn_overflow);
-NQ_TEST_REGISTER("spawn_null_safe",                    test_spawn_null_safe);
+NQ_TEST_REGISTER("spawn_create_empty",                 test_spawn_create_empty)
+NQ_TEST_REGISTER("spawn_ticks_all_per_frame",          test_spawn_ticks_all_subs_per_frame)
+NQ_TEST_REGISTER("spawn_waits_for_slowest_sub",       test_spawn_waits_for_slowest_sub)
+NQ_TEST_REGISTER("spawn_owns_subs",                    test_spawn_owns_subs)
+NQ_TEST_REGISTER("spawn_add_dynamically",              test_spawn_add_dynamically)
+NQ_TEST_REGISTER("spawn_overflow",                     test_spawn_overflow)
+NQ_TEST_REGISTER("spawn_null_safe",                    test_spawn_null_safe)

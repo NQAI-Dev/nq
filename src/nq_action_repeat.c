@@ -15,15 +15,13 @@ static NqActionState repeat_tick(NqAction *a, float dt, void *user) {
     }
     /* Sub terminated — should we restart? */
     if (r->infinite) {
-        /* The user's tick callback returns RUNNING on re-entry after a
-         * previous FINISHED (counter_tick does this; a pure "play clip"
-         * action doesn't). So infinite mode just keeps the wrapper
-         * RUNNING and trusts the sub. */
+        nq_action_reset(r->sub);
         return NQ_ACTION_RUNNING;
     }
     /* Finite mode: decrement counter. When it hits 0 we stop. */
     if (r->remaining > 0) r->remaining--;
     if (r->remaining <= 0) return NQ_ACTION_FINISHED;
+    nq_action_reset(r->sub);
     return NQ_ACTION_RUNNING;
 }
 
@@ -32,7 +30,10 @@ static NqActionState repeat_tick(NqAction *a, float dt, void *user) {
  * leaves it at -1. */
 static void repeat_reset(void *user) {
     NqActionRepeat *r = (NqActionRepeat *)user;
-    if (r) r->remaining = r->original_count;
+    if (r) {
+        r->remaining = r->original_count;
+        nq_action_reset(r->sub);
+    }
 }
 
 NqActionRepeat *nq_action_repeat_create(NqAction *sub, int times) {

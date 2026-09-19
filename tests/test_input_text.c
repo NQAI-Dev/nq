@@ -62,9 +62,9 @@ static void test_pump_unrelated_event_returns_zero(void) {
     NQ_ASSERT(1);
 }
 
-NQ_TEST_REGISTER("input_text_init_empty",           test_init_empty);
-NQ_TEST_REGISTER("input_text_set_replaces",          test_set_replaces_buffer);
-NQ_TEST_REGISTER("input_text_set_truncates",        test_set_truncates);
-NQ_TEST_REGISTER("input_text_set_null_safe",        test_set_null_safe);
-NQ_TEST_REGISTER("input_text_pump_null_safe",      test_pump_null_safe);
-NQ_TEST_REGISTER("input_text_pump_unrelated",      test_pump_unrelated_event_returns_zero);
+NQ_TEST_REGISTER("input_text_init_empty",           test_init_empty)
+NQ_TEST_REGISTER("input_text_set_replaces",          test_set_replaces_buffer)
+NQ_TEST_REGISTER("input_text_set_truncates",        test_set_truncates)
+NQ_TEST_REGISTER("input_text_set_null_safe",        test_set_null_safe)
+NQ_TEST_REGISTER("input_text_pump_null_safe",      test_pump_null_safe)
+NQ_TEST_REGISTER("input_text_pump_unrelated",      test_pump_unrelated_event_returns_zero)

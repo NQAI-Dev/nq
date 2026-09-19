@@ -64,8 +64,8 @@ static void test_tween_null_safe(void) {
     NQ_ASSERT(nq_action_tween_action(NULL) == NULL);
 }
 
-NQ_TEST_REGISTER("tween_create_destroy",          test_tween_create_destroy);
-NQ_TEST_REGISTER("tween_advances_animation",      test_tween_advances_animation);
-NQ_TEST_REGISTER("tween_completes_when_done",     test_tween_completes_when_anim_done);
-NQ_TEST_REGISTER("tween_with_ease_quad_in",       test_tween_with_ease_quad_in);
-NQ_TEST_REGISTER("tween_null_safe",                test_tween_null_safe);
+NQ_TEST_REGISTER("tween_create_destroy",          test_tween_create_destroy)
+NQ_TEST_REGISTER("tween_advances_animation",      test_tween_advances_animation)
+NQ_TEST_REGISTER("tween_completes_when_done",     test_tween_completes_when_anim_done)
+NQ_TEST_REGISTER("tween_with_ease_quad_in",       test_tween_with_ease_quad_in)
+NQ_TEST_REGISTER("tween_null_safe",                test_tween_null_safe)

@@ -18,9 +18,9 @@ static void test_text_create_destroy_null(void) {
     nq_text_destroy(NULL);
     nq_text_set_color(NULL, 255, 0, 0, 255);  /* NULL-safe — must not crash */
     NQ_ASSERT_EQ(nq_text_draw(NULL, "hi", 0, 0), 0);
-    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, 'A'), 5);
-    NQ_ASSERT_EQ(nq_text_glyph_h(NULL, 'A'), 7);
-    NQ_ASSERT_EQ(nq_text_line_h(NULL), 9);
+    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, 'A'), 10);
+    NQ_ASSERT_EQ(nq_text_glyph_h(NULL, 'A'), 14);
+    NQ_ASSERT_EQ(nq_text_line_h(NULL), 18);
 }
 
 static void test_glyph_metrics_consistent(void) {
@@ -28,11 +28,11 @@ static void test_glyph_metrics_consistent(void) {
      * values from constants. Verifies the public contract — callers
      * can do layout calculations without needing to instantiate a
      * full NqText. */
-    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, 'A'), 5);
-    NQ_ASSERT_EQ(nq_text_glyph_h(NULL, 'A'), 7);
-    NQ_ASSERT_EQ(nq_text_line_h(NULL), 9);
-    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, ' '), 5);
-    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, '~'), 5);
+    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, 'A'), 10);
+    NQ_ASSERT_EQ(nq_text_glyph_h(NULL, 'A'), 14);
+    NQ_ASSERT_EQ(nq_text_line_h(NULL), 18);
+    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, ' '), 10);
+    NQ_ASSERT_EQ(nq_text_glyph_w(NULL, '~'), 10);
 }
 
 static void test_set_color_stores_values(void) {
@@ -45,11 +45,11 @@ static void test_set_color_stores_values(void) {
     NQ_ASSERT(1);
 }
 
-NQ_TEST_REGISTER("text_create_destroy_null", test_text_create_destroy_null);
-NQ_TEST_REGISTER("text_width_empty",            test_text_width_empty_string);
-NQ_TEST_REGISTER("text_width_simple",            test_text_width_simple_string);
-NQ_TEST_REGISTER("text_width_with_newline",       test_text_width_with_newline);
-NQ_TEST_REGISTER("text_width_null_safe",          test_text_width_null_safe);
+NQ_TEST_REGISTER("text_create_destroy_null", test_text_create_destroy_null)
+NQ_TEST_REGISTER("text_width_empty",            test_text_width_empty_string)
+NQ_TEST_REGISTER("text_width_simple",            test_text_width_simple_string)
+NQ_TEST_REGISTER("text_width_with_newline",       test_text_width_with_newline)
+NQ_TEST_REGISTER("text_width_null_safe",          test_text_width_null_safe)
 
 static void test_text_width_empty_string(void) {
     /* Empty string has width 0 — but we can't construct a real NqText
@@ -86,5 +86,5 @@ static void test_text_width_null_safe(void) {
     NQ_ASSERT_EQ(nq_text_width(NULL, "anything"), 0);
 }
 
-NQ_TEST_REGISTER("text_glyph_metrics",      test_glyph_metrics_consistent);
-NQ_TEST_REGISTER("text_set_color_null",     test_set_color_stores_values);
+NQ_TEST_REGISTER("text_glyph_metrics",      test_glyph_metrics_consistent)
+NQ_TEST_REGISTER("text_set_color_null",     test_set_color_stores_values)

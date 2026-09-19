@@ -5,6 +5,7 @@
 typedef struct { int init_n, update_n, draw_n; } SceneCbCtx;
 static void sc_init(NqNode *n, void *u) { (void)n; (void)u; }
 static void sc_update(NqNode *n, float dt, void *u) {
+    (void)n;
     SceneCbCtx *c = (SceneCbCtx *)u;
     if (c) c->update_n++;
     (void)dt;
@@ -134,9 +135,9 @@ static void test_scene_null_safe(void) {
     nq_scene_draw(NULL);
 }
 
-NQ_TEST_REGISTER("scene_create_implicit_root",   test_scene_create_has_implicit_root);
-NQ_TEST_REGISTER("scene_push_pop",               test_scene_push_pop);
-NQ_TEST_REGISTER("scene_push_overflow",          test_scene_push_overflow);
-NQ_TEST_REGISTER("scene_update_top_only",        test_scene_update_top_only);
-NQ_TEST_REGISTER("scene_draw_root_then_top",     test_scene_draw_root_then_top);
-NQ_TEST_REGISTER("scene_null_safe",             test_scene_null_safe);
+NQ_TEST_REGISTER("scene_create_implicit_root",   test_scene_create_has_implicit_root)
+NQ_TEST_REGISTER("scene_push_pop",               test_scene_push_pop)
+NQ_TEST_REGISTER("scene_push_overflow",          test_scene_push_overflow)
+NQ_TEST_REGISTER("scene_update_top_only",        test_scene_update_top_only)
+NQ_TEST_REGISTER("scene_draw_root_then_top",     test_scene_draw_root_then_top)
+NQ_TEST_REGISTER("scene_null_safe",             test_scene_null_safe)

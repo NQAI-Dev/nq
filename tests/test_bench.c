@@ -39,7 +39,7 @@ static void test_bench_no_crash_on_zero_iterations(void) {
     NQ_ASSERT(1);
 }
 
-NQ_TEST_REGISTER("bench_now_monotonic",           test_bench_now_returns_monotonic);
-NQ_TEST_REGISTER("bench_elapsed_monotonic",       test_bench_elapsed_monotonic);
-NQ_TEST_REGISTER("bench_scope_records_hits",      test_bench_scope_records_hits);
-NQ_TEST_REGISTER("bench_no_crash_empty",          test_bench_no_crash_on_zero_iterations);
+NQ_TEST_REGISTER("bench_now_monotonic",           test_bench_now_returns_monotonic)
+NQ_TEST_REGISTER("bench_elapsed_monotonic",       test_bench_elapsed_monotonic)
+NQ_TEST_REGISTER("bench_scope_records_hits",      test_bench_scope_records_hits)
+NQ_TEST_REGISTER("bench_no_crash_empty",          test_bench_no_crash_on_zero_iterations)

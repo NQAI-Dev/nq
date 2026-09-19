@@ -1,6 +1,6 @@
 #include <nq/animation.h>
 #include "test_main.c"
-#define NQ_FE(a, b) ((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
+#define NQ_FE(a, b) NQ_ASSERT((a) - (b) < 1e-5f && (b) - (a) < 1e-5f)
 
 #define NQ_EPS 1e-4f
 
@@ -93,12 +93,12 @@ static void test_reverse_direction(void) {
     NQ_ASSERT_EQ(nq_anim_float_done(&a), 0);
 }
 
-NQ_TEST_REGISTER("anim_init_starts_active",        test_init_starts_active);
-NQ_TEST_REGISTER("anim_linear_progresses_to_target", test_linear_progresses_to_target);
-NQ_TEST_REGISTER("anim_linear_at_half_duration",   test_linear_at_half_duration);
-NQ_TEST_REGISTER("anim_quad_in_curves_slower",     test_quad_in_curves_slower_at_start);
-NQ_TEST_REGISTER("anim_zero_duration_clamps",      test_zero_duration_clamps_and_completes);
-NQ_TEST_REGISTER("anim_negative_dt_is_zero",       test_negative_dt_is_zero);
-NQ_TEST_REGISTER("anim_restart_resets",            test_restart_resets);
-NQ_TEST_REGISTER("anim_value_saturates_at_to",     test_value_saturates_at_to);
-NQ_TEST_REGISTER("anim_reverse_direction",        test_reverse_direction);
+NQ_TEST_REGISTER("anim_init_starts_active",        test_init_starts_active)
+NQ_TEST_REGISTER("anim_linear_progresses_to_target", test_linear_progresses_to_target)
+NQ_TEST_REGISTER("anim_linear_at_half_duration",   test_linear_at_half_duration)
+NQ_TEST_REGISTER("anim_quad_in_curves_slower",     test_quad_in_curves_slower_at_start)
+NQ_TEST_REGISTER("anim_zero_duration_clamps",      test_zero_duration_clamps_and_completes)
+NQ_TEST_REGISTER("anim_negative_dt_is_zero",       test_negative_dt_is_zero)
+NQ_TEST_REGISTER("anim_restart_resets",            test_restart_resets)
+NQ_TEST_REGISTER("anim_value_saturates_at_to",     test_value_saturates_at_to)
+NQ_TEST_REGISTER("anim_reverse_direction",        test_reverse_direction)

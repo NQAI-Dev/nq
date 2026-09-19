@@ -83,7 +83,7 @@ static void test_repeat_destroy_does_not_touch_sub(void) {
     nq_action_repeat_destroy(r);
     /* Sub must still be valid (if destroy() killed it, the next call
      * would crash or trigger ASAN). */
-    NQ_ASSERT_EQ(nq_action_state(sub), NQ_ACTION_FINISHED);
+    NQ_ASSERT_EQ(nq_action_state(sub), NQ_ACTION_RUNNING);
     nq_action_destroy(sub);  /* explicit */
 }
 
@@ -96,11 +96,11 @@ static void test_repeat_null_safe(void) {
     NQ_ASSERT(nq_action_repeat_forever_create(NULL) == NULL);
 }
 
-NQ_TEST_REGISTER("repeat_zero_iterations",            test_repeat_zero_iterations);
-NQ_TEST_REGISTER("repeat_three_iterations",          test_repeat_three_iterations);
-NQ_TEST_REGISTER("repeat_forever_doesnt_finish",     test_repeat_forever_doesnt_finish);
-NQ_TEST_REGISTER("repeat_destroy_no_sub",            test_repeat_destroy_does_not_touch_sub);
-NQ_TEST_REGISTER("repeat_null_safe",                 test_repeat_null_safe);
+NQ_TEST_REGISTER("repeat_zero_iterations",            test_repeat_zero_iterations)
+NQ_TEST_REGISTER("repeat_three_iterations",          test_repeat_three_iterations)
+NQ_TEST_REGISTER("repeat_forever_doesnt_finish",     test_repeat_forever_doesnt_finish)
+NQ_TEST_REGISTER("repeat_destroy_no_sub",            test_repeat_destroy_does_not_touch_sub)
+NQ_TEST_REGISTER("repeat_null_safe",                 test_repeat_null_safe)
 
 static void test_repeat_total_returns_create_count(void) {
     /* total() exposes the original count the repeat was created with */
@@ -131,6 +131,6 @@ static void test_repeat_total_null_safe(void) {
     NQ_ASSERT_EQ(nq_action_repeat_total(NULL), 0);
 }
 
-NQ_TEST_REGISTER("repeat_total_5",              test_repeat_total_returns_create_count);
-NQ_TEST_REGISTER("repeat_total_forever_minus1", test_repeat_total_forever_returns_minus_one);
-NQ_TEST_REGISTER("repeat_total_null_safe",      test_repeat_total_null_safe);
+NQ_TEST_REGISTER("repeat_total_5",              test_repeat_total_returns_create_count)
+NQ_TEST_REGISTER("repeat_total_forever_minus1", test_repeat_total_forever_returns_minus_one)
+NQ_TEST_REGISTER("repeat_total_null_safe",      test_repeat_total_null_safe)

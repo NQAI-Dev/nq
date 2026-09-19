@@ -77,9 +77,9 @@ static void test_clock_null_safe(void) {
     nq_clock_destroy(c);
 }
 
-NQ_TEST_REGISTER("clock_create_destroy",          test_clock_create_destroy);
-NQ_TEST_REGISTER("clock_first_tick_delta_zero",   test_clock_first_tick_delta_zero);
-NQ_TEST_REGISTER("clock_tick_delta_16ms",          test_clock_tick_delta_16ms);
-NQ_TEST_REGISTER("clock_elapsed_accumulates",      test_clock_elapsed_accumulates);
-NQ_TEST_REGISTER("clock_set_now_fn_default",      test_clock_set_now_fn_default);
-NQ_TEST_REGISTER("clock_null_safe",               test_clock_null_safe);
+NQ_TEST_REGISTER("clock_create_destroy",          test_clock_create_destroy)
+NQ_TEST_REGISTER("clock_first_tick_delta_zero",   test_clock_first_tick_delta_zero)
+NQ_TEST_REGISTER("clock_tick_delta_16ms",          test_clock_tick_delta_16ms)
+NQ_TEST_REGISTER("clock_elapsed_accumulates",      test_clock_elapsed_accumulates)
+NQ_TEST_REGISTER("clock_set_now_fn_default",      test_clock_set_now_fn_default)
+NQ_TEST_REGISTER("clock_null_safe",               test_clock_null_safe)

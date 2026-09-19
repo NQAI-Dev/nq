@@ -3,7 +3,7 @@
 
 /* Small epsilon for float comparison. */
 #define NQ_EPS 1e-5f
-#define NQ_FE(a, b) ((a) - (b) < NQ_EPS && (b) - (a) < NQ_EPS)
+#define NQ_FE(a, b) NQ_ASSERT((a) - (b) < NQ_EPS && (b) - (a) < NQ_EPS)
 
 static void test_linear_endpoints(void) {
     NQ_FE(nq_ease_linear(0.0f), 0.0f);
@@ -119,15 +119,15 @@ static void test_ease_lerp_matches_named(void) {
     NQ_FE(v, nq_lerp(-5.0f, 5.0f, nq_ease_sine_out(0.25f)));
 }
 
-NQ_TEST_REGISTER("linear_endpoints",            test_linear_endpoints);
-NQ_TEST_REGISTER("quad_in_endpoints",           test_quad_in_endpoints);
-NQ_TEST_REGISTER("quad_in_monotonic",          test_quad_in_monotonic);
-NQ_TEST_REGISTER("quad_out_endpoints",          test_quad_out_endpoints);
-NQ_TEST_REGISTER("quad_in_out_endpoints",       test_quad_in_out_endpoints);
-NQ_TEST_REGISTER("cubic_endpoints",             test_cubic_endpoints);
-NQ_TEST_REGISTER("sine_endpoints",              test_sine_endpoints);
-NQ_TEST_REGISTER("expo_endpoints",              test_expo_endpoints);
-NQ_TEST_REGISTER("ease_dispatch_endpoints",     test_ease_dispatch_endpoints);
-NQ_TEST_REGISTER("ease_clamps_out_of_range",    test_ease_clamps_out_of_range);
-NQ_TEST_REGISTER("lerp_endpoints",              test_lerp_endpoints);
-NQ_TEST_REGISTER("ease_lerp_matches_named",     test_ease_lerp_matches_named);
+NQ_TEST_REGISTER("linear_endpoints",            test_linear_endpoints)
+NQ_TEST_REGISTER("quad_in_endpoints",           test_quad_in_endpoints)
+NQ_TEST_REGISTER("quad_in_monotonic",          test_quad_in_monotonic)
+NQ_TEST_REGISTER("quad_out_endpoints",          test_quad_out_endpoints)
+NQ_TEST_REGISTER("quad_in_out_endpoints",       test_quad_in_out_endpoints)
+NQ_TEST_REGISTER("cubic_endpoints",             test_cubic_endpoints)
+NQ_TEST_REGISTER("sine_endpoints",              test_sine_endpoints)
+NQ_TEST_REGISTER("expo_endpoints",              test_expo_endpoints)
+NQ_TEST_REGISTER("ease_dispatch_endpoints",     test_ease_dispatch_endpoints)
+NQ_TEST_REGISTER("ease_clamps_out_of_range",    test_ease_clamps_out_of_range)
+NQ_TEST_REGISTER("lerp_endpoints",              test_lerp_endpoints)
+NQ_TEST_REGISTER("ease_lerp_matches_named",     test_ease_lerp_matches_named)

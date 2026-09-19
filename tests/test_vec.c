@@ -43,9 +43,9 @@ static void test_vec2f_add(void) {
     NQ_ASSERT(c.y > 1.99f && c.y < 2.01f);
 }
 
-NQ_TEST_REGISTER("vec2i_create",     test_vec2i_create);
-NQ_TEST_REGISTER("vec2i_add",        test_vec2i_add);
-NQ_TEST_REGISTER("vec2i_sub",        test_vec2i_sub);
-NQ_TEST_REGISTER("vec2i_scale",      test_vec2i_scale);
-NQ_TEST_REGISTER("vec2i_eq",         test_vec2i_eq);
-NQ_TEST_REGISTER("vec2f_add",        test_vec2f_add);
+NQ_TEST_REGISTER("vec2i_create",     test_vec2i_create)
+NQ_TEST_REGISTER("vec2i_add",        test_vec2i_add)
+NQ_TEST_REGISTER("vec2i_sub",        test_vec2i_sub)
+NQ_TEST_REGISTER("vec2i_scale",      test_vec2i_scale)
+NQ_TEST_REGISTER("vec2i_eq",         test_vec2i_eq)
+NQ_TEST_REGISTER("vec2f_add",        test_vec2f_add)

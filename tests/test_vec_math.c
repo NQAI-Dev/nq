@@ -145,18 +145,18 @@ static void test_vec2i_cross(void) {
 }
 
 /* ── registration ────────────────────────────────────────────────── */
-NQ_TEST_REGISTER("vec2f_eq",                    test_vec2f_eq);
-NQ_TEST_REGISTER("vec2f_dot_basic",             test_vec2f_dot_basic);
-NQ_TEST_REGISTER("vec2f_dot_antiparallel",      test_vec2f_dot_antiparallel);
-NQ_TEST_REGISTER("vec2f_cross",                 test_vec2f_cross);
-NQ_TEST_REGISTER("vec2f_length_sq",             test_vec2f_length_sq);
-NQ_TEST_REGISTER("vec2f_length",                test_vec2f_length);
-NQ_TEST_REGISTER("vec2f_normalize_unit",        test_vec2f_normalize_unit);
-NQ_TEST_REGISTER("vec2f_normalize_345",         test_vec2f_normalize_345);
-NQ_TEST_REGISTER("vec2f_normalize_zero",        test_vec2f_normalize_zero);
-NQ_TEST_REGISTER("vec2f_perp",                  test_vec2f_perp);
-NQ_TEST_REGISTER("vec2f_reflect_horizontal",    test_vec2f_reflect_horizontal);
-NQ_TEST_REGISTER("vec2f_reflect_vertical",      test_vec2f_reflect_vertical);
-NQ_TEST_REGISTER("vec2f_reflect_preserves_len", test_vec2f_reflect_preserves_length);
-NQ_TEST_REGISTER("vec2i_dot",                   test_vec2i_dot);
-NQ_TEST_REGISTER("vec2i_cross",                 test_vec2i_cross);
+NQ_TEST_REGISTER("vec2f_eq",                    test_vec2f_eq)
+NQ_TEST_REGISTER("vec2f_dot_basic",             test_vec2f_dot_basic)
+NQ_TEST_REGISTER("vec2f_dot_antiparallel",      test_vec2f_dot_antiparallel)
+NQ_TEST_REGISTER("vec2f_cross",                 test_vec2f_cross)
+NQ_TEST_REGISTER("vec2f_length_sq",             test_vec2f_length_sq)
+NQ_TEST_REGISTER("vec2f_length",                test_vec2f_length)
+NQ_TEST_REGISTER("vec2f_normalize_unit",        test_vec2f_normalize_unit)
+NQ_TEST_REGISTER("vec2f_normalize_345",         test_vec2f_normalize_345)
+NQ_TEST_REGISTER("vec2f_normalize_zero",        test_vec2f_normalize_zero)
+NQ_TEST_REGISTER("vec2f_perp",                  test_vec2f_perp)
+NQ_TEST_REGISTER("vec2f_reflect_horizontal",    test_vec2f_reflect_horizontal)
+NQ_TEST_REGISTER("vec2f_reflect_vertical",      test_vec2f_reflect_vertical)
+NQ_TEST_REGISTER("vec2f_reflect_preserves_len", test_vec2f_reflect_preserves_length)
+NQ_TEST_REGISTER("vec2i_dot",                   test_vec2i_dot)
+NQ_TEST_REGISTER("vec2i_cross",                 test_vec2i_cross)

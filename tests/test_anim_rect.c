@@ -109,12 +109,12 @@ static void test_anim_rect_null_safe(void) {
     nq_anim_rect_restart(NULL);
 }
 
-NQ_TEST_REGISTER("anim_rect_init_starts_active", test_anim_rect_init_starts_active);
-NQ_TEST_REGISTER("anim_rect_linear_progresses", test_anim_rect_linear_progresses_to_target);
-NQ_TEST_REGISTER("anim_rect_linear_midpoint",    test_anim_rect_linear_midpoint);
-NQ_TEST_REGISTER("anim_rect_saturates",          test_anim_rect_saturates_at_to);
-NQ_TEST_REGISTER("anim_rect_reverse_direction", test_anim_rect_reverse_direction);
-NQ_TEST_REGISTER("anim_rect_zero_duration",     test_anim_rect_zero_duration_clamps);
-NQ_TEST_REGISTER("anim_rect_negative_dt",         test_anim_rect_negative_dt_clamped);
-NQ_TEST_REGISTER("anim_rect_restart_resets",     test_anim_rect_restart_resets);
-NQ_TEST_REGISTER("anim_rect_null_safe",          test_anim_rect_null_safe);
+NQ_TEST_REGISTER("anim_rect_init_starts_active", test_anim_rect_init_starts_active)
+NQ_TEST_REGISTER("anim_rect_linear_progresses", test_anim_rect_linear_progresses_to_target)
+NQ_TEST_REGISTER("anim_rect_linear_midpoint",    test_anim_rect_linear_midpoint)
+NQ_TEST_REGISTER("anim_rect_saturates",          test_anim_rect_saturates_at_to)
+NQ_TEST_REGISTER("anim_rect_reverse_direction", test_anim_rect_reverse_direction)
+NQ_TEST_REGISTER("anim_rect_zero_duration",     test_anim_rect_zero_duration_clamps)
+NQ_TEST_REGISTER("anim_rect_negative_dt",         test_anim_rect_negative_dt_clamped)
+NQ_TEST_REGISTER("anim_rect_restart_resets",     test_anim_rect_restart_resets)
+NQ_TEST_REGISTER("anim_rect_null_safe",          test_anim_rect_null_safe)

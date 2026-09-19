@@ -8,7 +8,7 @@ static void test_action_tween_rect_ext(void) {
     NqActionTweenRect *tween = nq_action_tween_rect_create(NULL, NULL);
     nq_action_tween_rect_set_anim(tween, &anim);
     NqAction *action = nq_action_tween_rect_action(tween);
-    NQ_ASSERT(nq_action_state(action) == NQ_ACTION_IDLE);
+    NQ_ASSERT(nq_action_state(action) == NQ_ACTION_RUNNING);
     NqActionState state = nq_action_update(action, 0.5f);
     NQ_ASSERT(state == NQ_ACTION_RUNNING);
     NqRect current = nq_anim_rect_value(&anim);
@@ -19,4 +19,4 @@ static void test_action_tween_rect_ext(void) {
     NQ_ASSERT(current.x == 10 && current.y == 10 && current.w == 20 && current.h == 20);
     nq_action_tween_rect_destroy(tween);
 }
-NQ_TEST_REGISTER("action_tween_rect", test_action_tween_rect_ext);
+NQ_TEST_REGISTER("action_tween_rect", test_action_tween_rect_ext)

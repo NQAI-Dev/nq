@@ -30,6 +30,7 @@ static void test_node_update(NqNode *n, float dt, void *user) {
 }
 
 static void test_node_draw(NqNode *n, void *user) {
+    (void)n;
     NodeCbCtx *ctx = (NodeCbCtx *)user;
     if (!ctx) return;
     ctx->draw_calls++;
@@ -91,10 +92,10 @@ static void test_transform_get_set(void) {
 
     float x, y, sx, sy;
     nq_node_get_position(n, &x, &y);
-    NQ_FE(x, 10.0f); NQ_FE(y, 20.0f);
-    NQ_FE(nq_node_get_rotation(n), 45.0f);
+    NQ_ASSERT(NQ_FE(x, 10.0f)); NQ_ASSERT(NQ_FE(y, 20.0f));
+    NQ_ASSERT(NQ_FE(nq_node_get_rotation(n), 45.0f));
     nq_node_get_scale(n, &sx, &sy);
-    NQ_FE(sx, 2.0f); NQ_FE(sy, 3.0f);
+    NQ_ASSERT(NQ_FE(sx, 2.0f)); NQ_ASSERT(NQ_FE(sy, 3.0f));
 
     nq_node_destroy(n);
 }
@@ -124,7 +125,7 @@ static void test_update_dt_is_passed(void) {
     NqNode *root = nq_node_create(NULL, "r");
     nq_node_set_callbacks(root, test_node_init, test_node_update, test_node_draw, &ctx);
     nq_node_update(root, 0.033f);
-    NQ_FE(ctx.last_dt, 0.033f);
+    NQ_ASSERT(NQ_FE(ctx.last_dt, 0.033f));
     nq_node_destroy(root);
 }
 
@@ -180,12 +181,12 @@ static void test_null_safety(void) {
     NQ_ASSERT(sx == -1 && sy == -1);
 }
 
-NQ_TEST_REGISTER("node_create_root_and_child",      test_create_root_and_child);
-NQ_TEST_REGISTER("node_destroy_subtree",            test_destroy_subtree);
-NQ_TEST_REGISTER("node_flags_default_and_set",      test_flags_default_and_set);
-NQ_TEST_REGISTER("node_transform_get_set",          test_transform_get_set);
-NQ_TEST_REGISTER("node_update_walks_subtree",      test_update_walks_subtree_pre_order);
-NQ_TEST_REGISTER("node_update_dt_passed",           test_update_dt_is_passed);
-NQ_TEST_REGISTER("node_draw_skipped_when_inv",     test_draw_skipped_when_invisible);
-NQ_TEST_REGISTER("node_attach_reparent",            test_attach_reparent);
-NQ_TEST_REGISTER("node_null_safety",                test_null_safety);
+NQ_TEST_REGISTER("node_create_root_and_child",      test_create_root_and_child)
+NQ_TEST_REGISTER("node_destroy_subtree",            test_destroy_subtree)
+NQ_TEST_REGISTER("node_flags_default_and_set",      test_flags_default_and_set)
+NQ_TEST_REGISTER("node_transform_get_set",          test_transform_get_set)
+NQ_TEST_REGISTER("node_update_walks_subtree",      test_update_walks_subtree_pre_order)
+NQ_TEST_REGISTER("node_update_dt_passed",           test_update_dt_is_passed)
+NQ_TEST_REGISTER("node_draw_skipped_when_inv",     test_draw_skipped_when_invisible)
+NQ_TEST_REGISTER("node_attach_reparent",            test_attach_reparent)
+NQ_TEST_REGISTER("node_null_safety",                test_null_safety)

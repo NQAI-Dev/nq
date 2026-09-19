@@ -62,12 +62,12 @@ static void test_from_uint32(void) {
     NQ_ASSERT_EQ(z.a, 0);
 }
 
-NQ_TEST_REGISTER("color_lerp_endpoints",          test_lerp_endpoints);
-NQ_TEST_REGISTER("color_lerp_midpoint",           test_lerp_midpoint);
-NQ_TEST_REGISTER("color_lerp_alpha",              test_lerp_alpha);
-NQ_TEST_REGISTER("color_lerp_clamps_t",           test_lerp_clamps_t);
-NQ_TEST_REGISTER("color_lerp_identity",           test_lerp_identity);
-NQ_TEST_REGISTER("color_from_uint32",             test_from_uint32);
+NQ_TEST_REGISTER("color_lerp_endpoints",          test_lerp_endpoints)
+NQ_TEST_REGISTER("color_lerp_midpoint",           test_lerp_midpoint)
+NQ_TEST_REGISTER("color_lerp_alpha",              test_lerp_alpha)
+NQ_TEST_REGISTER("color_lerp_clamps_t",           test_lerp_clamps_t)
+NQ_TEST_REGISTER("color_lerp_identity",           test_lerp_identity)
+NQ_TEST_REGISTER("color_from_uint32",             test_from_uint32)
 
 static void test_color_equal_identical_returns_true(void) {
     NqColor c = NQ_COLOR_RGB(123, 45, 67);
@@ -94,6 +94,6 @@ static void test_color_equal_alpha_included(void) {
     NQ_ASSERT(!nq_color_equal(opaque, half));
 }
 
-NQ_TEST_REGISTER("color_equal_identical",            test_color_equal_identical_returns_true);
-NQ_TEST_REGISTER("color_equal_one_channel_differs",  test_color_equal_one_channel_differs_returns_false);
-NQ_TEST_REGISTER("color_equal_alpha_included",       test_color_equal_alpha_included);
+NQ_TEST_REGISTER("color_equal_identical",            test_color_equal_identical_returns_true)
+NQ_TEST_REGISTER("color_equal_one_channel_differs",  test_color_equal_one_channel_differs_returns_false)
+NQ_TEST_REGISTER("color_equal_alpha_included",       test_color_equal_alpha_included)

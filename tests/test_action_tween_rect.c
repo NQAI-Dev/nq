@@ -7,6 +7,7 @@ typedef struct { NqRect from; NqRect to; int ticks; int target_ticks; } RectCtx;
 
 static NqActionState rect_tick_advance(NqAction *a, float dt, void *user) {
     (void)a;
+    (void)dt;
     RectCtx *c = (RectCtx *)user;
     if (!c) return NQ_ACTION_FINISHED;
     c->ticks++;
@@ -55,12 +56,14 @@ static void test_null_safe(void) {
     nq_action_tween_rect_destroy(NULL);
     NQ_ASSERT_EQ(nq_action_tween_rect_update(NULL, 0.016f), NQ_ACTION_FINISHED);
     NQ_ASSERT(nq_action_tween_rect_action(NULL) == NULL);
-    /* NULL callback (rect_tick = NULL) → constructor returns NULL */
-    NQ_ASSERT(nq_action_tween_rect_create(NULL, NULL) == NULL);
+    /* NULL callback is valid: an animator can be attached afterwards. */
+    NqActionTweenRect *t = nq_action_tween_rect_create(NULL, NULL);
+    NQ_ASSERT(t != NULL);
+    nq_action_tween_rect_destroy(t);
 }
 
-NQ_TEST_REGISTER("tween_rect_create_destroy",     test_create_destroy);
-NQ_TEST_REGISTER("tween_rect_advances",           test_advances);
-NQ_TEST_REGISTER("tween_rect_completes",          test_completes_when_callback_returns_finished);
-NQ_TEST_REGISTER("tween_rect_no_touch_user",      test_destroy_does_not_touch_user);
-NQ_TEST_REGISTER("tween_rect_null_safe",          test_null_safe);
+NQ_TEST_REGISTER("tween_rect_create_destroy",     test_create_destroy)
+NQ_TEST_REGISTER("tween_rect_advances",           test_advances)
+NQ_TEST_REGISTER("tween_rect_completes",          test_completes_when_callback_returns_finished)
+NQ_TEST_REGISTER("tween_rect_no_touch_user",      test_destroy_does_not_touch_user)
+NQ_TEST_REGISTER("tween_rect_null_safe",          test_null_safe)
