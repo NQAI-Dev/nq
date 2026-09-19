@@ -37,18 +37,6 @@ static NqActionState spawn_tick(NqAction *a, float dt, void *user) {
         : NQ_ACTION_RUNNING;
 }
 
-static void spawn_reset(void *user) {
-    /* Restart the parallel group: zero the finished counter so the
-     * next update() re-counts finished subs from scratch. The sub-
-     * actions themselves are owned by the spawn wrapper (if take_ownership
-     * was set) and were already in their terminal state; whether they
-     * can actually be ticked again depends on whether they have their
-     * own reset_fn. Nq_action_tween / Nq_action_delay do; the user's
-     * own actions may not. */
-    NqActionSpawn *s = (NqActionSpawn *)user;
-    if (s) s->finished_subs = 0;
-}
-
 NqActionSpawn *nq_action_spawn_create(NqAction **subs, size_t count,
                                      int take_ownership) {
     if (!subs && count > 0) return NULL;

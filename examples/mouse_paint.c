@@ -117,7 +117,6 @@ int main(void) {
     /* SDL_GetPerformanceCounter is the same source nq_clock uses,
      * so the elapsed_seconds we feed the FPS counter stays
      * consistent if we swap nq_clock in here later. */
-    Uint64 last = SDL_GetPerformanceCounter();
     const Uint64 freq = SDL_GetPerformanceFrequency();
 
     while (running) {
@@ -133,7 +132,6 @@ int main(void) {
         Uint64 now = SDL_GetPerformanceCounter();
         double elapsed = (double)now / (double)freq;
         nq_fps_counter_tick(&fps_counter, elapsed);
-        last = now;
 
         int mx = nq_input_mouse_x(&input);
         int my = nq_input_mouse_y(&input);

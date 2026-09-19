@@ -79,9 +79,34 @@ int nq_renderer_fill_circle(NqRenderer *renderer, NqColor c,
     if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
         return -1;
     }
-    /* SDL_RenderFillCircle returns 0 on success — wrap as our convention. */
-    //return SDL_RenderFillCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
-return 0;
+
+    int x = radius;
+    int y = 0;
+    int decision = 1 - radius;
+    while (x >= y) {
+        if (!SDL_RenderLine(renderer->sdl_renderer,
+                            (float)(cx - x), (float)(cy + y),
+                            (float)(cx + x), (float)(cy + y)) ||
+            !SDL_RenderLine(renderer->sdl_renderer,
+                            (float)(cx - x), (float)(cy - y),
+                            (float)(cx + x), (float)(cy - y)) ||
+            !SDL_RenderLine(renderer->sdl_renderer,
+                            (float)(cx - y), (float)(cy + x),
+                            (float)(cx + y), (float)(cy + x)) ||
+            !SDL_RenderLine(renderer->sdl_renderer,
+                            (float)(cx - y), (float)(cy - x),
+                            (float)(cx + y), (float)(cy - x))) {
+            return -1;
+        }
+        y++;
+        if (decision <= 0) {
+            decision += 2 * y + 1;
+        } else {
+            x--;
+            decision += 2 * (y - x) + 1;
+        }
+    }
+    return 0;
 }
 
 int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
@@ -92,8 +117,33 @@ int nq_renderer_draw_circle(NqRenderer *renderer, NqColor c,
     if (!SDL_SetRenderDrawColor(renderer->sdl_renderer, c.r, c.g, c.b, c.a)) {
         return -1;
     }
-    //return SDL_RenderCircle(renderer->sdl_renderer, (float)cx, (float)cy, (float)radius) ? -1 : 0;
-return 0;
+
+    int x = radius;
+    int y = 0;
+    int decision = 1 - radius;
+    while (x >= y) {
+        const SDL_FPoint points[8] = {
+            { (float)(cx + x), (float)(cy + y) },
+            { (float)(cx + y), (float)(cy + x) },
+            { (float)(cx - y), (float)(cy + x) },
+            { (float)(cx - x), (float)(cy + y) },
+            { (float)(cx - x), (float)(cy - y) },
+            { (float)(cx - y), (float)(cy - x) },
+            { (float)(cx + y), (float)(cy - x) },
+            { (float)(cx + x), (float)(cy - y) }
+        };
+        if (!SDL_RenderPoints(renderer->sdl_renderer, points, 8)) {
+            return -1;
+        }
+        y++;
+        if (decision <= 0) {
+            decision += 2 * y + 1;
+        } else {
+            x--;
+            decision += 2 * (y - x) + 1;
+        }
+    }
+    return 0;
 }
 
 int nq_renderer_draw_line(NqRenderer *renderer, NqColor c,

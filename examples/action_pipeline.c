@@ -46,6 +46,7 @@ typedef struct {
  * routes this tick callback each frame the wrapper is RUNNING. */
 static NqActionState move_tick(NqAction *a, float dt, void *user) {
     (void)a;
+    (void)dt;
     MoveCtx *c = (MoveCtx *)user;
     if (!c) return NQ_ACTION_FINISHED;
     c->ticks++;

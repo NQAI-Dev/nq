@@ -44,11 +44,6 @@ SDL_Texture *nq_texture_get_sdl_texture(const NqTexture *tex);
 /* Returns the SDL_Texture* owned by NqTexture — needed here so the
  * example can write its procedural pixels into the texture once at
  * startup. This is the "backend escape hatch" the docs call out. */
-static SDL_Texture *tex_sdl(NqTexture *tex) {
-     
-    return nq_texture_get_sdl_texture(tex);
-}
-
 /* Generates a single 8x8 SDL_Texture (RGBA8888) and paints four 4x4
  * quadrants with different colours so we have four distinct "frames"
  * in one texture. The atlas then maps names to those four quadrants. */

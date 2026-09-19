@@ -77,20 +77,6 @@ void nq_action_sequence_destroy(NqActionSequence *s) {
     free(s);
 }
 
-static void seq_done(NqAction *a, void *user) {
-    /* Final cleanup: if we own subs and the sequence reached its end,
-     * destroy each sub. The NqAction machinery fires done() exactly
-     * once on terminal transition; that's our cue to free sub-actions
-     * we own but didn't destroy via destroy() yet.
-     *
-     * We can't free them here because destroy() may not have been called
-     * yet (the user might keep the sequence around after completion).
-     * For the "owns_subs + never destroy" path the user has to call
-     * destroy() explicitly. Document. */
-    (void)a;
-    (void)user;
-}
-
 NqActionState nq_action_sequence_update(NqActionSequence *s, float dt) {
     if (!s || !s->action) return NQ_ACTION_FINISHED;
     return nq_action_update(s->action, dt);

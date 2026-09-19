@@ -50,9 +50,9 @@ typedef struct {
 } Layer;
 
 static Layer layers[NUM_LAYERS] = {
-    { NQ_COLOR_RGB( 30,  40,  60), 0.20f, 0.0f },  /* background, blueish */
-    { NQ_COLOR_RGB( 90, 110, 140), 0.50f, 0.0f },  /* mid, lighter */
-    { NQ_COLOR_RGB(200,  90,  90), 1.00f, 0.0f },  /* foreground, red */
+    { {  30,  40,  60, 255 }, 0.20f, 0.0f },  /* background, blueish */
+    { {  90, 110, 140, 255 }, 0.50f, 0.0f },  /* mid, lighter */
+    { { 200,  90,  90, 255 }, 1.00f, 0.0f },  /* foreground, red */
 };
 
 static float camera_x = 0.0f;  /* moves with input; layers derive scroll_x */
@@ -81,7 +81,6 @@ int main(void) {
     }
 
     NqClock *clock = nq_clock_create();
-    NqScene  *scene = nq_scene_create();
     NqInput  input;
     nq_input_init(&input);
 
@@ -127,7 +126,6 @@ int main(void) {
                - nq_input_key_down(&input, SDL_GetScancodeFromKey(SDLK_W, NULL)));
 
         camera_x += (float)kx * 220.0f * dt;  /* arrow-key velocity */
-        camera_y_offset:
         (void)ky;  /* unused — vertical scrolling not in scope here */
 
         /* Per-layer scroll position. Wrap when off-screen. */
