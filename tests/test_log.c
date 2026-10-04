@@ -1,9 +1,7 @@
-#include <fcntl.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include <nq/log.h>
 #include "test_main.c"  /* NQ_TEST_REGISTER / NQ_ASSERT / NQ_ASSERT_EQ */
@@ -26,35 +24,21 @@ static void emit_all_log_messages(void) {
     NQ_LOG_FATAL("f");
 }
 
-/* The logger writes to stderr by default. Capture it via dup2 for test. */
+/* Capture logger output through its file sink (portable across platforms). */
 static int capture_stderr(char *buf, size_t cap, void (*fn)(void)) {
-    int orig = dup(STDERR_FILENO);
-    int fds[2];
-    if (pipe(fds) != 0) {
-        return -1;
-    }
-    /* Make read-end non-blocking so we can drain it after fn() returns. */
-    int flags = fcntl(fds[0], F_GETFL, 0);
-    fcntl(fds[0], F_SETFL, flags | O_NONBLOCK);
-    dup2(fds[1], STDERR_FILENO);
-    close(fds[1]);
+    const char *path = "nq_test_log_capture.tmp";
+    remove(path);
+    nq_log_set_file(path);
 
     fn();
 
-    fflush(stderr);
-    /* Restore stderr so fprintf below reaches the user. */
-    dup2(orig, STDERR_FILENO);
-    close(orig);
-
-    /* Drain read-end into buf. */
-    size_t n = 0;
-    while (n + 1 < cap) {
-        ssize_t r = read(fds[0], buf + n, cap - 1 - n);
-        if (r <= 0) break;
-        n += (size_t)r;
-    }
+    nq_log_set_file(NULL);
+    FILE *capture = fopen(path, "rb");
+    if (capture == NULL) return -1;
+    size_t n = fread(buf, 1, cap - 1, capture);
     buf[n] = '\0';
-    close(fds[0]);
+    fclose(capture);
+    remove(path);
     return (int)n;
 }
 
