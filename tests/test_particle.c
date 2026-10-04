@@ -5,7 +5,7 @@
 
 #define FLOAT_EQ(a, b) (fabs((a) - (b)) < 0.0001f)
 
-static void test_create_destroy() {
+static void test_create_destroy(void) {
     NqParticleSystem *ps = nq_particle_system_create(0);
     assert(ps == NULL);
 
@@ -15,7 +15,7 @@ static void test_create_destroy() {
     nq_particle_system_destroy(ps);
 }
 
-static void test_emit_and_update() {
+static void test_emit_and_update(void) {
     NqParticleSystem *ps = nq_particle_system_create(2);
     assert(ps != NULL);
 
@@ -65,7 +65,7 @@ static void test_emit_and_update() {
     nq_particle_system_destroy(ps);
 }
 
-int main() {
+int main(void) {
     test_create_destroy();
     test_emit_and_update();
     printf("test_particle passed\n");

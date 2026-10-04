@@ -2,13 +2,13 @@
 #include <stdbool.h>
 #include "test_main.c"
 
-static void test_heuristic() {
+static void test_heuristic(void) {
     NQ_ASSERT_EQ(nq_path_heuristic_manhattan((NqVec2i){0,0}, (NqVec2i){5,5}), 10);
     NQ_ASSERT_EQ(nq_path_heuristic_manhattan((NqVec2i){2,3}, (NqVec2i){-1,-2}), 8);
     NQ_ASSERT_EQ(nq_path_heuristic_manhattan((NqVec2i){10,10}, (NqVec2i){10,10}), 0);
 }
 
-static void test_astar_straight() {
+static void test_astar_straight(void) {
     bool walkable[25] = {
         true, true, true, true, true,
         true, true, true, true, true,
@@ -27,7 +27,7 @@ static void test_astar_straight() {
     NQ_ASSERT_EQ(res.path[4].y, 0);
 }
 
-static void test_astar_obstacle() {
+static void test_astar_obstacle(void) {
     bool walkable[25] = {
         true, true,  true, true, true,
         true, false, true, true, true,
@@ -46,7 +46,7 @@ static void test_astar_obstacle() {
     NQ_ASSERT_EQ(res.path[res.length - 1].y, 2);
 }
 
-static void test_astar_no_path() {
+static void test_astar_no_path(void) {
     bool walkable[25] = {
         true, false, true, true, true,
         true, false, true, true, true,
@@ -61,7 +61,7 @@ static void test_astar_no_path() {
     NQ_ASSERT_EQ(res.length, 0);
 }
 
-static void test_astar_invalid_bounds() {
+static void test_astar_invalid_bounds(void) {
     bool walkable[4] = {true, true, true, true};
     NqPathGrid grid = {2, 2, walkable};
 
@@ -72,7 +72,7 @@ static void test_astar_invalid_bounds() {
     NQ_ASSERT(!res.found);
 }
 
-static void test_astar_same_start_goal() {
+static void test_astar_same_start_goal(void) {
     bool walkable[4] = {true, true, true, true};
     NqPathGrid grid = {2, 2, walkable};
 

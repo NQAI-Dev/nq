@@ -6,7 +6,9 @@ SDL_SOURCE="${RUNNER_TEMP:-/tmp}/SDL"
 SDL_BUILD="${RUNNER_TEMP:-/tmp}/SDL-build"
 
 sudo apt-get update
-sudo apt-get install -y build-essential cmake ninja-build
+sudo apt-get install -y build-essential cmake ninja-build \
+    libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev \
+    libxi-dev libxinerama-dev libxss-dev
 git clone --depth 1 --branch "release-${SDL_VERSION}" \
     https://github.com/libsdl-org/SDL.git "$SDL_SOURCE"
 cmake -S "$SDL_SOURCE" -B "$SDL_BUILD" -G Ninja \
