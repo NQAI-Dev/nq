@@ -13,9 +13,7 @@ jobs:
     - uses: actions/checkout@v4
     
     - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y cmake build-essential libsdl3-dev
+      run: bash .github/scripts/install-sdl3-ubuntu.sh
         
     - name: Configure CMake
       run: cmake -B build -S . -DNQ_BUILD_TESTS=ON

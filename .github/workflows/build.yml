@@ -18,13 +18,7 @@ jobs:
         include:
           - os: ubuntu-24.04
             install: |
-              sudo apt-get update
-              sudo apt-get install -y cmake ninja-build
-              git clone --depth 1 --branch release-3.4.18 https://github.com/libsdl-org/SDL.git "$RUNNER_TEMP/SDL"
-              cmake -S "$RUNNER_TEMP/SDL" -B "$RUNNER_TEMP/SDL-build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DSDL_TESTS=OFF -DSDL_EXAMPLES=OFF
-              cmake --build "$RUNNER_TEMP/SDL-build" --parallel 2
-              sudo cmake --install "$RUNNER_TEMP/SDL-build"
-              sudo ldconfig
+              bash .github/scripts/install-sdl3-ubuntu.sh
           - os: macos-latest
             install: |
               brew update
