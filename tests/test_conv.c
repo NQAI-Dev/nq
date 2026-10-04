@@ -27,19 +27,20 @@
  * Caller frees. On failure returns NULL. */
 static char *nq_conv_run(int cols, int rows, int tex_w, int tex_h,
                         const char *atlas_name) {
+    const char *out_path = "nq_conv_test_out.h";
     char cmd[1024];
     if (tex_w > 0 && tex_h > 0) {
         snprintf(cmd, sizeof(cmd),
-                 "%s /tmp/nq_conv_test_out.h %s %d %d %d %d",
-                 NQ_CONV_BIN, atlas_name, cols, rows, tex_w, tex_h);
+                 "%s %s %s %d %d %d %d",
+                 NQ_CONV_BIN, out_path, atlas_name, cols, rows, tex_w, tex_h);
     } else {
         snprintf(cmd, sizeof(cmd),
-                 "%s /tmp/nq_conv_test_out.h %s %d %d",
-                 NQ_CONV_BIN, atlas_name, cols, rows);
+                 "%s %s %s %d %d",
+                 NQ_CONV_BIN, out_path, atlas_name, cols, rows);
     }
     int status = system(cmd);
     if (status != 0) return NULL;
-    FILE *p = fopen("/tmp/nq_conv_test_out.h", "r");
+    FILE *p = fopen(out_path, "r");
     if (!p) return NULL;
     char *out = calloc(1, 65536);
     if (!out) { fclose(p); return NULL; }
